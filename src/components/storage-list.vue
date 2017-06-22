@@ -17,6 +17,7 @@
 <script>
 import readable from '../lib/readable'
 
+
 export default new Vue.components('order-list', {
   props: [
     'list'
@@ -39,4 +40,5 @@ export default new Vue.components('order-list', {
 </script>
 
 <style>
+
 </style>

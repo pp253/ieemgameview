@@ -20,7 +20,7 @@
     <script src="./dist/build.js"></script>
   </body>
   </html>
-</teamplate>
+</template>
 
 <script>
 import home from './home'
@@ -36,7 +36,7 @@ import roundWholeseller from './round-wholeseller'
 const routes = [
   { path: '/', component: home },
   { path: '/home', component: home },
-  { path: '/choose', component: choose }
+  { path: '/choose', component: choose },
   { path: '/gameend', component: gameend },
   { path: '/round/exchange', component: roundExchange },
   { path: '/round/factory', component: roundFactory },

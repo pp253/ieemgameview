@@ -1,4 +1,6 @@
-const PRODUCTS = {
+import * as api from './api'
+
+export const PRODUCTS = {
   999: '未知',
   0: '車子',
   1: '物料A',
@@ -9,47 +11,84 @@ const PRODUCTS = {
   6: '貨車'
 }
 
-const JOBS = {
-  999: '未知',
-  0: '交換處',
-  1: '製造商',
-  2: '批發商',
-  3: '零售商',
-  4: '市場',
-  5: '隊輔'
-}
-
-export toReadableDays = function (days) {
+export function toReadableDays (days) {
   return '第' + days + '天'
 }
 
-export toReadableTimes = function (times) {
+export function toReadableTimes (times) {
   var s = times % 60
   var m = (times - s) / 60
   return s + ':' + (m < 10 ? '0' : '') + m
 }
 
-export toReadableGameTime = function (days, times) {
+export function toReadableGameTime (days, times) {
   return toReadableDays(days) + ' ' + toReadableTimes(times)
 }
 
-export toReadableTeam = function (team) {
-  return '第' + item.buyer.team + '組'
+export function toReadableTeam (team) {
+  return '第' + team + '組'
 }
 
-export toReadableJob = function (job) {
-  return JOBS[item.buyer.job]
+export function toReadableDollar (dollar) {
+  return '$' + dollar
 }
 
-export toReadablePosition = function (position) {
+export function readableJobList () {
+  let indexList = [
+    api.Jobs.factory,
+    api.Jobs.retailer,
+    api.Jobs.wholeseller,
+    api.Jobs.teamleader
+  ]
+  let list = []
+  for (let i of indexList) {
+    list.push({
+      index: i,
+      title: toReadableJob(i)
+    })
+  }
+  return list
+}
+
+export function readableStaffJobList () {
+  let indexList = [
+    api.StaffJobs.exchange,
+    api.StaffJobs.market
+  ]
+  let list = []
+  for (let i of indexList) {
+    list.push({
+      index: i,
+      title: toReadableJob(i)
+    })
+  }
+  return list
+}
+
+export function toReadableJob (job) {
+  let JobsString = {
+    0: '未知',
+    1: '製造商',
+    2: '批發商',
+    3: '零售商',
+    4: '隊輔',
+    5: '未知',
+    6: '交換處',
+    7: '市場'
+  }
+
+  return JobsString[job]
+}
+
+export function toReadablePosition (position) {
   return toReadableTeam(position.team) + ' ' + toReadableJob(position.job)
 }
 
-export toReadableProduct = function (product) {
+export function toReadableProduct (product) {
   return PRODUCTS[product]
 }
 
-export toReadableOrderList = function (list) {
+export function toReadableOrderList (list) {
   let readableList = []
   list.forEach(function (item) {
     let it = {
@@ -63,5 +102,3 @@ export toReadableOrderList = function (list) {
   })
   return readableList
 }
-
-export 
