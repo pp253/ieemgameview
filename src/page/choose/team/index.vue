@@ -1,0 +1,53 @@
+<template>
+  <div class="choose">
+    <v-toolbar class="orange">
+      <v-toolbar-title>首頁</v-toolbar-title>
+    </v-toolbar>
+    <main>
+      <h5 class="headline">請選擇你的小隊</h5>
+      <v-layout row>
+        <v-list class="list">
+          <v-list-tile
+            v-for="item in itemTeam"
+            v-bind:key="item"
+            v-on:click.native="intoTeam(item.index)"
+          >
+            <v-list-tile-content>
+              <v-list-tile-title v-text="item.text"></v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-layout>
+    </main>
+  </div>
+</template>
+
+<script>
+import {router} from '../../../router'
+import * as readable from '../../../lib/readable'
+import * as api from '../../../lib/api'
+
+export default {
+  data () {
+    return {
+      stepCount: 0,
+      teamNumber: 4
+    }
+  },
+  computed: {
+    itemTeam: function () {
+      return readable.toReadableTeamListWithStaff(this.teamNumber)
+    }
+  },
+  methods: {
+    intoTeam: function (team) {
+      console.log('User Team:', team)
+      api.nowUser.setTeam(team)
+      router.push('/choose/job')
+    }
+  }
+}
+</script>
+
+<style>
+</style>

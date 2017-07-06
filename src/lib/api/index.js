@@ -1,9 +1,11 @@
+import * as constant from '../constant'
+
 export const Products = {
   unknown: '未知',
   0: '車子',
-  1: '物料A',
-  2: '物料B',
-  3: '物料C',
+  1: '輪胎',
+  2: '車身',
+  3: '引擎',
   4: '倉庫',
   5: '工人薪水',
   6: '貨車'
@@ -28,10 +30,26 @@ export const StaffJobs = {
   market: 7
 }
 
+export function isStaffTeam (team) {
+  return team === 0
+}
+
+export function isStaffJob (job) {
+  return Object.keys(constant.STAFF_JOBS).indexOf(job) !== -1
+}
+
 export class Position {
-  constructor (team = Team.unknown, job = Jobs.unknown) {
+  constructor (gameid = constant.GAMES.UNKNOWN,
+               team = constant.TEAMS.UNKNOWN,
+               job = constant.JOBS.UNKNOWN) {
+    this.gameid = gameid
     this.team = team
     this.job = job
+    return this
+  }
+
+  setGame (gameid) {
+    this.gameid = gameid
     return this
   }
 
@@ -45,6 +63,10 @@ export class Position {
     return this
   }
 
+  getGame () {
+    return this.gameid
+  }
+
   getTeam () {
     return this.team
   }
@@ -52,11 +74,21 @@ export class Position {
   getJob () {
     return this.job
   }
+
+  isStaffTeam () {
+    return isStaffTeam(this.team)
+  }
 }
 
 export class User {
   constructor () {
     this.position = new Position()
+    this.daytime = new constant.TimeType(3, 44)
+    return this
+  }
+
+  setGame (gameid) {
+    this.position.setGame(gameid)
     return this
   }
 
@@ -70,12 +102,24 @@ export class User {
     return this
   }
 
+  getGame () {
+    return this.position.getGame()
+  }
+
   getTeam () {
     return this.position.getTeam()
   }
 
   getJob () {
     return this.position.getJob()
+  }
+
+  isStaffTeam () {
+    return this.position.isStaffTeam()
+  }
+
+  getDayTime () {
+    return this.daytime
   }
 }
 

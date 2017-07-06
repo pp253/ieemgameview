@@ -1,21 +1,76 @@
 <template>
-  <div id="home" style="height: 100%;">
+  <div id="home" class="home" style="height: 100%;">
     <v-card class="card">
       <v-card-text class="text-xs-center">
         <h3>2017工工營</h3>
         <h5>PRE-ALPHA</h5>
-        <router-link to="/choose"><v-btn primary class="white--text">進入遊戲</v-btn></router-link>
       </v-card-text>
+      <v-layout row>
+        <v-list class="list">
+          <v-list-tile
+            v-for="game in gameList"
+            :key="game"
+            v-on:click.native="intoGame(game.gid)"
+          >
+            <v-list-tile-content>
+              <v-list-tile-title v-text="game.title"></v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-layout>
     </v-card>
   </div>
 </template>
 
 <script>
-export default {}
+import * as api from '../../lib/api'
+import {router} from '../../router'
+
+export default {
+  data () {
+    return {
+      gameList: [
+        {
+          title: '試玩場',
+          gid: 123
+        }
+      ]
+    }
+  },
+  methods: {
+    intoGame (gameId) {
+      console.log('User Game:', gameId)
+      api.nowUser.setGame(gameId)
+      router.push('/choose')
+    }
+  },
+  created: function () {
+    // load gameList and use promise to change the gameList
+    
+  }
+}
 </script>
 
 <style>
-.card {
+.home .layout {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.home .card {
   height: 100% !important;
+}
+
+.home .list {
+  width: 100%;
+}
+
+.home .card__text {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.home .list__tile__title {
+  color: rgba(0, 0, 0, 0.87);
 }
 </style>

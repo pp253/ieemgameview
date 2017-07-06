@@ -4,3 +4,70 @@
   font-family: '微軟正黑體', 'Helvetica', 'Noto Sans TC';
   font-weight: 400;
 }
+
+.choose .layout {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.choose .list {
+  width: 100%;
+}
+
+.choose .card__text {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.choose .list__tile__title {
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.choose .headline {
+  padding: 14px;
+  padding-bottom: 2px;
+  margin-bottom: 5px;
+}
+
+.choose .subheading {
+  padding: 14px;
+  padding-top: 2px;
+}
+
+.round .bg-box {
+  height: 140px;
+}
+
+.round .tabs__bar {
+  height: 45px;
+}
+
+.round .tabs__item {
+  color: rgba(255, 255, 255, 0.87) !important;
+}
+
+.round .tabs__items {
+  margin-bottom: 80px;
+}
+
+.round .layout {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.round .toolbar-right {
+  position: absolute;
+  right: 0;
+}
+
+.dialog .floating-right-bottom {
+  position: fixed;
+  right: 8px;
+  bottom: 8px;
+}
+
+.dialog .floating-right-bottom-secondary {
+  position: fixed;
+  right: 16px;
+  bottom: 78px;
+}
