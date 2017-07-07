@@ -5,6 +5,16 @@
   font-weight: 400;
 }
 
+.home .logo {
+  margin-top: 60px;
+  background-image: url(../image/logo.svg);
+  width: 100%;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .choose .layout {
   margin-left: 0;
   margin-right: 0;

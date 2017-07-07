@@ -2,22 +2,23 @@
   <div id="home" class="home" style="height: 100%;">
     <v-card class="card">
       <v-card-text class="text-xs-center">
-        <h3>2017工工營</h3>
-        <h5>PRE-ALPHA</h5>
+        <div class="logo"></div>
+        <!--<h3>REDRO產銷遊戲</h3>-->
+        <h5>2017 工工營 PRE-ALPHA</h5>
       </v-card-text>
       <v-layout row>
-        <v-list class="list">
-          <template
-            v-for="(item, index) in gameList"
-          >
-            <v-list-tile :key="index" v-on:click.native="intoGame(item.index)">
-              <v-list-tile-content>
-                <v-list-tile-title v-text="item.text"></v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-divider v-if="index + 1 < gameList.length"></v-divider>
-          </template>
-        </v-list>
+        <v-flex v-for="(item, index) in gameList" :key="index" xs12>
+          <v-card class="cyan darken-2 white--text">
+            <v-card-title primary-title>
+              <div class="headline">{{ item.text }}</div>
+              <div>3天，準備中</div>
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat dark v-on:click.native="intoGame(item.index)">進入遊戲</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
       </v-layout>
     </v-card>
   </div>
@@ -54,15 +55,16 @@ export default {
 
 <style>
 .home .layout {
-  margin-left: 0;
-  margin-right: 0;
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 .home .card {
   height: 100% !important;
 }
 
-.home .list {
+.home .headline {
+  display: block;
   width: 100%;
 }
 
