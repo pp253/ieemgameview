@@ -57,31 +57,9 @@
           </v-tabs-content>
         </v-tabs>
       </v-layout>
-      
-      <v-dialog v-model="orderDialog">
-        <v-btn slot="activator" primary fab floating="floating" class="floating-right-bottom">
-          <v-icon class="white--text">add</v-icon>
-        </v-btn>
-          <v-card class="real-bg">
-          <v-card-title>你想要訂購多少呢？</v-card-title>
-          <v-card-text>
-            <v-text-field
-              name="order-number"
-              label="訂購數量"
-              id="order-number"
-            ></v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="blue--text darken-1" flat="flat" @click.native="orderDialog = false">取消</v-btn>
-            <v-btn class="blue--text darken-1" flat="flat" @click.native="orderDialog = false">訂購</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+
+      <order-dialog></order-dialog>
     </main>
-
-    <!-- Order Dialog -->
-
   </div>
 </template>
 

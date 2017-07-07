@@ -23,9 +23,9 @@
   </v-app>
   <script src="./dist/build.js"></script>
   <script>
-document.addEventListener("touchmove", function(event){
-    event.preventDefault();
-}, false);
+document.ontouchmove = function(event){
+  event.preventDefault();
+}
   </script>
 </body>
 </html>
