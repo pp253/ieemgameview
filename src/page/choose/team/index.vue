@@ -7,15 +7,16 @@
       <h5 class="headline">請選擇你的小隊</h5>
       <v-layout row>
         <v-list class="list">
-          <v-list-tile
-            v-for="item in itemTeam"
-            v-bind:key="item"
-            v-on:click.native="intoTeam(item.index)"
+          <template
+            v-for="(item, index) in itemTeam"
           >
-            <v-list-tile-content>
-              <v-list-tile-title v-text="item.text"></v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+            <v-list-tile :key="index" v-on:click.native="intoTeam(item.index)">
+              <v-list-tile-content>
+                <v-list-tile-title v-text="item.text"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < itemTeam.length"></v-divider>
+          </template>
         </v-list>
       </v-layout>
     </main>

@@ -7,16 +7,18 @@
       <h5 class="headline">請選擇你的工作</h5>
       <v-subheader class="subheader" v-show="showSubTitle">隊輔請協助小組分配工作</v-subheader>
       <v-layout row>
+        <v-divider></v-divider>
         <v-list class="list">
-          <v-list-tile
-            v-for="item in itemJob"
-            v-bind:key="item"
-            v-on:click.native="intoJob(item.index)"
+          <template
+            v-for="(item, index) in itemJob"
           >
-            <v-list-tile-content>
-              <v-list-tile-title v-text="item.text"></v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+            <v-list-tile :key="index" v-on:click.native="intoJob(item.index)">
+              <v-list-tile-content>
+                <v-list-tile-title v-text="item.text"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < itemJob.length"></v-divider>
+          </template>
         </v-list>
       </v-layout>
     </main>

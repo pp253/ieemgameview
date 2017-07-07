@@ -7,15 +7,16 @@
       </v-card-text>
       <v-layout row>
         <v-list class="list">
-          <v-list-tile
-            v-for="game in gameList"
-            :key="game"
-            v-on:click.native="intoGame(game.gid)"
+          <template
+            v-for="(item, index) in gameList"
           >
-            <v-list-tile-content>
-              <v-list-tile-title v-text="game.title"></v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+            <v-list-tile :key="index" v-on:click.native="intoGame(item.index)">
+              <v-list-tile-content>
+                <v-list-tile-title v-text="item.text"></v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-divider v-if="index + 1 < gameList.length"></v-divider>
+          </template>
         </v-list>
       </v-layout>
     </v-card>
@@ -31,8 +32,8 @@ export default {
     return {
       gameList: [
         {
-          title: '試玩場',
-          gid: 123
+          text: '試玩場',
+          index: 123
         }
       ]
     }

@@ -18,32 +18,9 @@
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
-  
-  <script>
-    document.body.addEventListener('touchmove', function(event) {
-      console.log(event.source);
-      //if (event.source == document.body)
-        event.preventDefault();
-    }, false);
-
-    window.onresize = function() {
-      $(document.body).width(window.innerWidth).height(window.innerHeight);
-    }
-
-    $(function() {
-      window.onresize();
-    });
-  </script>
   <v-app id="main-frame" style="height: 100%;">
     <router-view></router-view>
   </v-app>
   <script src="./dist/build.js"></script>
-  <script>
-/*
-document.ontouchmove = function(event){
-  event.preventDefault();
-}
-*/
-  </script>
 </body>
 </html>

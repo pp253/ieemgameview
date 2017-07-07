@@ -8,6 +8,7 @@ Vue.component('team-storage-list', require('./team-storage-list.vue'))
 Vue.component('storage-register-dialog', require('./storage-register-dialog.vue'))
 Vue.component('deliver-dialog', require('./deliver-dialog.vue'))
 Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
+Vue.component('online-status', require('./online-status.vue'))
 
 // Discarded:
 // Vue.component('received-order', require('./received-order.vue'))

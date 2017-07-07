@@ -2,7 +2,7 @@
   <div class="game-clock">
     <v-card>
       <v-card-text>
-        <span class="more-info">{{ readableDay }} {{ readableIsWorking }}</span>
+        <span class="more-info">{{ readableDay }} {{ readableIsWorking }}</span><br>
         <span class="time">{{ readableTime }}</span>
       </v-card-text>
     </v-card>
@@ -32,12 +32,11 @@ export default {
 
 <style>
 .game-clock .more-info {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .game-clock .time {
-  font-size: 90px;
-  font-weight: bold;
-  line-height: 85px;
+  font-size: 50px;
+  line-height: 50px;
 }
 </style>
