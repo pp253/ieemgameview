@@ -1,7 +1,7 @@
 <template>
   <div id="home" class="home" style="height: 100%;">
     <v-card class="card">
-      <v-card-text class="text-xs-center">
+      <v-card-text class="text-xs-center head">
         <div class="logo"></div>
         <!--<h3>REDRO產銷遊戲</h3>-->
         <h5>2017 工工營 PRE-ALPHA</h5>
@@ -54,6 +54,11 @@ export default {
 </script>
 
 <style>
+.home .head {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
 .home .layout {
   padding-left: 14px;
   padding-right: 14px;
