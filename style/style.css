@@ -5,6 +5,11 @@
   font-weight: 400;
 }
 
+body,
+html {
+  position: fixed;
+}
+
 .choose .layout {
   margin-left: 0;
   margin-right: 0;
