@@ -5,6 +5,7 @@
   <title>工工營</title>
 
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
 
   <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
@@ -21,5 +22,10 @@
     <router-view></router-view>
   </v-app>
   <script src="./dist/build.js"></script>
+  <script>
+document.addEventListener("touchmove", function(event){
+    event.preventDefault();
+}, false);
+  </script>
 </body>
 </html>
