@@ -5,8 +5,7 @@
     </v-toolbar>
     <main>
       <game-clock v-bind:game-time="gameTime"></game-clock>
-      <team-storage-list></team-storage-list>
-      <storage-register-dialog :secondary="secondary"></storage-register-dialog>
+      <news-publisher-dialog :secondary="secondary"></news-publisher-dialog>
       <deliver-dialog></deliver-dialog>
     </main>
   </div>

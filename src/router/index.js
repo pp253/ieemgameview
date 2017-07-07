@@ -7,6 +7,7 @@ import roundWholesaler from '../page/round/wholesaler/index.vue'
 import roundGuerrilla from '../page/round/guerrilla/index.vue'
 import roundExchanger from '../page/round/exchanger/index.vue'
 import roundTransporter from '../page/round/transporter/index.vue'
+import roundMarket from '../page/round/market/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
@@ -21,7 +22,8 @@ const routes = [
   { path: '/round/guerrilla', component: roundGuerrilla },
   { path: '/round/keeper', component: roundGuerrilla },
   { path: '/round/exchanger', component: roundExchanger },
-  { path: '/round/transporter', component: roundTransporter }/*,
+  { path: '/round/transporter', component: roundTransporter },
+  { path: '/round/market', component: roundMarket }/*,
   { path: '/gameend', component: gameend },
   { path: '/round/exchange', component: roundExchange },
   { path: '/round/market', component: roundMarket },

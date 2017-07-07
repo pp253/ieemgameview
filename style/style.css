@@ -55,11 +55,6 @@
   margin-right: 0;
 }
 
-.round .toolbar-right {
-  position: absolute;
-  right: 0;
-}
-
 .dialog .floating-right-bottom {
   position: fixed;
   right: 8px;

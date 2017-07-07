@@ -2,7 +2,8 @@
   <div class="round">
     <v-toolbar class="green">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
-      <span class="white--text toolbar-right">{{ ToolbarInfo }}</span>
+      <v-spacer></v-spacer>
+      <span class="white--text">{{ ToolbarInfo }}</span>
     </v-toolbar>
     <main>
       <v-layout row class="bg-box">

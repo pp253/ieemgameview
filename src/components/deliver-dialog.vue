@@ -14,7 +14,7 @@
       <v-icon class="white--text">local_shipping</v-icon>
     </v-btn>
     <v-card>
-      <v-card-title>登記囤貨</v-card-title>
+      <v-card-title>運輸貨物</v-card-title>
       <v-card-text>
         <v-select
           v-bind:items="teamList"
