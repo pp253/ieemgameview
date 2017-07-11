@@ -1,6 +1,7 @@
 import home from '../page/home/index.vue'
 import chooseTeam from '../page/choose/team/index.vue'
 import chooseJob from '../page/choose/job/index.vue'
+import chooseReady from '../page/choose/ready/index.vue'
 import roundFactory from '../page/round/factory/index.vue'
 import roundRetailer from '../page/round/retailer/index.vue'
 import roundWholesaler from '../page/round/wholesaler/index.vue'
@@ -17,6 +18,7 @@ const routes = [
   { path: '/choose', component: chooseTeam },
   { path: '/choose/team', component: chooseTeam },
   { path: '/choose/job', component: chooseJob },
+  { path: '/choose/ready', component: chooseReady },
   { path: '/round/factory', component: roundFactory },
   { path: '/round/retailer', component: roundRetailer },
   { path: '/round/wholesaler', component: roundWholesaler },

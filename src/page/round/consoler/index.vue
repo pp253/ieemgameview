@@ -8,7 +8,7 @@
         <v-toolbar dark class="cyan elevation-0">
           <v-toolbar-title>{{ title }}</v-toolbar-title>
           <v-spacer></v-spacer>
-          <span>{{ ToolbarInfo }}</span>
+          <span>{{ toolbarInfo }}</span>
         </v-toolbar>
         <v-tabs-bar
           slot="activators"
@@ -42,7 +42,19 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn primary>下一階段</v-btn>
+              <v-btn primary v-on:click.native="nextGameStage">下一階段</v-btn>
+            </v-card-actions>
+          </v-card>
+          <v-card>
+            <v-card-title>下一天</v-card-title>
+            <v-card-text>
+              <ul>
+                <li>確定list</li>
+              </ul>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn primary v-on:click.native="nextDay">下一天</v-btn>
             </v-card-actions>
           </v-card>
         </v-tabs-content>
@@ -65,6 +77,14 @@
         </v-tabs-content>
       </v-tabs>
     </main>
+    <v-snackbar
+      :timeout="6000"
+      secondary
+      v-model="snackbar"
+    >
+      {{ snackbarText }}
+      <v-btn dark flat @click.native="snackbar = false">知道了</v-btn>
+    </v-snackbar>
   </div>
 </template>
 
@@ -72,14 +92,15 @@
 import {router} from '../../../router'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
+import * as gameApi from '../../../lib/api/game'
 
 export default {
   data () {
     return {
       teamNumber: 4,
       title: readable.toReadableJob(api.nowUser.getJob()),
-      days: 1,
-      times: 22,
+      dayTime: api.nowUser.getDayTime(),
+      
       money: 300,
       tabs: [
         { index: 0, id: 'online-status', title: '連線狀況' },
@@ -87,6 +108,8 @@ export default {
         { index: 2, id: 'game-info', title: '遊戲資訊' }
       ],
       activeTab: null,
+      snackbar: false,
+      snackbarText: '',
       
       orderHistory: [],
       deliverHistory: [],
@@ -105,11 +128,37 @@ export default {
     teamList () {
       return readable.toReadableTeamList(this.teamNumber)
     },
-    ToolbarInfo () {
-      return readable.toReadableGameTime(this.days, this.times)
+    toolbarInfo () {
+      return readable.toReadableGameTime(this.dayTime)
     }
   },
   methods: {
+    nextGameStage () {
+      gameApi.nextGameStage(api.nowUser.getGameId())
+        .then((function (res) {
+          let data = res.data
+          let gameId = data.gameId
+          let stage = data.stage
+          this.snackbarText = `GameId='${gameId}' Stage has been set to ${stage}`
+          this.snackbar = true
+        }).bind(this))
+        .catch(function (err) {
+          console.error(err)
+        })
+    },
+    nextDay () {
+      gameApi.nextDay(api.nowUser.getGameId())
+        .then((function (res) {
+          let data = res.data
+          let gameId = data.gameId
+          let day = data.day
+          this.snackbarText = `GameId='${gameId}' Stage has been set to day ${day}`
+          this.snackbar = true
+        }).bind(this))
+        .catch(function (err) {
+          console.error(err)
+        })
+    }
   }
 }
 </script>

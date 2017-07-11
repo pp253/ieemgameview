@@ -3,7 +3,7 @@
     <v-toolbar class="green">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="white--text">{{ ToolbarInfo }}</span>
+      <span class="white--text">{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
       <v-layout row class="bg-box">
@@ -66,7 +66,7 @@ import * as api from '../../../lib/api'
 export default {
   data () {
     return {
-      title: readable.toReadableTeam(api.nowUser.getTeam()) + " " + readable.toReadableJob(api.nowUser.getJob()),
+      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),
       days: 1,
       times: 22,
       money: 300,
@@ -76,6 +76,8 @@ export default {
         { index: 2, id: 'deliver-history', title: '運送紀錄', content: 'something3...' }
       ],
       activeTab: null,
+      dayTime: api.nowUser.getDayTime(),
+      account: api.nowUser.getAccount(),
       
       orderHistory: [],
       deliverHistory: [],
@@ -91,9 +93,9 @@ export default {
         return readable.readableJobList()
       }
     },
-    ToolbarInfo: function () {
-      return readable.toReadableGameTime(this.days, this.times)
-        + ' ' + readable.toReadableDollar(this.money)
+    toolbarInfo: function () {
+      return readable.toReadableGameTime(this.dayTime)
+        + ' ' + readable.toReadableDollar(this.account.balance)
     }
   },
   methods: {

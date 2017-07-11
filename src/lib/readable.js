@@ -6,16 +6,23 @@ export function toReadableDay (day) {
 }
 
 export function toReadableTime (time) {
-  var s = time % 60
-  var m = (time - s) / 60
-  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s
+  if (time === constant.UNKNOWN_TIME) {
+    return constant.READABLE_GAME_WORK.OFF_WORK
+  }
+  let t = parseInt(time / 1000)
+  let s = t % 60
+  let m = (t - s) / 60
+  return constant.READABLE_GAME_WORK.WORKING + ' ' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s
 }
 
-export function toReadableGameTime (day, time) {
-  return toReadableDay(day) + ' ' + toReadableTime(time)
+export function toReadableGameTime (dayTime) {
+  return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time)
 }
 
 export function toReadableTeam (team) {
+  if (team === constant.TEAMS.STAFF) {
+    return constant.READABLE_TEAMS.STAFF
+  }
   return '第' + team + '組'
 }
 

@@ -3,7 +3,7 @@
     <v-toolbar class="green">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="white--text">{{ ToolbarInfo }}</span>
+      <span class="white--text">{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
       <v-layout row class="bg-box">
@@ -100,7 +100,7 @@ export default {
         return readable.readableJobList()
       }
     },
-    ToolbarInfo: function () {
+    toolbarInfo: function () {
       return readable.toReadableGameTime(this.days, this.times)
         + ' ' + readable.toReadableDollar(this.money)
     }

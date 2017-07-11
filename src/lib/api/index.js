@@ -1,4 +1,6 @@
 import * as constant from '../constant'
+import * as gameApi from './game'
+import * as accountApi from './account'
 
 export const Products = {
   unknown: '未知',
@@ -38,23 +40,92 @@ export function isStaffJob (job) {
   return Object.keys(constant.STAFF_JOBS).indexOf(job) !== -1
 }
 
-export class Position {
-  constructor (gameid = constant.GAMES.UNKNOWN,
-               team = constant.TEAMS.UNKNOWN,
-               job = constant.JOBS.UNKNOWN) {
-    this.gameid = gameid
-    this.team = team
-    this.job = job
+export class User {
+  constructor () {
+    this.gameId = null
+    this.teamIndex = null
+    this.job = null
+    this.gameConfig = null
+    this.stage = constant.GAME_STAGE.UNKNOWN
+    this.day = 0
+    this.dayStartTime = -1
+    this.time = -1
+    
+    // these are made for auto-updating time
+    this.dayTime = {
+      day: 0,
+      time: -1,
+      isWorking: false
+    }
+    this.account = {
+      balance: 0
+    }
+
+    this.timer = setInterval(this._update.bind(this), 1000)
+
     return this
   }
 
-  setGame (gameid) {
-    this.gameid = gameid
+  _update () {
+    switch (this.getGameStage()) {
+      case constant.GAME_STAGE.UNKNOWN:
+      case constant.GAME_STAGE.PREPARE:
+      case constant.GAME_STAGE.READY:
+        // update game stage
+        if (this.getGameId()) {
+          gameApi.getGameStage(this.getGameId())
+            .then((function (res) {
+              let stage = res.data.stage
+              if (stage === constant.GAME_STAGE.START) {
+                this.stage = stage
+                this.updateTime()
+              }
+            }).bind(this))
+            .catch(function (err) {
+              console.error(err)
+            })
+        }
+        break
+
+      case constant.GAME_STAGE.START:
+        // update time
+        if (this.isOffWork() || (this.getTime() > this.getGameConfig().dayLong * 1000)) {
+          this.dayStartTime = constant.UNKNOWN_TIME
+          this.updateTime()
+          if (this.day === this.getGameConfig().days) {
+            this.stage = constant.GAME_STAGE.FINAL
+          }
+        }
+        this.dayTime.day = this.getDay()
+        this.dayTime.time = this.getTime()
+        this.dayTime.isWorking = this.isWorking()
+        console.log()
+
+        // update account
+        if (!this.isStaffTeam()) {
+          this.updateAccount()
+        }
+        break
+
+      case constant.GAME_STAGE.FINAL:
+        break
+        
+      case constant.GAME_STAGE.END:
+        break
+    }
+  }
+
+  setGameId (gameId) {
+    this.gameId = gameId
     return this
+  }
+
+  setGameConfig (config) {
+    this.gameConfig = config
   }
 
   setTeam (team) {
-    this.team = team
+    this.teamIndex = team
     return this
   }
 
@@ -63,12 +134,20 @@ export class Position {
     return this
   }
 
-  getGame () {
-    return this.gameid
+  getGameId () {
+    return this.gameId
+  }
+
+  getGameConfig () {
+    return this.gameConfig
+  }
+
+  getTeamNumber () {
+    return this.getGameConfig().teamNumber
   }
 
   getTeam () {
-    return this.team
+    return this.teamIndex
   }
 
   getJob () {
@@ -76,50 +155,60 @@ export class Position {
   }
 
   isStaffTeam () {
-    return isStaffTeam(this.team)
-  }
-}
-
-export class User {
-  constructor () {
-    this.position = new Position()
-    this.daytime = new constant.TimeType(3, 44)
-    return this
+    return isStaffTeam(this.getTeam())
   }
 
-  setGame (gameid) {
-    this.position.setGame(gameid)
-    return this
+  getAccount () {
+    return this.account
   }
 
-  setTeam (team) {
-    this.position.setTeam(team)
-    return this
+  updateAccount () {
+    accountApi.nextGameStage(this.getGameId(), this.getTeam())
+      .then((function (res) {
+        let data = res.data
+        this.getAccount().balance = data.balance
+      }).bind(this))
   }
 
-  setJob (job) {
-    this.position.setJob(job)
-    return this
+  getGameStage () {
+    return this.stage
   }
 
-  getGame () {
-    return this.position.getGame()
+  getDayStartTime () {
+    return this.dayStartTime
   }
 
-  getTeam () {
-    return this.position.getTeam()
+  isWorking () {
+    return this.getDayStartTime() !== constant.UNKNOWN_TIME
   }
 
-  getJob () {
-    return this.position.getJob()
+  isOffWork () {
+    return (this.getGameStage() === constant.GAME_STAGE.START) && !this.isWorking()
   }
 
-  isStaffTeam () {
-    return this.position.isStaffTeam()
+  getDay () {
+    return this.day
+  }
+
+  getTime () {
+    if (this.getDayStartTime() === constant.UNKNOWN_TIME) {
+      return constant.UNKNOWN_TIME
+    } else {
+      return Date.now() - this.getDayStartTime()
+    }
   }
 
   getDayTime () {
-    return this.daytime
+    return this.dayTime
+  }
+
+  updateTime () {
+    gameApi.getGameIdTime(this.getGameId())
+      .then((function (res) {
+        let data = res.data
+        this.day = data.day
+        this.dayStartTime = data.dayStartTime
+      }).bind(this))
   }
 }
 

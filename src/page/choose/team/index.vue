@@ -32,7 +32,7 @@ export default {
   data () {
     return {
       stepCount: 0,
-      teamNumber: 4
+      teamNumber: api.nowUser.getTeamNumber()
     }
   },
   computed: {

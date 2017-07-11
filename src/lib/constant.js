@@ -1,4 +1,4 @@
-
+export const UNKNOWN_TIME = -1
 
 export const ZERO_DAYTIME = {
   DAY: -1,
@@ -6,32 +6,58 @@ export const ZERO_DAYTIME = {
 }
 
 export const GAMES = {
-  UNKNOWN: -1
+  UNKNOWN: 'UNKNOWN'
+}
+
+export const GAME_STAGE = {
+  UNKNOWN: 'UNKNOWN',
+  // PREPARE STAGE: 開放登記進入遊戲
+  PREPARE: 'PREPARE',
+  // READY STAGE: 人員不可再變動
+  READY: 'READY',
+  // START STAGE: 遊戲進行中
+  START: 'START',
+  // FINAL STAGE: 進行結算
+  FINAL: 'FINAL',
+  // END STAGE: 遊戲封存，不可再更動，但可以讀取資料
+  END: 'END'
+}
+
+export const GAME_WORK = {
+  UNKNOWN: 'UNKNOWN',
+  WORKING: 'WORKING',
+  OFF_WORK: 'OFF_WORK'
+}
+
+export const READABLE_GAME_WORK = {
+  UNKNOWN: '未知階段',
+  WORKING: '上班',
+  OFF_WORK: '下班'
 }
 
 export const READABLE_GAMES = {
-  [GAMES.UNKNOWN]: '未知遊戲'
+  UNKNOWN: '未知遊戲'
 }
 
 export const TEAMS = {
-  UNKNOWN: -1,
+  UNKNOWN: 'UNKNOWN',
   STAFF: 0
 }
 
 export const READABLE_TEAMS = {
-  [TEAMS.UNKNOWN]: '未知組別',
-  [TEAMS.STAFF]: '工作人員'
+  UNKNOWN: '未知組別',
+  STAFF: '工作人員'
 }
 
 export const PRODUCTS = {
-  UNKNOWN: 0,
-  CAR: 1,
-  WHEEL: 2,
-  BODY: 3,
-  ENGINE: 4,
-  WAREHOUSE: 5,
-  WAGE: 6,
-  TRANSPORT: 7
+  UNKNOWN: 'UNKNOWN',
+  CAR: 'CAR',
+  WHEEL: 'WHEEL',
+  BODY: 'BODY',
+  ENGINE: 'ENGINE',
+  WAREHOUSE: 'WAREHOUSE',
+  WAGE: 'WAGE',
+  TRANSPORT: 'TRANSPORT'
 }
 
 export const READABLE_PRODUCTS = {
@@ -46,21 +72,21 @@ export const READABLE_PRODUCTS = {
 }
 
 export const JOBS = {
-  UNKNOWN: 0,
-  FACTORY: 1,
-  WHOLESALER: 2,
-  RETAILER: 3
+  UNKNOWN: 'UNKNOWN',
+  FACTORY: 'FACTORY',
+  WHOLESALER: 'WHOLESALER',
+  RETAILER: 'RETAILER'
 }
 
 export const STAFF_JOBS = {
-  UNKNOWN_STAFF: 4,
-  GUERRILLA: 5,
-  KEEPER: 6,
-  EXCHANGER: 7,
-  TRANSPORTER: 8,
-  MARKET: 9,
-  CONFIRMER: 10,
-  CONSOLER: 11
+  UNKNOWN_STAFF: 'UNKNOWN_STAFF',
+  GUERRILLA: 'GUERRILLA',
+  KEEPER: 'KEEPER',
+  EXCHANGER: 'EXCHANGER',
+  TRANSPORTER: 'TRANSPORTER',
+  MARKET: 'MARKET',
+  CONFIRMER: 'CONFIRMER',
+  CONSOLER: 'CONSOLER'
 }
 
 export const READABLE_JOBS = {
