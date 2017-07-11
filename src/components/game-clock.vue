@@ -2,7 +2,7 @@
   <div class="game-clock">
     <v-card>
       <v-card-text>
-        <span class="more-info">{{ readableDay }} {{ readableIsWorking }}</span><br>
+        <span class="more-info">{{ readableDay }}</span><br>
         <span class="time">{{ readableTime }}</span>
       </v-card-text>
     </v-card>
@@ -10,21 +10,21 @@
 </template>
 
 <script>
+import * as api from '../lib/api'
 import * as readable from '../lib/readable'
 
 export default {
-  props: [
-    'game-time'
-  ],
+  data () {
+    return {
+      dayTime: api.nowUser.getDayTime()
+    }
+  },
   computed: {
     readableTime: function () {
-      return readable.toReadableTime(this.gameTime.getTime())
+      return readable.toReadableTime(this.dayTime.time)
     },
     readableDay: function () {
-      return readable.toReadableDay(this.gameTime.getDay())
-    },
-    readableIsWorking: function () {
-      return this.gameTime.isWorking() ? '上班' : '下班'
+      return readable.toReadableDay(this.dayTime.day)
     }
   }
 }

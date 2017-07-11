@@ -1,6 +1,9 @@
 import * as constant from '../constant'
 import * as gameApi from './game'
 import * as accountApi from './account'
+import * as deliverApi from './deliver'
+import * as orderApi from './order'
+import * as storageApi from './storage'
 
 export const Products = {
   unknown: '未知',
@@ -57,13 +60,37 @@ export class User {
       time: -1,
       isWorking: false
     }
-    this.account = {
-      balance: 0
+
+    this.state = {
+      dayTime: {
+        day: 0,
+        time: -1,
+        isWorking: false
+      },
+      account: {
+        balance: 0
+      },
+      storage: [],
+      receivedOrder: [],
+      orderHistory: [],
+      deliverHistory: []
     }
 
     this.timer = setInterval(this._update.bind(this), 1000)
 
     return this
+  }
+
+  getState () {
+    return this.state
+  }
+
+  getAccount () {
+    return this.getState().account
+  }
+
+  getDayTime () {
+    return this.getState().dayTime
   }
 
   _update () {
@@ -96,14 +123,34 @@ export class User {
             this.stage = constant.GAME_STAGE.FINAL
           }
         }
-        this.dayTime.day = this.getDay()
-        this.dayTime.time = this.getTime()
-        this.dayTime.isWorking = this.isWorking()
+        this.getState().dayTime.day = this.getDay()
+        this.getState().dayTime.time = this.getTime()
+        this.getState().dayTime.isWorking = this.isWorking()
         console.log()
 
-        // update account
+        // update state
         if (!this.isStaffTeam()) {
           this.updateAccount()
+          this.updateStorage()
+
+          switch (this.getJob()) {
+            case constant.JOBS.FACTORY:
+              this.updateDeliverHistory()
+              this.updateReceivedOrder()
+              break
+
+            case constant.JOBS.WHOLESALER:
+              this.updateDeliverHistory()
+              this.updateReceivedOrder()
+              this.updateOrderHistory()
+              break
+
+            case constant.JOBS.RETAILER:
+              // this.updateDeliverHistory()
+              this.updateReceivedOrder()
+              this.updateOrderHistory()
+              break
+          }
         }
         break
 
@@ -158,18 +205,6 @@ export class User {
     return isStaffTeam(this.getTeam())
   }
 
-  getAccount () {
-    return this.account
-  }
-
-  updateAccount () {
-    accountApi.nextGameStage(this.getGameId(), this.getTeam())
-      .then((function (res) {
-        let data = res.data
-        this.getAccount().balance = data.balance
-      }).bind(this))
-  }
-
   getGameStage () {
     return this.stage
   }
@@ -198,16 +233,64 @@ export class User {
     }
   }
 
-  getDayTime () {
-    return this.dayTime
-  }
-
   updateTime () {
     gameApi.getGameIdTime(this.getGameId())
       .then((function (res) {
         let data = res.data
         this.day = data.day
         this.dayStartTime = data.dayStartTime
+      }).bind(this))
+  }
+
+  updateAccount () {
+    accountApi.nextGameStage(this.getGameId(), this.getTeam())
+      .then((function (res) {
+        let data = res.data
+        this.getAccount().balance = data.balance
+      }).bind(this))
+  }
+
+  updateStorage () {
+    storageApi.getStorage(this.getGameId(), this.getTeam(), this.getJob())
+      .then((function (res) {
+        this.state.storage.splice(0,this.state.storage.length)
+        let list = res.data.list
+        for (let key in list) {
+          this.state.storage.push(list[key])
+        }
+      }).bind(this))
+  }
+
+  updateReceivedOrder () {
+    orderApi.getReceived(this.getGameId(), this.getTeam(), this.getJob())
+      .then((function (res) {
+        this.state.receivedOrder.splice(0,this.state.receivedOrder.length)
+        let list = res.data.list
+        for (let key in list) {
+          this.state.receivedOrder.push(list[key])
+        }
+      }).bind(this))
+  }
+
+  updateOrderHistory () {
+    orderApi.getHistory(this.getGameId(), this.getTeam(), this.getJob())
+      .then((function (res) {
+        this.state.orderHistory.splice(0,this.state.orderHistory.length)
+        let list = res.data.list
+        for (let key in list) {
+          this.state.orderHistory.push(list[key])
+        }
+      }).bind(this))
+  }
+
+  updateDeliverHistory () {
+    deliverApi.getHistory(this.getGameId(), this.getTeam(), this.getJob())
+      .then((function (res) {
+        this.state.deliverHistory.splice(0,this.state.deliverHistory.length)
+        let list = res.data.list
+        for (let key in list) {
+          this.state.deliverHistory.push(list[key])
+        }
       }).bind(this))
   }
 }

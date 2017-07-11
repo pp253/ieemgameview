@@ -22,6 +22,7 @@
           v-model="selectedTeam"
           label="選擇組別"
           single-line
+          item-value="index"
           bottom
         ></v-select>
         <v-select
@@ -29,22 +30,25 @@
           v-model="selectedJob"
           label="選擇工作"
           single-line
+          item-value="index"
           bottom
         ></v-select>
-        <v-text-field
+        <div
           v-for="product in productList"
-          :id="product.index"
-          :key="product.index"
-          :name="product.index.toLowerCase()"
-          :label="product.text"
-          type="number"
-          suffix="個"
-        ></v-text-field>
+        >
+          <v-text-field
+            :key="product.index"
+            v-model.number="amount[product.index]"
+            :label="product.text"
+            type="number"
+            suffix="個"
+          ></v-text-field>
+        </div>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn class="blue--text darken-1" flat="flat" @click.native="storageRegisterDialog = false">取消</v-btn>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="storageRegisterDialog = false">登記</v-btn>
+        <v-btn class="blue--text darken-1" flat="flat" @click.native="register">登記</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -53,6 +57,8 @@
 <script>
 import * as readable from '../lib/readable'
 import * as constant from '../lib/constant'
+import * as api from '../lib/api'
+import * as storageApi from '../lib/api/storage'
 
 export default {
   props: {
@@ -64,13 +70,19 @@ export default {
       }
     }
   },
-  data: function () {
+  data () {
     return {
       teamNumber: 4,
       storageRegisterDialog: false,
       jobList: readable.readableJobList(),
       selectedJob: null,
-      selectedTeam: null
+      selectedTeam: null,
+      amount: {
+        'CAR': 0,
+        'WHEEL': 0,
+        'BODY': 0,
+        'ENGINE': 0
+      }
     }
   },
   computed: {
@@ -81,22 +93,38 @@ export default {
       if (!this.selectedJob) {
         return []
       }
+
+      let list = []
       if (this.selectedJob.index === 'FACTORY') {
-        return readable.readableProductList()
+        list = readable.readableProductList()
       } else {
-        return [{
+        list = [{
           index: 'CAR',
           text: constant.READABLE_PRODUCTS.CAR
         }]
       }
+      return list
     },
     btnClass () {
       return this.secondary ? 'floating-right-bottom-secondary' : 'floating-right-bottom'
     }
   },
   methods: {
-    order: function (amount) {
+    register () {
+      this.storageRegisterDialog = false
+      let user = api.nowUser
 
+      console.log(this.amountCar)
+      console.log(this.amount)
+      for (let key in this.amount) {
+      console.log(this.amount[key])
+        if (!this.amount[key]) {
+          continue
+        }
+        storageApi.setStorage(user.getGameId(), this.selectedTeam, this.selectedJob, key, this.amount[key])
+          .then(function (res) {console.log(res)}).catch((err)=>{console.error(err)})
+        this.amount[key] = 0
+      }
     }
   }
 }

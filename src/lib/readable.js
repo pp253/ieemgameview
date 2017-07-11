@@ -5,18 +5,18 @@ export function toReadableDay (day) {
   return '第' + day + '天'
 }
 
-export function toReadableTime (time) {
+export function toReadableTime (time, showWorking = true) {
   if (time === constant.UNKNOWN_TIME) {
     return constant.READABLE_GAME_WORK.OFF_WORK
   }
   let t = parseInt(time / 1000)
   let s = t % 60
   let m = (t - s) / 60
-  return constant.READABLE_GAME_WORK.WORKING + ' ' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s
+  return (showWorking ? constant.READABLE_GAME_WORK.WORKING + ' ' : '') + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s
 }
 
-export function toReadableGameTime (dayTime) {
-  return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time)
+export function toReadableGameTime (dayTime, showWorking = true) {
+  return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
 }
 
 export function toReadableTeam (team) {
@@ -88,26 +88,29 @@ export function toReadablePosition (position) {
 
 // list as StorageList
 export function toReadableStorageList (list) {
-  let readableList = []
-  list.forEach(function (item) {
-    let it = {
-      readableDayTime: toReadableGameTime(item.gameTime),
-      readableBuyer: toReadablePosition(item.buyer),
+  let result = []
+  for (let item of list) {
+    result.push({
       readableProduct: toReadableProduct(item.product),
-      amount: item.amount,
-      delivered: item.delivered
-    }
-    readableList.push(it)
-  })
-  return readableList
+      amount: item.amount
+    })
+  }
+  return result
 }
 
 export function toReadableProduct (product) {
-  return constant.PRODUCTS[product]
+  return constant.READABLE_PRODUCTS[product]
 }
 
 export function toReadableDeliverList (list) {
-  return []
+  let result = []
+  for (let item of list) {
+    result.push({
+      readableGameTime: toReadableGameTime(item),
+      amount: item.amount
+    })
+  }
+  return result
 }
 
 export function readableProductList () {
@@ -127,16 +130,15 @@ export function readableProductList () {
 }
 
 export function toReadableOrderList (list) {
-  let readableList = []
-  list.forEach(function (item) {
-    let it = {
-      readableDayTime: toReadableGameTime(item.gameTime),
-      readableBuyer: toReadablePosition(item.buyer),
-      readableProduct: toReadableProduct(item.product),
-      amount: item.amount,
-      delivered: item.delivered
-    }
-    readableList.push(it)
-  })
-  return readableList
+  let result = []
+  let realAmount = 0
+  for (let item of list) {
+    realAmount = parseInt(item.amount) - realAmount
+    result.push({
+      readableGameTime: toReadableGameTime(item, false),
+      amount: realAmount,
+      delivered: 0
+    })
+  }
+  return result
 }

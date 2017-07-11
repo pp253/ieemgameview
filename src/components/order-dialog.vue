@@ -13,6 +13,7 @@
       <v-card-title>你想要訂購多少呢？</v-card-title>
       <v-card-text>
         <v-text-field
+          v-model="amount"
           name="order-number"
           label="訂購數量"
           id="order-number"
@@ -22,7 +23,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn class="blue--text darken-1" flat="flat" @click.native="orderDialog = false">取消</v-btn>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="orderDialog = false">訂購</v-btn>
+        <v-btn class="blue--text darken-1" flat="flat" @click.native="order">訂購</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -30,14 +31,17 @@
 
 <script>
 import * as readable from '../lib/readable'
+import * as api from '../lib/api'
+import * as orderApi from '../lib/api/order'
 
 export default {
   props: [
     'position',
     'secondary'
   ],
-  data: function () {
+  data () {
     return {
+      amount: null,
       orderDialog: false
     }
   },
@@ -47,8 +51,10 @@ export default {
     }
   },
   methods: {
-    order: function (amount) {
-
+    order () {
+      this.orderDialog = false
+      let user = api.nowUser
+      orderApi.setOrder(user.getGameId(), user.getTeam(), user.getJob(), 'CAR', this.amount)
     }
   }
 }

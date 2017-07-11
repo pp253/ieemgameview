@@ -7,6 +7,7 @@
     <template slot="items" scope="props">
       <td>{{ props.item.readableGameTime }}</td>
       <td class="text-xs-right">{{ props.item.amount }}</td>
+      <td class="text-xs-right">{{ props.item.delivered }}</td>
     </template>
   </v-data-table>
 </template>
@@ -22,12 +23,13 @@ export default {
     return {
       header: [
         {text: '時間', align: 'left', value: 'readableGameTime'},
-        {text: '數量', value: 'amount'}
+        {text: '數量', value: 'amount'},
+        {text: '已送達', value: 'delivered'}
       ]
     }
   },
   computed: {
-    readableOrderList: function () {
+    readableOrderList () {
       if (this.list) {
         return readable.toReadableOrderList(this.list)
       } else {
