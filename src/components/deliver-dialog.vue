@@ -58,10 +58,15 @@ import * as api from '../lib/api'
 import * as deliverApi from '../lib/api/deliver'
 
 export default {
-  props: [
-    'position',
-    'secondary'
-  ],
+  props: {
+    'announce': Function,
+    'secondary': {
+      type: Boolean,
+      default () {
+        return false
+      }
+    }
+  },
   data: function () {
     return {
       teamNumber: 4,
@@ -90,7 +95,15 @@ export default {
     deliver: function () {
       this.deliverDialog = false
       deliverApi.setDeliver(api.nowUser.getGameId(), this.selectedTeam, this.selectedJob, 'CAR', this.amount)
-        .then((res) => console.log(res)).catch((err) => console.error(err))
+        .then((function (res) {
+          let data = res.data
+          this.announce(`成功運輸第${data.teamIndex}組${data.job}的${data.amount}臺車`)
+        }).bind(this))
+        .catch((function (err) {
+          console.log(err)
+          let data = err.data
+          this.announce(data.readableMsg || data.msg)
+        }).bind(this))
     }
   }
 }

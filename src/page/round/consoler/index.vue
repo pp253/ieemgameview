@@ -90,6 +90,7 @@
 
 <script>
 import {router} from '../../../router'
+import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 import * as gameApi from '../../../lib/api/game'
@@ -99,9 +100,7 @@ export default {
     return {
       teamNumber: 4,
       title: readable.toReadableJob(api.nowUser.getJob()),
-      dayTime: api.nowUser.getDayTime(),
-      
-      money: 300,
+      state: api.nowUser.getState(),
       tabs: [
         { index: 0, id: 'online-status', title: '連線狀況' },
         { index: 1, id: 'dynamic-log', title: '即時動態' },
@@ -110,26 +109,11 @@ export default {
       activeTab: null,
       snackbar: false,
       snackbarText: '',
-      
-      orderHistory: [],
-      deliverHistory: [],
-      receivedOrder: [],
-      storage: []
     }
   },
   computed: {
-    jobList () {
-      if (api.nowUser.getTeam() === api.Team.staff) {
-        return readable.readableStaffJobList()
-      } else {
-        return readable.readableJobList()
-      }
-    },
-    teamList () {
-      return readable.toReadableTeamList(this.teamNumber)
-    },
     toolbarInfo () {
-      return readable.toReadableGameTime(this.dayTime)
+      return readable.toReadableGameTime(this.state)
     }
   },
   methods: {
@@ -139,8 +123,7 @@ export default {
           let data = res.data
           let gameId = data.gameId
           let stage = data.stage
-          this.snackbarText = `GameId='${gameId}' Stage has been set to ${stage}`
-          this.snackbar = true
+          this.announce(`GameId='${gameId}' Stage has been set to ${stage}`)
         }).bind(this))
         .catch(function (err) {
           console.error(err)
@@ -152,12 +135,15 @@ export default {
           let data = res.data
           let gameId = data.gameId
           let day = data.day
-          this.snackbarText = `GameId='${gameId}' Stage has been set to day ${day}`
-          this.snackbar = true
+          this.announce(`GameId='${gameId}' Stage has been set to day ${day}`)
         }).bind(this))
         .catch(function (err) {
           console.error(err)
         })
+    },
+    announce (msg) {
+      this.snackbarText = msg
+      this.snackbar = true
     }
   }
 }

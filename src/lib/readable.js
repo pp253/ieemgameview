@@ -1,4 +1,3 @@
-import * as api from './api'
 import * as constant from './constant'
 
 export function toReadableDay (day) {
@@ -104,10 +103,12 @@ export function toReadableProduct (product) {
 
 export function toReadableDeliverList (list) {
   let result = []
+  let realAmount = 0
   for (let item of list) {
+    realAmount = parseInt(item.amount) - realAmount
     result.push({
       readableGameTime: toReadableGameTime(item),
-      amount: item.amount
+      amount: realAmount
     })
   }
   return result

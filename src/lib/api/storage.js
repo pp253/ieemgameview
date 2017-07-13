@@ -8,7 +8,7 @@ export function setStorage (gameId, teamIndex, job, product, amount) {
       amount: amount
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -27,7 +27,7 @@ export function getStorage (gameId, teamIndex, job) {
       job: job
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)

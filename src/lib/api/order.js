@@ -6,7 +6,7 @@ export function getHistory (gameId, teamIndex, job) {
       job: job
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -25,7 +25,7 @@ export function getReceived (gameId, teamIndex, job) {
       job: job
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -46,7 +46,7 @@ export function setOrder (gameId, teamIndex, job, product, amount) {
       amount: amount
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)

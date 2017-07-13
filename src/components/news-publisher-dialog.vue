@@ -48,7 +48,7 @@ import * as constant from '../lib/constant'
 
 export default {
   props: {
-    'position': Object,
+    'announce': Function,
     'secondary': {
       type: Boolean,
       default () {

@@ -62,7 +62,7 @@ import * as storageApi from '../lib/api/storage'
 
 export default {
   props: {
-    'position': Object,
+    'announce': Function,
     'secondary': {
       type: Boolean,
       default () {
@@ -95,7 +95,7 @@ export default {
       }
 
       let list = []
-      if (this.selectedJob.index === 'FACTORY') {
+      if (this.selectedJob === 'FACTORY') {
         list = readable.readableProductList()
       } else {
         list = [{
@@ -122,7 +122,14 @@ export default {
           continue
         }
         storageApi.setStorage(user.getGameId(), this.selectedTeam, this.selectedJob, key, this.amount[key])
-          .then(function (res) {console.log(res)}).catch((err)=>{console.error(err)})
+          .then((function (res) {
+            let data = res.data
+            this.announce(`成功登記第${data.teamIndex}組${data.job}的${data.product}庫存`)
+          }).bind(this))
+          .catch((function (err) {
+            let data = err.data
+            this.announce(data.readableMsg || data.msg)
+          }).bind(this))
         this.amount[key] = 0
       }
     }

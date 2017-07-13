@@ -20,11 +20,13 @@
         </v-list>
       </v-layout>
     </main>
+    {{ intoBelong }}
   </div>
 </template>
 
 <script>
 import {router} from '../../../router'
+import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
@@ -32,12 +34,21 @@ export default {
   data () {
     return {
       stepCount: 0,
-      teamNumber: api.nowUser.getTeamNumber()
+      teamNumber: api.nowUser.getTeamNumber(),
+      state: api.nowUser.getState()
     }
   },
   computed: {
-    itemTeam: function () {
+    itemTeam () {
       return readable.toReadableTeamListWithStaff(this.teamNumber)
+    },
+    intoBelong () {
+      switch (this.state.stage) {
+        case constant.GAME_STAGE.END:
+          router.push('/end')
+          break
+      }
+      return ''
     }
   },
   methods: {

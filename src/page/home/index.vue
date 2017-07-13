@@ -45,6 +45,7 @@ export default {
   },
   created: function () {
     // load gameList and use promise to change the gameList
+    api.nowUser.resetState()
     enterApi.getGameIdList()
       .then((function (res) {
         for (let game of res.data.gameList) {

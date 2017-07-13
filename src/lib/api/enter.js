@@ -2,7 +2,7 @@ export function getGameIdList () {
   return new Promise(function (resolve, reject) {
     axios.post('/api/enter/get_game_list')
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -19,7 +19,7 @@ export function newGame (gameConfig) {
       gameConfig: gameConfig
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)

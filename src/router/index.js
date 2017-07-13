@@ -10,6 +10,7 @@ import roundExchanger from '../page/round/exchanger/index.vue'
 import roundTransporter from '../page/round/transporter/index.vue'
 import roundMarket from '../page/round/market/index.vue'
 import roundConsoler from '../page/round/consoler/index.vue'
+import end from '../page/end/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
@@ -27,7 +28,8 @@ const routes = [
   { path: '/round/exchanger', component: roundExchanger },
   { path: '/round/transporter', component: roundTransporter },
   { path: '/round/market', component: roundMarket },
-  { path: '/round/consoler', component: roundConsoler }/*,
+  { path: '/round/consoler', component: roundConsoler },
+  { path: '/end', component: end }/*,
   { path: '/gameend', component: gameend },
   { path: '/round/exchange', component: roundExchange },
   { path: '/round/market', component: roundMarket },

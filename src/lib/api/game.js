@@ -4,7 +4,7 @@ export function nextGameStage (gameId) {
       gameId: gameId
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -21,7 +21,7 @@ export function getGameStage (gameId) {
       gameId: gameId
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -38,7 +38,7 @@ export function getGameIdTime (gameId) {
       gameId: gameId
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)
@@ -55,7 +55,7 @@ export function nextDay (gameId) {
       gameId: gameId
     })
       .then(function (res) {
-        if (res.error) {
+        if (res.data.err) {
           reject(res)
         }
         resolve(res)

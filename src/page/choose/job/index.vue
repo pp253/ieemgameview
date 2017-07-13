@@ -35,11 +35,13 @@
         </v-card>
       </v-dialog>
     </main>
+    {{ intoBelong }}
   </div>
 </template>
 
 <script>
 import {router} from '../../../router'
+import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
@@ -47,7 +49,8 @@ export default {
   data () {
     return {
       dialog: false,
-      job: ''
+      job: '',
+      state: api.nowUser.getState()
     }
   },
   computed: {
@@ -55,7 +58,7 @@ export default {
       return !api.nowUser.isStaffTeam()
     },
     itemJob () {
-      if (api.nowUser.getTeam() === api.Team.staff) {
+      if (api.nowUser.getTeam() === constant.TEAMS.STAFF) {
         return readable.readableStaffJobList()
       } else {
         return readable.readableJobList()
@@ -66,6 +69,14 @@ export default {
     },
     readableJob () {
       return readable.toReadableJob(this.job)
+    },
+    intoBelong () {
+      switch (this.state.stage) {
+        case constant.GAME_STAGE.END:
+          router.push('/end')
+          break
+      }
+      return ''
     }
   },
   methods: {

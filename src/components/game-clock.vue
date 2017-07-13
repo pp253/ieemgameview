@@ -16,15 +16,15 @@ import * as readable from '../lib/readable'
 export default {
   data () {
     return {
-      dayTime: api.nowUser.getDayTime()
+      state: api.nowUser.getDayTime()
     }
   },
   computed: {
     readableTime: function () {
-      return readable.toReadableTime(this.dayTime.time)
+      return readable.toReadableTime(this.state.time)
     },
     readableDay: function () {
-      return readable.toReadableDay(this.dayTime.day)
+      return readable.toReadableDay(this.state.day)
     }
   }
 }

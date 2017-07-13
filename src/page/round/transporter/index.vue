@@ -4,11 +4,19 @@
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
     </v-toolbar>
     <main>
-      <game-clock v-bind:game-time="gameTime"></game-clock>
+      <game-clock :day="state.day" :time="state.time"></game-clock>
       <team-storage-list></team-storage-list>
-      <storage-register-dialog :secondary="secondary"></storage-register-dialog>
-      <deliver-dialog></deliver-dialog>
+      <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
+    <v-snackbar
+      :timeout="6000"
+      secondary
+      v-model="snackbar"
+    >
+      {{ snackbarText }}
+      <v-btn dark flat @click.native="snackbar = false">知道了</v-btn>
+    </v-snackbar>
+    {{ intoBelong }}
   </div>
 </template>
 
@@ -23,7 +31,25 @@ export default {
     return {
       secondary: true,
       title: readable.toReadableJob(api.nowUser.getJob()),
-      gameTime: api.nowUser.getDayTime()
+      state: api.nowUser.getState(),
+      snackbar: false,
+      snackbarText: ''
+    }
+  },
+  computed: {
+    intoBelong () {
+      switch (this.state.stage) {
+        case constant.GAME_STAGE.END:
+          router.push('/end')
+          break
+      }
+      return ''
+    }
+  },
+  methods: {
+    announce (msg) {
+      this.snackbarText = msg
+      this.snackbar = true
     }
   }
 }

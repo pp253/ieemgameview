@@ -4,12 +4,26 @@
       v-for="news in newsList"
       :key="news.id"
     >
-      <v-card-text>
+      <v-card-media
+        class="white--text"
+        height="200px"
+        :src="news.picture"
+      >
+        <v-container fill-height fluid>
+          <v-layout fill-height>
+            <v-flex xs12 align-end flexbox>
+              <span class="headline">{{ news.title }}</span>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card-media>
+      <v-card-title>
         <div>
-          <h5>{{ news.title }}</h5>
-          <p>{{ news.content }}</p>
+          <span class="grey--text">發布時間：第{{ news.day }}天</span><br>
+          <span class="grey--text">需求數量：{{ news.demanded }}臺車</span><br>
+          <span>{{ news.content }}</span>
         </div>
-      </v-card-text>
+      </v-card-title>
     </v-card>
   </div>
 </template>

@@ -35,10 +35,15 @@ import * as api from '../lib/api'
 import * as orderApi from '../lib/api/order'
 
 export default {
-  props: [
-    'position',
-    'secondary'
-  ],
+  props: {
+    'announce': Function,
+    'secondary': {
+      type: Boolean,
+      default () {
+        return false
+      }
+    }
+  },
   data () {
     return {
       amount: null,
@@ -55,6 +60,14 @@ export default {
       this.orderDialog = false
       let user = api.nowUser
       orderApi.setOrder(user.getGameId(), user.getTeam(), user.getJob(), 'CAR', this.amount)
+        .then((function (res) {
+          let data = res.data
+          this.announce(`成功訂購${data.amount}臺車`)
+        }).bind(this))
+        .catch((function (err) {
+          let data = err.data
+          this.announce(data.readableMsg || data.msg)
+        }).bind(this))
     }
   }
 }

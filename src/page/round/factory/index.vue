@@ -52,14 +52,21 @@
         </v-tabs>
       </v-layout>
     </main>
-
-    <!-- Order Dialog -->
-
+    <v-snackbar
+      :timeout="6000"
+      secondary
+      v-model="snackbar"
+    >
+      {{ snackbarText }}
+      <v-btn dark flat @click.native="snackbar = false">知道了</v-btn>
+    </v-snackbar>
+    {{ intoBelong }}
   </div>
 </template>
 
 <script>
 import {router} from '../../../router'
+import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
@@ -73,13 +80,29 @@ export default {
         { index: 2, id: 'deliver-history', title: '運送紀錄', content: 'something3...' }
       ],
       activeTab: null,
-      state: api.nowUser.getState()
+      state: api.nowUser.getState(),
+      snackbar: false,
+      snackbarText: ''
     }
   },
   computed: {
     toolbarInfo: function () {
-      return readable.toReadableGameTime(this.state.dayTime)
-        + ' ' + readable.toReadableDollar(this.state.account.balance)
+      return readable.toReadableGameTime(this.state)
+        + ' ' + readable.toReadableDollar(this.state.balance)
+    },
+    intoBelong () {
+      switch (this.state.stage) {
+        case constant.GAME_STAGE.END:
+          router.push('/end')
+          break
+      }
+      return ''
+    }
+  },
+  methods: {
+    announce (msg) {
+      this.snackbarText = msg
+      this.snackbar = true
     }
   }
 }

@@ -1,5 +1,6 @@
+import VueCharts from 'vue-chartjs'
 import {router} from './router'
-import * as components from './components'
+import './components'
 
 const mainFrame = new Vue({
   el: '#main-frame',
