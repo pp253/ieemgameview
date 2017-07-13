@@ -49,7 +49,7 @@ export default {
     enterApi.getGameIdList()
       .then((function (res) {
         for (let game of res.data.gameList) {
-          this.gameList.push({
+          this.gameList.unshift({
             index: game.gameId,
             text: game.gameConfig.title,
             describe: game.gameConfig.describe,

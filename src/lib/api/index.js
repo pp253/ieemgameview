@@ -112,6 +112,11 @@ export class User {
           this.getState().dayStartTime = parseInt(data.dayStartTime)
           console.log('Game Day has been set to', data.day)
         }
+        if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
+          this.dayStartTime = constant.UNKNOWN_TIME
+          if (this.day === this.getGameConfig().days) {
+          }
+        }
         this.getState().time = this.getTime()
         this.getState().isWorking = this.isWorking()
         
@@ -124,12 +129,9 @@ export class User {
           }
           
           // update storage
-          if (this.getState().storage.length !== data.storage.length) {
-            this.getState().storage.splice(0,this.getState().storage.length)
-            for (let key in data.storage) {
-              this.getState().storage.push(data.storage[key])
-            }
-            console.log('Storage has been set to', data.storage)
+          this.getState().storage.splice(0,this.getState().storage.length)
+          for (let key in data.storage) {
+            this.getState().storage.push(data.storage[key])
           }
 
           let updateDeliverHistoryFromRes = (deliverHistory) => {
@@ -251,7 +253,7 @@ export class User {
   }
 
   isWorking () {
-    return this.getDayStartTime() !== constant.UNKNOWN_TIME && this.getDayStartTime() > this.getGameConfig().dayLong * 1000
+    return (this.getGameStage() === constant.GAME_STAGE.START) && (this.getDayStartTime() !== constant.UNKNOWN_TIME)
   }
 
   isOffWork () {
@@ -263,8 +265,10 @@ export class User {
   }
 
   getTime () {
-    if (this.getDayStartTime() === constant.UNKNOWN_TIME) {
+    if (this.getGameStage() !== constant.GAME_STAGE.START) {
       return constant.UNKNOWN_TIME
+    } else if (this.getDayStartTime() === constant.UNKNOWN_TIME) {
+      return this.getConfig().dayLong * 1000
     } else {
       return Date.now() - this.getDayStartTime()
     }

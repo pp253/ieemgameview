@@ -2,9 +2,10 @@
   <div class="round">
     <v-toolbar class="green">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <game-clock :day="state.day" :time="state.time"></game-clock>
       <team-storage-list></team-storage-list>
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
@@ -37,6 +38,9 @@ export default {
     }
   },
   computed: {
+    toolbarInfo () {
+      return readable.toReadableGameTime(this.state)
+    },
     intoBelong () {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:

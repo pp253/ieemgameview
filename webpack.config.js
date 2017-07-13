@@ -1,6 +1,11 @@
 var path = require('path')
 var webpack = require('webpack')
 
+let pro = process.env.NODE_ENV === 'production'
+if (pro) {
+  console.log('production build!!')
+}
+
 module.exports = {
   entry: {
     app: ['./src/index.js']
@@ -8,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build.js'
+    filename: pro ? 'build.min.js' : 'build.js'
   },
   module: {
     loaders: [
@@ -42,11 +47,10 @@ module.exports = {
     historyApiFallback: true,
     noInfo: true
   },
-  devtool: '#eval-source-map'
+  devtool: '#source-map'
 }
-/*
+
 if (process.env.NODE_ENV === 'production') {
-  module.exports.devtool = '#source-map'
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
     new webpack.DefinePlugin({
@@ -61,4 +65,4 @@ if (process.env.NODE_ENV === 'production') {
     })
   ])
 }
-*/
+

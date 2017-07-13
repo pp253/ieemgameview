@@ -23,12 +23,17 @@ export function toReadableGameTime (dayTime, showWorking = true) {
     case constant.GAME_STAGE.PREPARE:
     case constant.GAME_STAGE.READY:
       return '尚未開始'
-    case constant.GAME_STAGE.START:
-      return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
+      break
     case constant.GAME_STAGE.FINAL:
       return '結算中'
+      break
     case constant.GAME_STAGE.END:
       return '已結束'
+      break
+    case constant.GAME_STAGE.START:
+    default:
+      return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
+      break
   }
 }
 

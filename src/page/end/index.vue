@@ -54,14 +54,7 @@
           :key="1"
           id="game-info"
         >
-          <v-card>
-            <v-card-title>資訊</v-card-title>
-            <v-card-text>
-              <ul>
-                <li>天數</li>
-              </ul>
-            </v-card-text>
-          </v-card>
+          <info-panel :game-config="gameConfig"></info-panel>
         </v-tabs-content>
       </v-tabs>
     </main>
@@ -103,7 +96,8 @@ export default {
           id: 'chart-storage',
           title: '倉儲'
         }
-      ]
+      ],
+      gameConfig: api.nowUser.getGameConfig()
     }
   },
   computed: {
