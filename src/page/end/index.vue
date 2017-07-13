@@ -35,7 +35,7 @@
           ></v-select>
           
           <div
-            v-for="(key, chart) in charts"
+            v-for="(chart, key) in charts"
             :key="key"
           >
             <h5>{{ chart.title }}</h5>
@@ -123,6 +123,9 @@ export default {
       return list.concat(readable.toReadableTeamList(api.nowUser.getTeamNumber()))
     },
     loadChart () {
+      if (this.selectedTeam === 0) {
+        return
+      }
       accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)
         .then((function (res) {
           let list = res.data.list
@@ -174,10 +177,14 @@ export default {
             for (let i = 0; i <= parseInt(dayLong / interval); i++) {
               let result = calculate(d, i * interval)
               netIncomeList.push(result[0])
-              netIncomeList.push(result[1])
+              grossProfitList.push(result[1])
+              // this.charts[0].data.datasets[0].data[k] = result[0]
+              // this.charts[0].data.datasets[1].data[k] = result[1]
               k++
             }
           }
+          this.charts[0].data.datasets[0].data = netIncomeList
+          this.charts[0].data.datasets[1].data = grossProfitList
           console.log(this.charts[0].data)
         }).bind(this))
         .catch((function (err) {
