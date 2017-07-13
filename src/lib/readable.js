@@ -1,11 +1,14 @@
 import * as constant from './constant'
 
 export function toReadableDay (day) {
+  if (day <= 0) {
+    return '已結束'
+  }
   return '第' + day + '天'
 }
 
 export function toReadableTime (time, showWorking = true) {
-  if (time === constant.UNKNOWN_TIME) {
+  if (time > 36000000 || time === constant.UNKNOWN_TIME) {
     return constant.READABLE_GAME_WORK.OFF_WORK
   }
   let t = parseInt(time / 1000)
@@ -15,7 +18,18 @@ export function toReadableTime (time, showWorking = true) {
 }
 
 export function toReadableGameTime (dayTime, showWorking = true) {
-  return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
+  switch (dayTime.stage) {
+    case constant.GAME_STAGE.UNKNOWN:
+    case constant.GAME_STAGE.PREPARE:
+    case constant.GAME_STAGE.READY:
+      return '尚未開始'
+    case constant.GAME_STAGE.START:
+      return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
+    case constant.GAME_STAGE.FINAL:
+      return '結算中'
+    case constant.GAME_STAGE.END:
+      return '已結束'
+  }
 }
 
 export function toReadableTeam (team) {

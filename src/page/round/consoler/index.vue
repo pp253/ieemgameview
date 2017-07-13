@@ -62,18 +62,7 @@
           :key="2"
           id="game-info"
         >
-          <v-card>
-            <v-card-title>資訊</v-card-title>
-            <v-card-text>
-              <ul>
-                <li>天數</li>
-              </ul>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn primary>變更</v-btn>
-            </v-card-actions>
-          </v-card>
+          <info-panel :game-config="gameConfig"></info-panel>
         </v-tabs-content>
       </v-tabs>
     </main>
@@ -98,7 +87,6 @@ import * as gameApi from '../../../lib/api/game'
 export default {
   data () {
     return {
-      teamNumber: 4,
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
       tabs: [
@@ -109,6 +97,7 @@ export default {
       activeTab: null,
       snackbar: false,
       snackbarText: '',
+      gameConfig: api.nowUser.getGameConfig()
     }
   },
   computed: {

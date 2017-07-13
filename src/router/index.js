@@ -11,11 +11,14 @@ import roundTransporter from '../page/round/transporter/index.vue'
 import roundMarket from '../page/round/market/index.vue'
 import roundConsoler from '../page/round/consoler/index.vue'
 import end from '../page/end/index.vue'
+import adminConstruct from '../page/admin/construct/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
   { path: '/', component: home },
   { path: '/home', component: home },
+  { path: '/admin', component: adminConstruct },
+  { path: '/admin/construct', component: adminConstruct },
   { path: '/choose', component: chooseTeam },
   { path: '/choose/team', component: chooseTeam },
   { path: '/choose/job', component: chooseJob },

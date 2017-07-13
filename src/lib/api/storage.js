@@ -38,4 +38,23 @@ export function getStorage (gameId, teamIndex, job) {
   })
 }
 
+export function getHistory (gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/storage/get_history', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
+    })
+      .then(function (res) {
+        if (res.data.err) {
+          reject(res)
+        }
+        resolve(res)
+      })
+      .catch(function (err) {
+        reject(err)
+      })
+  })
+}
+
 

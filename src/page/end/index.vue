@@ -1,11 +1,14 @@
 <template>
-  <div>
+  <div class="end">
     <main>
       <v-tabs
         v-model="activeTab"
         dark fixed centered
       >
         <v-toolbar dark class="cyan elevation-0">
+          <v-btn icon v-on:click.native="backToHome">
+            <v-icon>arrow_back</v-icon>
+          </v-btn>
           <v-toolbar-title>{{ title }}</v-toolbar-title>
         </v-toolbar>
         <v-tabs-bar
@@ -25,34 +28,27 @@
           :key="0"
           id="charts"
         >
-          <v-select
-            v-bind:items="itemTeam"
-            v-model="selectedTeam"
-            label="選擇小隊"
-            single-line
-            item-value="index"
-            bottom
-          ></v-select>
-          
-          <div
-            v-for="(chart, key) in charts"
-            :key="key"
-          >
-            <h5>{{ chart.title }}</h5>
-            <line-chart
-              v-if="chart.type == 'line'"
-              :chart-data="chart.data"
-              :option="chart.option"></line-chart>
-            <bar-chart
-              v-else-if="chart.type == 'bar'"
-              :chart-data="chart.data"
-              :option="chart.option"></bar-chart>
-          </div>
-
-          <h5>每日產量</h5>
-
-          <h5>累積產量</h5>
-
+          <v-card>
+            <v-card-text>
+              <v-select
+                v-bind:items="itemTeam"
+                v-model="selectedTeam"
+                label="選擇小隊"
+                single-line
+                item-value="index"
+                bottom
+              ></v-select>
+              
+              <div
+                v-for="(chart, key) in charts"
+                :key="key"
+              >
+                <h5 class="chart-title">{{ chart.title }}</h5>
+                <div :id="chart.id"></div>
+                <v-divider v-if="key + 1 < charts.length"></v-divider>
+              </div>
+            </v-card-text>
+          </v-card>
         </v-tabs-content>
         <v-tabs-content
           :key="1"
@@ -79,6 +75,7 @@ import * as constant from '../../lib/constant'
 import * as readable from '../../lib/readable'
 import * as api from '../../lib/api'
 import * as accountApi from '../../lib/api/account'
+import * as storageApi from '../../lib/api/storage'
 import * as gameApi from '../../lib/api/game'
 
 export default {
@@ -95,21 +92,16 @@ export default {
       selectedTeam: 1,
       charts: [
         {
-          title: '淨利',
-          type: 'line',
-          data: {
-            labels: [],
-            datasets: [{
-              label: '毛利',
-              backgroundColor: '#F44336',
-              data: []
-            }, {
-              label: '淨利',
-              backgroundColor: '#2196F3',
-              data: []
-            }]
-          },
-          option: { responsive: true, maintainAspectRatio: false }
+          id: 'chart-profit',
+          title: '淨利與毛利'
+        },
+        {
+          id: 'chart-productivity',
+          title: '產量'
+        },
+        {
+          id: 'chart-storage',
+          title: '倉儲'
         }
       ]
     }
@@ -126,17 +118,14 @@ export default {
       if (this.selectedTeam === 0) {
         return
       }
+
+      let days = api.nowUser.getGameConfig().days
+      let dayLong = api.nowUser.getGameConfig().dayLong
+      let interval = 10
+
       accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)
         .then((function (res) {
-          let list = res.data.list
-          let days = api.nowUser.getGameConfig().days
-          let dayLong = api.nowUser.getGameConfig().dayLong
-          let interval = 10
           let history = res.data.list
-
-          let labels = []
-          let netIncomeList = []
-          let grossProfitList = []
 
           let calculate = (day, time) => {
             let n = 0
@@ -155,49 +144,131 @@ export default {
             return [g, n]
           }
 
-          if (this.charts[0].data.labels.length === 0) {
-            for (let d = 1; d <= days; d++) {
-              for (let i = 0; i <= parseInt(dayLong / interval); i++) {
-                this.charts[0].data.labels.push(i === 0 ? readable.toReadableDay(d) : '')
-                this.charts[0].data.datasets[0].data.push(0)
-                this.charts[0].data.datasets[1].data.push(0)
-              }
-            }
-          } else {
-            for (let d = 1; d <= days; d++) {
-              for (let i = 0; i <= parseInt(dayLong / interval); i++) {
-                this.charts[0].data.datasets[0].data.pop()
-                this.charts[0].data.datasets[1].data.pop()
-              }
-            }
-          }
-
-          let k = 0
+          let dataTable = [['時間', '毛利', '淨利']]
           for (let d = 1; d <= days; d++) {
             for (let i = 0; i <= parseInt(dayLong / interval); i++) {
               let result = calculate(d, i * interval)
-              netIncomeList.push(result[0])
-              grossProfitList.push(result[1])
-              // this.charts[0].data.datasets[0].data[k] = result[0]
-              // this.charts[0].data.datasets[1].data[k] = result[1]
-              k++
+              dataTable.push([i === 0 ? readable.toReadableDay(d) : '', result[0], result[1]])
             }
           }
-          this.charts[0].data.datasets[0].data = netIncomeList
-          this.charts[0].data.datasets[1].data = grossProfitList
-          console.log(this.charts[0].data)
+          let data = google.visualization.arrayToDataTable(dataTable)
+
+          let options = {
+            chartArea: {left: '15%', width: '85%', height: '70%'},
+            legend: { position: 'bottom' },
+            height: 300
+          }
+
+          // material design charts
+          // remember to add 'line' package to 'google.charts.load' before using this
+          // let chart = new google.charts.Line(document.getElementById('chart-profit'))
+          // chart.draw(data, google.charts.Line.convertOptions(options))
+
+          let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))
+          chart.draw(data, options)
         }).bind(this))
         .catch((function (err) {
           console.error(err)
         }).bind(this))
+      
+      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, constant.JOBS.FACTORY)
+        .then((function (res) {
+          let history = res.data.list
+
+          // chart-productivity
+          let calculate = (day) => {
+            let n = 0 // accumulate
+            for (let key in history) {
+              let item = history[key]
+              if (item.day <= day) {
+                if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
+                  n += item.amount - n
+                }
+              } else {
+                break
+              }
+            }
+            return n
+          }
+
+          let dataTable = [['日子', '累積產量', '單日產量']]
+          let k = 0
+          for (let d = 1; d <= days; d++) {
+            let result = calculate(d)
+            k = result - k
+            dataTable.push([readable.toReadableDay(d), result, k])
+          }
+          let data = google.visualization.arrayToDataTable(dataTable)
+
+          let options = {
+            chartArea: {left: '15%', width: '85%', height: '70%'},
+            legend: { position: 'bottom' },
+            height: 300
+          }
+
+          let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))
+          chart.draw(data, options)
+        }).bind(this))
+        .catch((function (err) {
+          console.error(err)
+        }).bind(this))
+
       return ''
+    }
+  },
+  methods: {
+    backToHome () {
+      router.push('/')
+    },
+    drawStorageChart (history) {
+      let calculate = (day) => {
+        let n = 0 // accumulate
+        for (let key in history) {
+          let item = history[key]
+          if (item.day <= day) {
+            if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
+              n += item.amount - n
+            }
+          } else {
+            break
+          }
+        }
+        return n
+      }
+
+      let dataTable = [['日子', '累積產量', '單日產量']]
+      let k = 0
+      for (let d = 1; d <= days; d++) {
+        let result = calculate(d)
+        k = result - k
+        dataTable.push([readable.toReadableDay(d), result, k])
+      }
+      let data = google.visualization.arrayToDataTable(dataTable)
+
+      let options = {
+        chartArea: {left: '15%', width: '85%', height: '70%'},
+        legend: { position: 'bottom' },
+        height: 300
+      }
+
+      let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))
+      chart.draw(data, options)
     }
   },
   mounted () {
     // this.loadChart()
+    // google.charts.setOnLoadCallback(this.loadChart)
   }
 }
 </script>
 
 <style>
+.end .chart-title {
+  margin-bottom: 0;
+  margin-top: 20px;
+}
+
+.end .divider {
+  margin-top: 20px;
+}
 </style>

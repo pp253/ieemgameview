@@ -4,7 +4,7 @@
       <v-card-text class="text-xs-center head">
         <div class="logo"></div>
         <!--<h3>REDRO產銷遊戲</h3>-->
-        <h5>2017 工工營 PRE-ALPHA</h5>
+        <h5>2017 工工營 BETA</h5>
       </v-card-text>
       <v-layout row wrap>
         <v-flex v-for="(item, index) in gameList" :key="index" xs12>
@@ -65,6 +65,10 @@ export default {
 </script>
 
 <style>
+.home {
+  min-height: 100%;
+}
+
 .home .head {
   padding-top: 60px;
   padding-bottom: 60px;
