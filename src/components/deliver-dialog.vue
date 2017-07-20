@@ -39,7 +39,6 @@
           label="車子"
           type="number"
           suffix="臺"
-          item-value="index"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>
@@ -69,17 +68,17 @@ export default {
   },
   data: function () {
     return {
-      teamNumber: 4,
       deliverDialog: false,
       jobList: readable.readableJobList(),
       selectedJob: null,
       selectedTeam: null,
-      amount: null
+      amount: null,
+      state: api.nowUser.getState()
     }
   },
   computed: {
     teamList () {
-      return readable.toReadableTeamList(this.teamNumber)
+      return readable.toReadableTeamList(api.nowUser.getTeamNumber())
     },
     productList () {
       return [{

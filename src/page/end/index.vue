@@ -142,9 +142,10 @@ export default {
           for (let d = 1; d <= days; d++) {
             for (let i = 0; i <= parseInt(dayLong / interval); i++) {
               let result = calculate(d, i * interval)
-              dataTable.push([i === 0 ? readable.toReadableDay(d) : '', result[0], result[1]])
+              dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])
             }
           }
+          console.log(dataTable)
           let data = google.visualization.arrayToDataTable(dataTable)
 
           let options = {

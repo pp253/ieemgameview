@@ -23,14 +23,6 @@ import * as constant from '../lib/constant'
 export default {
   props: {
     'game-config': Object
-  },
-  data: function () {
-    return {
-    }
-  },
-  computed: {
-  },
-  methods: {
   }
 }
 </script>

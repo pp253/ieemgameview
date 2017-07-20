@@ -7,8 +7,8 @@ export function toReadableDay (day) {
   return '第' + day + '天'
 }
 
-export function toReadableTime (time, showWorking = true) {
-  if (time > 36000000 || time === constant.UNKNOWN_TIME) {
+export function toReadableTime (time, isWorking = true, showWorking = true) {
+  if (!isWorking || time === constant.UNKNOWN_TIME) {
     return constant.READABLE_GAME_WORK.OFF_WORK
   }
   let t = parseInt(time / 1000)
@@ -32,7 +32,7 @@ export function toReadableGameTime (dayTime, showWorking = true) {
       break
     case constant.GAME_STAGE.START:
     default:
-      return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, showWorking)
+      return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, dayTime.isWorking, showWorking)
       break
   }
 }

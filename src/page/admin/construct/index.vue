@@ -57,7 +57,6 @@ export default {
           api.nowUser.setTeam(constant.TEAMS.STAFF)
           api.nowUser.setJob(constant.STAFF_JOBS.CONSOLER)
           router.push('/round/consoler')
-          console.log('get in')
         }).bind(this))
         .catch(function (err) {
           console.error(err)

@@ -268,7 +268,7 @@ export class User {
     if (this.getGameStage() !== constant.GAME_STAGE.START) {
       return constant.UNKNOWN_TIME
     } else if (this.getDayStartTime() === constant.UNKNOWN_TIME) {
-      return this.getConfig().dayLong * 1000
+      return this.getGameConfig().dayLong * 1000
     } else {
       return Date.now() - this.getDayStartTime()
     }
@@ -344,6 +344,22 @@ export class User {
           this.getState().news.unshift(list[key])
         }
       }).bind(this))
+  }
+
+  test () {
+    this.setTeam(1)
+    this.setJob(constant.JOBS.RETAILER)
+    let interval = 10
+    let times = 1000
+    let t = 0
+    let a = setInterval((function () {
+      console.log('test', t)
+      this._update()
+      if (t++ === times) {
+        console.log('done')
+        clearInterval(a)
+      }
+    }).bind(this), interval)
   }
 }
 

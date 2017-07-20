@@ -7,9 +7,10 @@ Vue.component('game-clock', require('./game-clock.vue'))
 Vue.component('team-storage-list', require('./team-storage-list.vue'))
 Vue.component('storage-register-dialog', require('./storage-register-dialog.vue'))
 Vue.component('deliver-dialog', require('./deliver-dialog.vue'))
-Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
+// Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
 Vue.component('online-status', require('./online-status.vue'))
 Vue.component('info-panel', require('./info-panel.vue'))
+Vue.component('account-dialog', require('./account-dialog.vue'))
 
 // Discarded:
 // Vue.component('received-order', require('./received-order.vue'))

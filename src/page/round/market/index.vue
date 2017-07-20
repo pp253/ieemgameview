@@ -6,7 +6,6 @@
       <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <news-publisher-dialog :secondary="secondary"></news-publisher-dialog>
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar

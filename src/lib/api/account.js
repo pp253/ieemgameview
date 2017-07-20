@@ -4,15 +4,8 @@ export function getBalance (gameId, teamIndex) {
       gameId: gameId,
       teamIndex: teamIndex
     })
-      .then(function (res) {
-        if (res.data.err) {
-          reject(res)
-        }
-        resolve(res)
-      })
-      .catch(function (err) {
-        reject(err)
-      })
+      .then((res) => { res.data.err ? reject(res) : resolve(res) })
+      .catch((err) => { reject(err) })
   })
 }
 
@@ -22,14 +15,31 @@ export function getHistory (gameId, teamIndex) {
       gameId: gameId,
       teamIndex: teamIndex
     })
-      .then(function (res) {
-        if (res.data.err) {
-          reject(res)
-        }
-        resolve(res)
-      })
-      .catch(function (err) {
-        reject(err)
-      })
+      .then((res) => { res.data.err ? reject(res) : resolve(res) })
+      .catch((err) => { reject(err) })
+  })
+}
+
+export function give (gameId, teamIndex, balance) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/account/give', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      balance: balance
+    })
+      .then((res) => { res.data.err ? reject(res) : resolve(res) })
+      .catch((err) => { reject(err) })
+  })
+}
+
+export function take (gameId, teamIndex, balance) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/account/take', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      balance: balance
+    })
+      .then((res) => { res.data.err ? reject(res) : resolve(res) })
+      .catch((err) => { reject(err) })
   })
 }

@@ -25,14 +25,6 @@
           item-value="index"
           bottom
         ></v-select>
-        <v-select
-          v-bind:items="jobList"
-          v-model="selectedJob"
-          label="選擇工作"
-          single-line
-          item-value="index"
-          bottom
-        ></v-select>
         <div
           v-for="product in productList"
         >
@@ -72,10 +64,9 @@ export default {
   },
   data () {
     return {
-      teamNumber: 4,
       storageRegisterDialog: false,
       jobList: readable.readableJobList(),
-      selectedJob: null,
+      selectedJob: constant.JOBS.FACTORY,
       selectedTeam: null,
       amount: {
         'CAR': 0,
@@ -87,7 +78,7 @@ export default {
   },
   computed: {
     teamList () {
-      return readable.toReadableTeamList(this.teamNumber)
+      return readable.toReadableTeamList(api.nowUser.getTeamNumber())
     },
     productList () {
       if (!this.selectedJob) {

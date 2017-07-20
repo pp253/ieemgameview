@@ -31,7 +31,7 @@ export default {
       if (this.list) {
         return readable.toReadableDeliverList(this.list)
       } else {
-        return [{readableGameTime:'A', amount:123}, {readableGameTime:'B', amount:456}]
+        return []
       }
     }
   }

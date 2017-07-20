@@ -57,6 +57,25 @@
               <v-btn primary v-on:click.native="nextDay">下一天</v-btn>
             </v-card-actions>
           </v-card>
+          <v-card>
+            <v-card-title>特別功能</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <account-dialog :account="account"></account-dialog>
+            </v-card-actions>
+          </v-card>
+          <v-card>
+            <v-card-title>處理速度測試</v-card-title>
+            <v-card-text>
+              <ul>
+                <li>確定list</li>
+              </ul>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn primary v-on:click.native="test">測試</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-tabs-content>
         <v-tabs-content
           :key="2"
@@ -129,6 +148,9 @@ export default {
         .catch(function (err) {
           console.error(err)
         })
+    },
+    test () {
+      api.nowUser.test()
     },
     announce (msg) {
       this.snackbarText = msg
