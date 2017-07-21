@@ -4802,6 +4802,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5395,79 +5401,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      gameList: []
-    };
-  },
-
   methods: {
-    intoGame: function intoGame(gameId, gameConfig) {
-      console.log('User Game:', gameId);
-      __WEBPACK_IMPORTED_MODULE_0__lib_api__["a" /* nowUser */].setGameId(gameId);
-      __WEBPACK_IMPORTED_MODULE_0__lib_api__["a" /* nowUser */].setGameConfig(gameConfig);
-      __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/choose');
-    },
     intoRegist: function intoRegist() {
       __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/regist');
     }
-  },
-  created: function created() {
-    // load gameList and use promise to change the gameList
-    __WEBPACK_IMPORTED_MODULE_0__lib_api__["a" /* nowUser */].resetState();
-    __WEBPACK_IMPORTED_MODULE_1__lib_api_enter__["a" /* getGameIdList */]().then(function (res) {
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = res.data.gameList[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var game = _step.value;
-
-          this.gameList.unshift({
-            index: game.gameId,
-            text: game.gameConfig.title,
-            describe: game.gameConfig.describe,
-            gameConfig: game.gameConfig
-          });
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-    }.bind(this)).catch(function (err) {
-      console.error(err);
-    });
   }
 });
 
@@ -6613,7 +6556,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.home {\r\n  min-height: 100%;\n}\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100% !important;\n}\n.home .headline {\r\n  display: block;\r\n  width: 100%;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\n.home .list__tile__title {\r\n  color: rgba(0, 0, 0, 0.87);\n}\n.home .flex {\r\n  margin-bottom: 8px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/choose/game/index.vue?6276f04e"],"names":[],"mappings":";AAgEA;EACA,iBAAA;CACA;AAEA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,wBAAA;CACA;AAEA;EACA,eAAA;EACA,YAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA;AAEA;EACA,2BAAA;CACA;AAEA;EACA,mBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-toolbar class=\"green\">\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n          <v-flex v-for=\"(item, index) in gameList\" :key=\"index\" xs12>\r\n            <v-card class=\"cyan darken-2 white--text\">\r\n              <v-card-title primary-title>\r\n                <div class=\"headline\">{{ item.text }}</div>\r\n                <div>{{ item.describe }}</div>\r\n              </v-card-title>\r\n              <v-card-actions>\r\n                <v-spacer></v-spacer>\r\n                <v-btn flat dark v-on:click.native=\"intoGame(item.index, item.gameConfig)\">進入遊戲</v-btn>\r\n              </v-card-actions>\r\n            </v-card>\r\n          </v-flex>\r\n    </main>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../../lib/api'\r\nimport * as enterApi from '../../../lib/api/enter'\r\nimport {router} from '../../../router'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '選擇遊戲',\r\n      gameList: []\r\n    }\r\n  },\r\n  methods: {\r\n    intoGame (gameId, gameConfig) {\r\n      console.log('User Game:', gameId)\r\n      api.nowUser.setGameId(gameId)\r\n      api.nowUser.setGameConfig(gameConfig)\r\n      router.push('/choose')\r\n    }\r\n  },\r\n  created: function () {\r\n    // load gameList and use promise to change the gameList\r\n    api.nowUser.resetState()\r\n    enterApi.getGameIdList()\r\n      .then((function (res) {\r\n        for (let game of res.data.gameList) {\r\n          this.gameList.unshift({\r\n            index: game.gameId,\r\n            text: game.gameConfig.title,\r\n            describe: game.gameConfig.describe,\r\n            gameConfig: game.gameConfig\r\n          })\r\n        }\r\n      }).bind(this))\r\n      .catch(function (err) {\r\n        console.error(err)\r\n      })\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.home {\r\n  min-height: 100%;\r\n}\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100% !important;\r\n}\r\n\r\n.home .headline {\r\n  display: block;\r\n  width: 100%;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n\r\n.home .list__tile__title {\r\n  color: rgba(0, 0, 0, 0.87);\r\n}\r\n\r\n.home .flex {\r\n  margin-bottom: 8px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -6669,7 +6612,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.home {\r\n  min-height: 100%;\n}\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100% !important;\n}\n.home .headline {\r\n  display: block;\r\n  width: 100%;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\n.home .list__tile__title {\r\n  color: rgba(0, 0, 0, 0.87);\n}\n.home .flex {\r\n  margin-bottom: 8px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?f5b43f5a"],"names":[],"mappings":";AAuEA;EACA,iBAAA;CACA;AAEA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,wBAAA;CACA;AAEA;EACA,eAAA;EACA,YAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA;AAEA;EACA,2BAAA;CACA;AAEA;EACA,mBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n      <v-layout row wrap>\r\n        <v-flex v-for=\"(item, index) in gameList\" :key=\"index\" xs12>\r\n          <v-card class=\"cyan darken-2 white--text\">\r\n            <v-card-title primary-title>\r\n              <div class=\"headline\">{{ item.text }}</div>\r\n              <div>{{ item.describe }}</div>\r\n            </v-card-title>\r\n            <v-card-actions>\r\n              <v-spacer></v-spacer>\r\n              <v-btn flat dark v-on:click.native=\"intoGame(item.index, item.gameConfig)\">進入遊戲</v-btn>\r\n            </v-card-actions>\r\n          </v-card>\r\n        </v-flex>\r\n      </v-layout>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      gameList: []\r\n    }\r\n  },\r\n  methods: {\r\n    intoGame (gameId, gameConfig) {\r\n      console.log('User Game:', gameId)\r\n      api.nowUser.setGameId(gameId)\r\n      api.nowUser.setGameConfig(gameConfig)\r\n      router.push('/choose')\r\n    },\r\n    intoRegist () {\r\n      router.push('/regist')\r\n    }\r\n  },\r\n  created: function () {\r\n    // load gameList and use promise to change the gameList\r\n    api.nowUser.resetState()\r\n    enterApi.getGameIdList()\r\n      .then((function (res) {\r\n        for (let game of res.data.gameList) {\r\n          this.gameList.unshift({\r\n            index: game.gameId,\r\n            text: game.gameConfig.title,\r\n            describe: game.gameConfig.describe,\r\n            gameConfig: game.gameConfig\r\n          })\r\n        }\r\n      }).bind(this))\r\n      .catch(function (err) {\r\n        console.error(err)\r\n      })\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.home {\r\n  min-height: 100%;\r\n}\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100% !important;\r\n}\r\n\r\n.home .headline {\r\n  display: block;\r\n  width: 100%;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n\r\n.home .list__tile__title {\r\n  color: rgba(0, 0, 0, 0.87);\r\n}\r\n\r\n.home .flex {\r\n  margin-bottom: 8px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.home {\r\n  min-height: 100%;\n}\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100% !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?d61e0936"],"names":[],"mappings":";AA4BA;EACA,iBAAA;CACA;AAEA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,wBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      router.push('/regist')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.home {\r\n  min-height: 100%;\r\n}\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100% !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -8953,15 +8896,20 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "home",
-    attrs: {
-      "id": "home"
-    }
+    staticClass: "choose"
   }, [_c('v-toolbar', {
     staticClass: "green"
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', _vm._l((_vm.gameList), function(item, index) {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-container', {
+    staticStyle: {
+      "min-height": "0"
+    },
+    attrs: {
+      "fluid": "",
+      "grid-list-lg": ""
+    }
+  }, _vm._l((_vm.gameList), function(item, index) {
     return _c('v-flex', {
       key: index,
       attrs: {
@@ -8986,7 +8934,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("進入遊戲")])], 1)], 1)], 1)
-  }))], 1)
+  }))], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -9192,37 +9140,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.intoRegist($event)
       }
     }
-  }, [_vm._v("進入遊戲")])], 1), _vm._v(" "), _c('v-layout', {
-    attrs: {
-      "row": "",
-      "wrap": ""
-    }
-  }, _vm._l((_vm.gameList), function(item, index) {
-    return _c('v-flex', {
-      key: index,
-      attrs: {
-        "xs12": ""
-      }
-    }, [_c('v-card', {
-      staticClass: "cyan darken-2 white--text"
-    }, [_c('v-card-title', {
-      attrs: {
-        "primary-title": ""
-      }
-    }, [_c('div', {
-      staticClass: "headline"
-    }, [_vm._v(_vm._s(item.text))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(item.describe))])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
-      attrs: {
-        "flat": "",
-        "dark": ""
-      },
-      nativeOn: {
-        "click": function($event) {
-          _vm.intoGame(item.index, item.gameConfig)
-        }
-      }
-    }, [_vm._v("進入遊戲")])], 1)], 1)], 1)
-  }))], 1)], 1)
+  }, [_vm._v("進入遊戲")])], 1)], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

@@ -1,21 +1,27 @@
 <template>
-  <div id="home" class="home">
+  <div class="choose">
     <v-toolbar class="green">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
     </v-toolbar>
     <main>
-      <v-flex v-for="(item, index) in gameList" :key="index" xs12>
-        <v-card class="cyan darken-2 white--text">
-          <v-card-title primary-title>
-            <div class="headline">{{ item.text }}</div>
-            <div>{{ item.describe }}</div>
-          </v-card-title>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-flex>
+      <v-container
+        fluid
+        style="min-height: 0;"
+        grid-list-lg
+      >
+        <v-flex v-for="(item, index) in gameList" :key="index" xs12>
+          <v-card class="cyan darken-2 white--text">
+            <v-card-title primary-title>
+              <div class="headline">{{ item.text }}</div>
+              <div>{{ item.describe }}</div>
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-flex>
+      </v-container>
     </main>
   </div>
 </template>
@@ -62,39 +68,4 @@ export default {
 </script>
 
 <style>
-.home {
-  min-height: 100%;
-}
-
-.home .head {
-  padding-top: 60px;
-  padding-bottom: 60px;
-}
-
-.home .layout {
-  padding-left: 14px;
-  padding-right: 14px;
-}
-
-.home .card {
-  height: 100% !important;
-}
-
-.home .headline {
-  display: block;
-  width: 100%;
-}
-
-.home .card__text {
-  padding-right: 0;
-  padding-left: 0;
-}
-
-.home .list__tile__title {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.home .flex {
-  margin-bottom: 8px;
-}
 </style>
