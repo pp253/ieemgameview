@@ -13,12 +13,12 @@
           <v-flex v-for="(item, index) in gameList" :key="index" xs12>
             <v-card class="cyan darken-2 white--text">
               <v-card-title primary-title>
-                <h3>{{ item.text }}</h3>
+                <div class="headline">{{ item.text }}</div><br />
                 <div>{{ item.describe }}</div>
               </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+                <v-btn flat dark @click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>
@@ -45,10 +45,10 @@ export default {
       console.log('User Game:', gameId)
       api.nowUser.setGameId(gameId)
       api.nowUser.setGameConfig(gameConfig)
-      router.push('/choose')
+      router.push('/choose/team')
     }
   },
-  created: function () {
+  created () {
     // load gameList and use promise to change the gameList
     api.nowUser.resetState()
     enterApi.getGameIdList()

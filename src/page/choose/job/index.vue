@@ -4,15 +4,15 @@
       <v-toolbar-title>首頁</v-toolbar-title>
     </v-toolbar>
     <main>
-      <h5 class="headline">請選擇你的工作</h5>
-      <v-subheader class="subheader" v-show="showSubTitle">隊輔請協助小組分配工作</v-subheader>
+      <h5>請選擇你的工作</h5>
+      <v-subheader v-show="showSubTitle">隊輔請協助小組分配工作</v-subheader>
       <v-layout row>
         <v-divider></v-divider>
         <v-list class="list">
           <template
             v-for="(item, index) in itemJob"
           >
-            <v-list-tile :key="index" v-on:click.native.stop="previewJob(item.index)">
+            <v-list-tile :key="index" @click.native.stop="previewJob(item.index)">
               <v-list-tile-content>
                 <v-list-tile-title v-text="item.text"></v-list-tile-title>
               </v-list-tile-content>

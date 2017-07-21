@@ -1,5 +1,6 @@
 import home from '../page/home/index.vue'
 import registNew from '../page/regist/new/index.vue'
+import registOld from '../page/regist/old/index.vue'
 import registPlayer from '../page/regist/player/index.vue'
 import chooseGame from '../page/choose/game/index.vue'
 import chooseTeam from '../page/choose/team/index.vue'
@@ -24,6 +25,7 @@ const routes = [
   { path: '/admin/construct', component: adminConstruct },
   { path: '/regist', component: registNew },
   { path: '/regist/new', component: registNew },
+  { path: '/regist/old', component: registOld },
   { path: '/regist/player', component: registPlayer },
   { path: '/choose', component: chooseGame },
   { path: '/choose/game', component: chooseGame },
