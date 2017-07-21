@@ -9,18 +9,20 @@
         style="min-height: 0;"
         grid-list-lg
       >
-        <v-flex v-for="(item, index) in gameList" :key="index" xs12>
-          <v-card class="cyan darken-2 white--text">
-            <v-card-title primary-title>
-              <h3>{{ item.text }}</h3>
-              <div>{{ item.describe }}</div>
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
+        <v-layout row wrap>
+          <v-flex v-for="(item, index) in gameList" :key="index" xs12>
+            <v-card class="cyan darken-2 white--text">
+              <v-card-title primary-title>
+                <h3>{{ item.text }}</h3>
+                <div>{{ item.describe }}</div>
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
       </v-container>
     </main>
   </div>

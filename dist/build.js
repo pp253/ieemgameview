@@ -4808,6 +4808,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -6556,7 +6558,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -8909,6 +8911,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "fluid": "",
       "grid-list-lg": ""
     }
+  }, [_c('v-layout', {
+    attrs: {
+      "row": "",
+      "wrap": ""
+    }
   }, _vm._l((_vm.gameList), function(item, index) {
     return _c('v-flex', {
       key: index,
@@ -8932,7 +8939,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v("進入遊戲")])], 1)], 1)], 1)
-  }))], 1)], 1)
+  }))], 1)], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
