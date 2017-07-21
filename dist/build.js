@@ -8921,9 +8921,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "primary-title": ""
       }
-    }, [_c('div', {
-      staticClass: "headline"
-    }, [_vm._v(_vm._s(item.text))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(item.describe))])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+    }, [_c('h3', [_vm._v(_vm._s(item.text))]), _vm._v(" "), _c('div', [_vm._v(_vm._s(item.describe))])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
       attrs: {
         "flat": "",
         "dark": ""

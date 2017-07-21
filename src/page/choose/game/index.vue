@@ -12,7 +12,7 @@
         <v-flex v-for="(item, index) in gameList" :key="index" xs12>
           <v-card class="cyan darken-2 white--text">
             <v-card-title primary-title>
-              <div class="headline">{{ item.text }}</div>
+              <h3>{{ item.text }}</h3>
               <div>{{ item.describe }}</div>
             </v-card-title>
             <v-card-actions>
