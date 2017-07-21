@@ -1,26 +1,26 @@
 <template>
   <div id="home" class="home">
-    <v-card>
-      <v-card-text class="text-xs-center head">
-        <div class="logo"></div>
-        <!--<h3>REDRO產銷遊戲</h3>-->
-        <h5>2017 工工營 BETA</h5>
-      </v-card-text>
-      <v-layout row wrap>
-        <v-flex v-for="(item, index) in gameList" :key="index" xs12>
-          <v-card class="cyan darken-2 white--text">
-            <v-card-title primary-title>
-              <div class="headline">{{ item.text }}</div>
-              <div>{{ item.describe }}</div>
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
+    <v-toolbar class="green">
+      <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+    </v-toolbar>
+    <main>
+      <v-card>
+        <v-layout row wrap>
+          <v-flex v-for="(item, index) in gameList" :key="index" xs12>
+            <v-card class="cyan darken-2 white--text">
+              <v-card-title primary-title>
+                <div class="headline">{{ item.text }}</div>
+                <div>{{ item.describe }}</div>
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </main>
   </div>
 </template>
 
@@ -32,6 +32,7 @@ import {router} from '../../../router'
 export default {
   data () {
     return {
+      title: '選擇遊戲',
       gameList: []
     }
   },

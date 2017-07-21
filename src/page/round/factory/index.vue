@@ -10,7 +10,7 @@
 
       </v-layout>
       <v-layout row>
-          <v-tabs
+        <v-tabs
           id="mobile-tabs-1"
           grow
           scroll-bars

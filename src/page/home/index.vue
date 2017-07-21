@@ -5,6 +5,7 @@
         <div class="logo"></div>
         <!--<h3>REDRO產銷遊戲</h3>-->
         <h5>2017 工工營 BETA</h5>
+        <v-btn primary v-on:click.native="intoRegist">進入遊戲</v-btn>
       </v-card-text>
       <v-layout row wrap>
         <v-flex v-for="(item, index) in gameList" :key="index" xs12>
@@ -41,6 +42,9 @@ export default {
       api.nowUser.setGameId(gameId)
       api.nowUser.setGameConfig(gameConfig)
       router.push('/choose')
+    },
+    intoRegist () {
+      router.push('/regist')
     }
   },
   created: function () {

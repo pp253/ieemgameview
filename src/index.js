@@ -1,4 +1,3 @@
-import VueCharts from 'vue-chartjs'
 import {router} from './router'
 import './components'
 
