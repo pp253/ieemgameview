@@ -10,7 +10,7 @@
 
       </v-layout>
       <v-layout row>
-          <v-tabs
+        <v-tabs
           id="mobile-tabs-1"
           grow
           scroll-bars
@@ -18,7 +18,7 @@
           light
         >
           <v-tabs-bar
-            class="tabs"
+            class="tabs green"
             slot="activators"
           >
             <v-tabs-item
@@ -29,7 +29,7 @@
             >
               {{ tab.title }}
             </v-tabs-item>
-            <v-tabs-slider></v-tabs-slider>
+            <v-tabs-slider class="lime"></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-content
             :key="0"
