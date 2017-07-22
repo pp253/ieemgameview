@@ -34,7 +34,9 @@ export default {
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     }
   },
   computed: {

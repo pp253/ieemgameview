@@ -96,7 +96,7 @@ export const READABLE_JOBS = {
   RETAILER: '零售商',
   UNKNOWN_STAFF: '未知工作人員',
   KEEPER: '關主',
-  EXCHANGER: '交換處',
+  EXCHANGER: '製造部',
   TRANSPORTER: '運輸者',
   MARKET: '市場代表者',
   GUERRILLA: '游擊者、工人',

@@ -1253,7 +1253,7 @@ var READABLE_JOBS = {
   RETAILER: '零售商',
   UNKNOWN_STAFF: '未知工作人員',
   KEEPER: '關主',
-  EXCHANGER: '交換處',
+  EXCHANGER: '製造部',
   TRANSPORTER: '運輸者',
   MARKET: '市場代表者',
   GUERRILLA: '游擊者、工人',
@@ -3531,7 +3531,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -3646,7 +3648,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -3714,7 +3718,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -3784,7 +3790,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -3907,7 +3915,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -3978,7 +3988,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       title: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -4101,7 +4113,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     };
   },
 
@@ -4135,7 +4149,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4261,7 +4275,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4303,7 +4317,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4331,7 +4345,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4387,7 +4401,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4429,7 +4443,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4485,7 +4499,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5642,7 +5656,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
@@ -5671,7 +5685,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    staticClass: "tabs",
+    class: 'tabs ' + _vm.mainColor,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -5681,7 +5695,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "ripple": ""
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
-  }), _vm._v(" "), _c('v-tabs-slider')], 2), _vm._v(" "), _c('v-tabs-content', {
+  }), _vm._v(" "), _c('v-tabs-slider', {
+    class: _vm.subColor
+  })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {
       "id": 'storage'
@@ -6231,7 +6247,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main'), _vm._v(" "), _c('v-snackbar', {
@@ -6398,7 +6414,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('deliver-dialog', {
@@ -6513,7 +6529,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('team-storage-list'), _vm._v(" "), _c('deliver-dialog', {
@@ -6712,7 +6728,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
@@ -6741,7 +6757,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    staticClass: "tabs",
+    class: 'tabs ' + _vm.mainColor,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -6751,7 +6767,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "ripple": ""
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
-  }), _vm._v(" "), _c('v-tabs-slider')], 2), _vm._v(" "), _c('v-tabs-content', {
+  }), _vm._v(" "), _c('v-tabs-slider', {
+    class: _vm.subColor
+  })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {
       "id": 'storage'
@@ -6985,7 +7003,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
@@ -7014,7 +7032,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    staticClass: "tabs green",
+    class: 'tabs ' + _vm.mainColor,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -7025,7 +7043,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
   }), _vm._v(" "), _c('v-tabs-slider', {
-    staticClass: "lime"
+    class: _vm.subColor
   })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {

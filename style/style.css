@@ -66,7 +66,7 @@
 }
 
 .dialog button.btn--floating {
-  position: absolute;
+  position: fixed !important;
 }
 
 .dialog .floating-right-bottom {

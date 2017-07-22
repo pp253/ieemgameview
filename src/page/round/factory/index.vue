@@ -1,6 +1,6 @@
 <template>
   <div class="round">
-    <v-toolbar class="green">
+    <v-toolbar :class="mainColor">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="white--text">{{ toolbarInfo }}</span>
@@ -18,7 +18,7 @@
           light
         >
           <v-tabs-bar
-            class="tabs green"
+            :class="'tabs ' + mainColor"
             slot="activators"
           >
             <v-tabs-item
@@ -29,7 +29,7 @@
             >
               {{ tab.title }}
             </v-tabs-item>
-            <v-tabs-slider class="lime"></v-tabs-slider>
+            <v-tabs-slider :class="subColor"></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-content
             :key="0"
@@ -82,7 +82,9 @@ export default {
       activeTab: null,
       state: api.nowUser.getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     }
   },
   computed: {
