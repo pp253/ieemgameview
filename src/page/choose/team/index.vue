@@ -4,7 +4,7 @@
       <v-toolbar-title>首頁</v-toolbar-title>
     </v-toolbar>
     <main>
-      <h5 class="headline">請選擇你的小隊</h5>
+      <h5>請選擇你的小隊</h5>
       <v-layout row>
         <v-list class="list">
           <template

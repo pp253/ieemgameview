@@ -1,26 +1,30 @@
 <template>
-  <div id="home" class="home">
-    <v-card>
-      <v-card-text class="text-xs-center head">
-        <div class="logo"></div>
-        <!--<h3>REDRO產銷遊戲</h3>-->
-        <h5>2017 工工營 BETA</h5>
-      </v-card-text>
-      <v-layout row wrap>
-        <v-flex v-for="(item, index) in gameList" :key="index" xs12>
-          <v-card class="cyan darken-2 white--text">
-            <v-card-title primary-title>
-              <div class="headline">{{ item.text }}</div>
-              <div>{{ item.describe }}</div>
-            </v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn flat dark v-on:click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-card>
+  <div class="choose">
+    <v-toolbar class="green">
+      <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+    </v-toolbar>
+    <main>
+      <v-container
+        fluid
+        style="min-height: 0;"
+        grid-list-lg
+      >
+        <v-layout row wrap>
+          <v-flex v-for="(item, index) in gameList" :key="index" xs12>
+            <v-card class="cyan darken-2 white--text">
+              <v-card-title primary-title>
+                <div class="headline">{{ item.text }}</div><br />
+                <div>{{ item.describe }}</div>
+              </v-card-title>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn flat dark @click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </main>
   </div>
 </template>
 
@@ -32,6 +36,7 @@ import {router} from '../../../router'
 export default {
   data () {
     return {
+      title: '選擇遊戲',
       gameList: []
     }
   },
@@ -40,10 +45,10 @@ export default {
       console.log('User Game:', gameId)
       api.nowUser.setGameId(gameId)
       api.nowUser.setGameConfig(gameConfig)
-      router.push('/choose')
+      router.push('/choose/team')
     }
   },
-  created: function () {
+  created () {
     // load gameList and use promise to change the gameList
     api.nowUser.resetState()
     enterApi.getGameIdList()
@@ -65,39 +70,4 @@ export default {
 </script>
 
 <style>
-.home {
-  min-height: 100%;
-}
-
-.home .head {
-  padding-top: 60px;
-  padding-bottom: 60px;
-}
-
-.home .layout {
-  padding-left: 14px;
-  padding-right: 14px;
-}
-
-.home .card {
-  height: 100% !important;
-}
-
-.home .headline {
-  display: block;
-  width: 100%;
-}
-
-.home .card__text {
-  padding-right: 0;
-  padding-left: 0;
-}
-
-.home .list__tile__title {
-  color: rgba(0, 0, 0, 0.87);
-}
-
-.home .flex {
-  margin-bottom: 8px;
-}
 </style>

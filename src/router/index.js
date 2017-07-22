@@ -1,4 +1,8 @@
 import home from '../page/home/index.vue'
+import registNew from '../page/regist/new/index.vue'
+import registOld from '../page/regist/old/index.vue'
+import registPlayer from '../page/regist/player/index.vue'
+import chooseGame from '../page/choose/game/index.vue'
 import chooseTeam from '../page/choose/team/index.vue'
 import chooseJob from '../page/choose/job/index.vue'
 import chooseReady from '../page/choose/ready/index.vue'
@@ -15,11 +19,17 @@ import adminConstruct from '../page/admin/construct/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
+  { path: '', component: home },
   { path: '/', component: home },
   { path: '/home', component: home },
   { path: '/admin', component: adminConstruct },
   { path: '/admin/construct', component: adminConstruct },
-  { path: '/choose', component: chooseTeam },
+  { path: '/regist', component: registNew },
+  { path: '/regist/new', component: registNew },
+  { path: '/regist/old', component: registOld },
+  { path: '/regist/player', component: registPlayer },
+  { path: '/choose', component: chooseGame },
+  { path: '/choose/game', component: chooseGame },
   { path: '/choose/team', component: chooseTeam },
   { path: '/choose/job', component: chooseJob },
   { path: '/choose/ready', component: chooseReady },

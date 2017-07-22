@@ -88,7 +88,7 @@ export default {
           accountApi.take(api.nowUser.getGameId(), this.selectedTeam, this.balance)
             .then((function (res) {
               let data = res.data
-              this.announce(`成功給予${data.teamIndex}組${data.balance}元`)
+              this.announce(`成功拿取${data.teamIndex}組${data.balance}元`)
             }).bind(this))
             .catch((function (err) {
               console.log(err)
@@ -99,7 +99,7 @@ export default {
           accountApi.give(api.nowUser.getGameId(), this.selectedTeam, this.balance)
             .then((function (res) {
               let data = res.data
-              this.announce(`成功拿取${data.teamIndex}組${data.balance}元`)
+              this.announce(`成功給予${data.teamIndex}組${data.balance}元`)
             }).bind(this))
             .catch((function (err) {
               console.log(err)

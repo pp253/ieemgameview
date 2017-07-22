@@ -30,8 +30,8 @@ export function toReadableGameTime (dayTime, showWorking = true) {
     case constant.GAME_STAGE.END:
       return '已結束'
       break
-    case constant.GAME_STAGE.START:
     default:
+    case constant.GAME_STAGE.START:
       return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, dayTime.isWorking, showWorking)
       break
   }
