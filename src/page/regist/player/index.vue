@@ -23,8 +23,6 @@
           <v-btn primary @click.native.stop="setName">確定</v-btn>
         </v-card-actions>
       </v-card>
-      <v-layout row>
-      </v-layout>
     </main>
     <v-dialog v-model="errorDialog">
       <v-card>

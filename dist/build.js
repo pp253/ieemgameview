@@ -1323,11 +1323,11 @@ var READABLE_JOBS = {
 
 //import gameend from '../page/gameend'
 
-var routes = [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default.a }, { path: '/home', component: __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default.a }, { path: '/admin', component: __WEBPACK_IMPORTED_MODULE_17__page_admin_construct_index_vue___default.a }, { path: '/admin/construct', component: __WEBPACK_IMPORTED_MODULE_17__page_admin_construct_index_vue___default.a }, { path: '/regist', component: __WEBPACK_IMPORTED_MODULE_1__page_regist_new_index_vue___default.a }, { path: '/regist/new', component: __WEBPACK_IMPORTED_MODULE_1__page_regist_new_index_vue___default.a }, { path: '/regist/old', component: __WEBPACK_IMPORTED_MODULE_2__page_regist_old_index_vue___default.a }, { path: '/regist/player', component: __WEBPACK_IMPORTED_MODULE_3__page_regist_player_index_vue___default.a }, { path: '/choose', component: __WEBPACK_IMPORTED_MODULE_4__page_choose_game_index_vue___default.a }, { path: '/choose/game', component: __WEBPACK_IMPORTED_MODULE_4__page_choose_game_index_vue___default.a }, { path: '/choose/team', component: __WEBPACK_IMPORTED_MODULE_5__page_choose_team_index_vue___default.a }, { path: '/choose/job', component: __WEBPACK_IMPORTED_MODULE_6__page_choose_job_index_vue___default.a }, { path: '/choose/ready', component: __WEBPACK_IMPORTED_MODULE_7__page_choose_ready_index_vue___default.a }, { path: '/round/factory', component: __WEBPACK_IMPORTED_MODULE_8__page_round_factory_index_vue___default.a }, { path: '/round/retailer', component: __WEBPACK_IMPORTED_MODULE_9__page_round_retailer_index_vue___default.a }, { path: '/round/wholesaler', component: __WEBPACK_IMPORTED_MODULE_10__page_round_wholesaler_index_vue___default.a }, { path: '/round/guerrilla', component: __WEBPACK_IMPORTED_MODULE_11__page_round_guerrilla_index_vue___default.a }, { path: '/round/keeper', component: __WEBPACK_IMPORTED_MODULE_11__page_round_guerrilla_index_vue___default.a }, { path: '/round/exchanger', component: __WEBPACK_IMPORTED_MODULE_12__page_round_exchanger_index_vue___default.a }, { path: '/round/transporter', component: __WEBPACK_IMPORTED_MODULE_13__page_round_transporter_index_vue___default.a }, { path: '/round/market', component: __WEBPACK_IMPORTED_MODULE_14__page_round_market_index_vue___default.a }, { path: '/round/consoler', component: __WEBPACK_IMPORTED_MODULE_15__page_round_consoler_index_vue___default.a }, { path: '/end', component: __WEBPACK_IMPORTED_MODULE_16__page_end_index_vue___default.a } /*,
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               { path: '/gameend', component: gameend },
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               { path: '/round/exchange', component: roundExchange },
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               { path: '/round/market', component: roundMarket },
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               { path: '/round/teamleader', component: roundTeamleader }*/
+var routes = [{ path: '', component: __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default.a }, { path: '/', component: __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default.a }, { path: '/home', component: __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default.a }, { path: '/admin', component: __WEBPACK_IMPORTED_MODULE_17__page_admin_construct_index_vue___default.a }, { path: '/admin/construct', component: __WEBPACK_IMPORTED_MODULE_17__page_admin_construct_index_vue___default.a }, { path: '/regist', component: __WEBPACK_IMPORTED_MODULE_1__page_regist_new_index_vue___default.a }, { path: '/regist/new', component: __WEBPACK_IMPORTED_MODULE_1__page_regist_new_index_vue___default.a }, { path: '/regist/old', component: __WEBPACK_IMPORTED_MODULE_2__page_regist_old_index_vue___default.a }, { path: '/regist/player', component: __WEBPACK_IMPORTED_MODULE_3__page_regist_player_index_vue___default.a }, { path: '/choose', component: __WEBPACK_IMPORTED_MODULE_4__page_choose_game_index_vue___default.a }, { path: '/choose/game', component: __WEBPACK_IMPORTED_MODULE_4__page_choose_game_index_vue___default.a }, { path: '/choose/team', component: __WEBPACK_IMPORTED_MODULE_5__page_choose_team_index_vue___default.a }, { path: '/choose/job', component: __WEBPACK_IMPORTED_MODULE_6__page_choose_job_index_vue___default.a }, { path: '/choose/ready', component: __WEBPACK_IMPORTED_MODULE_7__page_choose_ready_index_vue___default.a }, { path: '/round/factory', component: __WEBPACK_IMPORTED_MODULE_8__page_round_factory_index_vue___default.a }, { path: '/round/retailer', component: __WEBPACK_IMPORTED_MODULE_9__page_round_retailer_index_vue___default.a }, { path: '/round/wholesaler', component: __WEBPACK_IMPORTED_MODULE_10__page_round_wholesaler_index_vue___default.a }, { path: '/round/guerrilla', component: __WEBPACK_IMPORTED_MODULE_11__page_round_guerrilla_index_vue___default.a }, { path: '/round/keeper', component: __WEBPACK_IMPORTED_MODULE_11__page_round_guerrilla_index_vue___default.a }, { path: '/round/exchanger', component: __WEBPACK_IMPORTED_MODULE_12__page_round_exchanger_index_vue___default.a }, { path: '/round/transporter', component: __WEBPACK_IMPORTED_MODULE_13__page_round_transporter_index_vue___default.a }, { path: '/round/market', component: __WEBPACK_IMPORTED_MODULE_14__page_round_market_index_vue___default.a }, { path: '/round/consoler', component: __WEBPACK_IMPORTED_MODULE_15__page_round_consoler_index_vue___default.a }, { path: '/end', component: __WEBPACK_IMPORTED_MODULE_16__page_end_index_vue___default.a } /*,
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { path: '/gameend', component: gameend },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { path: '/round/exchange', component: roundExchange },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { path: '/round/market', component: roundMarket },
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              { path: '/round/teamleader', component: roundTeamleader }*/
 ];
 
 var router = new VueRouter({
@@ -1683,7 +1683,7 @@ var mainFrame = new Vue({
   router: __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */]
 });
 
-__WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/');
+// router.push('/')
 
 /***/ }),
 /* 14 */
@@ -4376,15 +4376,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['list'],
+  props: {
+    'list': Array
+  },
   data: function data() {
     return {
       header: [{ text: '時間', align: 'left', value: 'readableGameTime' }, { text: '數量', value: 'amount' }, { text: '已送達', value: 'delivered' }]
     };
   },
+
   computed: {
     readableOrderList: function readableOrderList() {
       if (this.list) {
+        console.log(this.list);
+        console.log(__WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list));
         return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list);
       } else {
         return [{ readableGameTime: 'A', amount: 123 }, { readableGameTime: 'B', amount: 456 }];
@@ -5620,8 +5625,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 
 
@@ -6692,7 +6695,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -6804,7 +6807,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
 
 // exports
 
@@ -9178,11 +9181,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.setName($event)
       }
     }
-  }, [_vm._v("確定")])], 1)], 1), _vm._v(" "), _c('v-layout', {
-    attrs: {
-      "row": ""
-    }
-  })], 1), _vm._v(" "), _c('v-dialog', {
+  }, [_vm._v("確定")])], 1)], 1)], 1), _vm._v(" "), _c('v-dialog', {
     model: {
       value: (_vm.errorDialog),
       callback: function($$v) {
@@ -9676,7 +9675,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "hide-actions": ""
     },
     scopedSlots: _vm._u([
-      ["items", function(props) {
+      ["default", function(props) {
         return [_c('td', [_vm._v(_vm._s(props.item.readableGameTime))]), _vm._v(" "), _c('td', {
           staticClass: "text-xs-right"
         }, [_vm._v(_vm._s(props.item.amount))]), _vm._v(" "), _c('td', {

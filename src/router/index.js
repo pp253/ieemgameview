@@ -19,6 +19,7 @@ import adminConstruct from '../page/admin/construct/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
+  { path: '', component: home },
   { path: '/', component: home },
   { path: '/home', component: home },
   { path: '/admin', component: adminConstruct },
