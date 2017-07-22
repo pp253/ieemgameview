@@ -3,6 +3,7 @@
     v-bind:headers="header"
     :items="readableDeliverList"
     hide-actions
+    no-data-text="還沒有物流紀錄"
   >
     <template slot="items" scope="props">
       <td>{{ props.item.readableGameTime }}</td>

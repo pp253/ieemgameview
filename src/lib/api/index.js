@@ -113,12 +113,20 @@ export class User {
           console.log('Game Day has been set to', data.day)
         }
         if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
+          console.log('off work')
+          this.getState().time = this.getGameConfig().dayLong * 1000
           this.dayStartTime = constant.UNKNOWN_TIME
+          this.getState().isWorking = false
           if (this.day === this.getGameConfig().days) {
+            this.getState().state = constant.GAME_STAGE.FINAL
           }
+        } else {
+          console.log('on work')
+          this.getState().time = this.getTime()
+          this.getState().isWorking = true
         }
-        this.getState().time = this.getTime()
-        this.getState().isWorking = this.isWorking()
+        
+        console.log(this.getTime(), this.isWorking())
         
         // update state
         if ((this.getJob() !== constant.JOBS.UNKNOWN) && !this.isStaffTeam()) {
@@ -253,7 +261,7 @@ export class User {
   }
 
   isWorking () {
-    return (this.getGameStage() === constant.GAME_STAGE.START) && (this.getDayStartTime() !== constant.UNKNOWN_TIME)
+    return this.getState().isWorking
   }
 
   isOffWork () {

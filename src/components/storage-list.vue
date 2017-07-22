@@ -3,6 +3,7 @@
     v-bind:headers="header"
     :items="readableStorageList"
     hide-actions
+    no-data-text="還沒有囤貨紀錄"
   >
     <template slot="items" scope="props">
       <td>{{ props.item.readableProduct }}</td>

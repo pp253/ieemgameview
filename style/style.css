@@ -70,6 +70,10 @@
   margin-right: 0;
 }
 
+.dialog button.btn--floating {
+  position: fixed !important;
+}
+
 .dialog .floating-right-bottom {
   position: fixed;
   right: 8px;

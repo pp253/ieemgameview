@@ -6,7 +6,7 @@
       <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <team-storage-list></team-storage-list>
+      <!-- <team-storage-list></team-storage-list> -->
       <storage-register-dialog :announce="announce"></storage-register-dialog>
     </main>
     <v-snackbar
@@ -34,7 +34,9 @@ export default {
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     }
   },
   computed: {

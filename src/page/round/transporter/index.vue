@@ -1,12 +1,12 @@
 <template>
   <div class="round">
-    <v-toolbar class="green">
+    <v-toolbar :class="mainColor">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <team-storage-list></team-storage-list>
+      <!-- <team-storage-list></team-storage-list> -->
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar
@@ -34,7 +34,9 @@ export default {
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
       snackbar: false,
-      snackbarText: ''
+      snackbarText: '',
+      mainColor: 'green',
+      subColor: 'lime'
     }
   },
   computed: {

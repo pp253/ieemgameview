@@ -102,13 +102,14 @@ export default {
   },
   methods: {
     register () {
+      if (!this.selectedTeam) {
+        this.announce(`登記失敗！請選擇組別`)
+        return
+      }
       this.storageRegisterDialog = false
       let user = api.nowUser
 
-      console.log(this.amountCar)
-      console.log(this.amount)
       for (let key in this.amount) {
-      console.log(this.amount[key])
         if (!this.amount[key]) {
           continue
         }
