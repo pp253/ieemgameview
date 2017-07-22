@@ -866,11 +866,20 @@ var User = function () {
           console.log('Game Day has been set to', data.day);
         }
         if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
+          console.log('off work');
+          this.getState().time = this.getGameConfig().dayLong * 1000;
           this.dayStartTime = __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */];
-          if (this.day === this.getGameConfig().days) {}
+          this.getState().isWorking = false;
+          if (this.day === this.getGameConfig().days) {
+            this.getState().state = __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].FINAL;
+          }
+        } else {
+          console.log('on work');
+          this.getState().time = this.getTime();
+          this.getState().isWorking = true;
         }
-        this.getState().time = this.getTime();
-        this.getState().isWorking = this.isWorking();
+
+        console.log(this.getTime(), this.isWorking());
 
         // update state
         if (this.getJob() !== __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].UNKNOWN && !this.isStaffTeam()) {
@@ -1017,7 +1026,7 @@ var User = function () {
   }, {
     key: 'isWorking',
     value: function isWorking() {
-      return this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].START && this.getDayStartTime() !== __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */];
+      return this.getState().isWorking;
     }
   }, {
     key: 'isOffWork',
@@ -2491,13 +2500,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     register: function register() {
+      if (!this.selectedTeam) {
+        this.announce('\u767B\u8A18\u5931\u6557\uFF01\u8ACB\u9078\u64C7\u7D44\u5225');
+        return;
+      }
       this.storageRegisterDialog = false;
       var user = __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */];
 
-      console.log(this.amountCar);
-      console.log(this.amount);
       for (var key in this.amount) {
-        console.log(this.amount[key]);
         if (!this.amount[key]) {
           continue;
         }
@@ -4247,7 +4257,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-register-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-register-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -6532,7 +6542,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.mainColor
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('team-storage-list'), _vm._v(" "), _c('deliver-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('deliver-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -6943,7 +6953,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_vm._v("下一天")])], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("特別功能")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('account-dialog', {
     attrs: {
-      "account": _vm.account
+      "announce": _vm.announce
     }
   })], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("處理速度測試")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("確定list")])])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     attrs: {
@@ -7306,7 +7316,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "green"
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('team-storage-list'), _vm._v(" "), _c('storage-register-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('storage-register-dialog', {
     attrs: {
       "announce": _vm.announce
     }

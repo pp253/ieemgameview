@@ -6,7 +6,7 @@
       <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <team-storage-list></team-storage-list>
+      <!-- <team-storage-list></team-storage-list> -->
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar

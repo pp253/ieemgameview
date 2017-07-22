@@ -61,7 +61,7 @@
             <v-card-title>特別功能</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <account-dialog :account="account"></account-dialog>
+              <account-dialog :announce="announce"></account-dialog>
             </v-card-actions>
           </v-card>
           <v-card>
