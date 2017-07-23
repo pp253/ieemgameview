@@ -149,8 +149,16 @@ export function readableProductList () {
   return list
 }
 
-export function toReadableOrderList (list) {
+export function toReadableOrderList (list, getList) {
   let result = []
+  if (!getList) {
+    getList = []
+  }
+  let accumulateAmmount = 0
+  for (let i of getList) {
+    
+  }
+
   let realAmount = 0
   for (let item of list) {
     realAmount = parseInt(item.amount) - realAmount

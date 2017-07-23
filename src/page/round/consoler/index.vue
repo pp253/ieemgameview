@@ -125,6 +125,9 @@ export default {
     }
   },
   methods: {
+    intoBoardCast () {
+      router.push('/boardcast')
+    },
     nextGameStage () {
       gameApi.nextGameStage(api.nowUser.getGameId())
         .then((function (res) {

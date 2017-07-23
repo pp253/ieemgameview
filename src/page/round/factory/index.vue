@@ -41,7 +41,7 @@
             :key="1"
             :id="'received-order'"
           >
-            <order-history :list="state.receivedOrder"></order-history>
+            <order-history :list="state.receivedOrder" :get-list="state.deliverHistory"></order-history>
           </v-tabs-content>
           <v-tabs-content
             :key="2"

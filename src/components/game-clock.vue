@@ -1,16 +1,21 @@
 <template>
   <div class="game-clock">
-    <v-card>
-      <v-card-text>
-        <span class="more-info">{{ readableDay }}</span><br>
-        <span class="time">{{ readableTime }}</span>
-      </v-card-text>
-    </v-card>
+    <h5 class="more-info">{{ readableDay }}</h5>
+    <v-progress-circular
+      :size="200"
+      :width="15"
+      :rotate="-90"
+      :value="timeValue"
+      class="primary--text"
+    >
+      {{ readableTime }}
+    </v-progress-circular>
   </div>
 </template>
 
 <script>
 import * as api from '../lib/api'
+import * as constant from '../lib/constant'
 import * as readable from '../lib/readable'
 
 export default {
@@ -20,10 +25,18 @@ export default {
     }
   },
   computed: {
-    readableTime: function () {
-      return readable.toReadableTime(this.state.time)
+    timeValue () {
+      // full round is 100
+      if (this.state.isWorking) {
+        return 100 - (this.state.time / api.nowUser.getGameConfig().dayLong) / 10
+      } else {
+        return 0
+      }
     },
-    readableDay: function () {
+    readableTime () {
+      return readable.toReadableTime(this.state.time, this.state.isWorking, true)
+    },
+    readableDay () {
       return readable.toReadableDay(this.state.day)
     }
   }
@@ -31,8 +44,8 @@ export default {
 </script>
 
 <style>
-.game-clock .more-info {
-  font-size: 20px;
+.game-clock {  
+  text-align: center;
 }
 
 .game-clock .time {

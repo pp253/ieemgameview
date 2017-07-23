@@ -1,4 +1,6 @@
 import home from '../page/home/index.vue'
+import adminConstruct from '../page/admin/construct/index.vue'
+import boardcastScoreboard from '../page/boardcast/scoreboard/index.vue'
 import registNew from '../page/regist/new/index.vue'
 import registOld from '../page/regist/old/index.vue'
 import registPlayer from '../page/regist/player/index.vue'
@@ -15,7 +17,6 @@ import roundTransporter from '../page/round/transporter/index.vue'
 import roundMarket from '../page/round/market/index.vue'
 import roundConsoler from '../page/round/consoler/index.vue'
 import end from '../page/end/index.vue'
-import adminConstruct from '../page/admin/construct/index.vue'
 //import gameend from '../page/gameend'
 
 const routes = [
@@ -24,6 +25,8 @@ const routes = [
   { path: '/home', component: home },
   { path: '/admin', component: adminConstruct },
   { path: '/admin/construct', component: adminConstruct },
+  { path: '/boardcast', component: boardcastScoreboard }, // this should be fixed
+  { path: '/boardcast/scoreboard', component: boardcastScoreboard },
   { path: '/regist', component: registNew },
   { path: '/regist/new', component: registNew },
   { path: '/regist/old', component: registOld },

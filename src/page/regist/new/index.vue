@@ -8,7 +8,7 @@
         <v-card-text>
           <p>這個認證碼代表著你的身分，如果之後想要重新進入遊戲的話，你必須輸入這個認證碼。</p>
           <p><b>請將認證碼記錄下來</b>，以備等一下所需。</p>
-          <input class="code-text" :value="code"></input>
+          <input :value="code" class="code-text" readonly></input>
         </v-card-text>
         <v-card-actions>
           <v-btn class="blue--text darken-1" flat @click.native="intoRegistOld">我已經有認證碼</v-btn>
