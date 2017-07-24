@@ -5,7 +5,7 @@
     hide-actions
     no-data-text="還沒有訂貨紀錄"
   >
-    <template scope="props">
+    <template slot="items" scope="props">
       <td>{{ props.item.readableGameTime }}</td>
       <td class="text-xs-right">{{ props.item.amount }}</td>
       <!--<td class="text-xs-right">{{ props.item.delivered }}</td>-->
@@ -33,7 +33,8 @@ export default {
   computed: {
     readableOrderList () {
       if (this.list) {
-        return readable.toReadableOrderList(this.list, this.getList)
+        console.log(readable.toReadableOrderList(this.list/*, this.getList*/))
+        return readable.toReadableOrderList(this.list/*, this.getList*/)
       } else {
         return [{readableGameTime:'A', amount:123}, {readableGameTime:'B', amount:456}]
       }
