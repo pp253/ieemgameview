@@ -128,7 +128,7 @@ export default {
               let item = history[key]
               if (item.day < day || (item.day === day && item.time <= time * 1000)) {
                 if (item.balance > n) {
-                  n += item.balance - n
+                  n += item.balance
                 }
                 g = item.balance
               } else {

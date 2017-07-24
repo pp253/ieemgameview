@@ -6,4 +6,4 @@ const mainFrame = new Vue({
   router: router
 })
 
-// router.push('/')
+router.push('/')
