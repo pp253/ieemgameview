@@ -172,12 +172,14 @@ export default {
           // chart-productivity
           let calculate = (day) => {
             let n = 0 // accumulate
+            let g = 0
             for (let key in history) {
               let item = history[key]
               if (item.day <= day) {
-                if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
-                  n += item.amount
+                if (item.product === constant.PRODUCTS.CAR && item.amount > g) {
+                  n += item.amount - g
                 }
+                g = item.amount
               } else {
                 break
               }
