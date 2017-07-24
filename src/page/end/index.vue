@@ -177,7 +177,7 @@ export default {
               let item = history[key]
               if (item.day <= day) {
                 if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
-                  n += item.amount - n
+                  n += item.amount
                 }
               } else {
                 break
@@ -222,7 +222,7 @@ export default {
           let item = history[key]
           if (item.day <= day) {
             if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
-              n += item.amount - n
+              n += item.amount
             }
           } else {
             break
