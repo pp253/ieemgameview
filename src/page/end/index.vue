@@ -127,8 +127,8 @@ export default {
             for (let key in history) {
               let item = history[key]
               if (item.day < day || (item.day === day && item.time <= time * 1000)) {
-                if (item.balance > n) {
-                  n += item.balance
+                if (item.balance > g) {
+                  n += item.balance - g
                 }
                 g = item.balance
               } else {
@@ -145,7 +145,6 @@ export default {
               dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])
             }
           }
-          console.log(dataTable)
           let data = google.visualization.arrayToDataTable(dataTable)
 
           let options = {
