@@ -1,11 +1,14 @@
 <template>
   <div class="round">
-    <v-toolbar :class="mainColor">
+    <v-toolbar :class="color.primary">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
+      <v-card>
+        <v-card-text>
+          <game-clock></game-clock>
+        </v-card-text>
+      </v-card>
     </main>
     <v-snackbar
       :timeout="6000"
@@ -32,14 +35,10 @@ export default {
       state: api.nowUser.getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: api.nowUser.getColor()
     }
   },
   computed: {
-    toolbarInfo () {
-      return readable.toReadableGameTime(this.state)
-    },
     intoBelong () {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:

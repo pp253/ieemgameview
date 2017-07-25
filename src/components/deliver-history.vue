@@ -16,9 +16,10 @@
 import * as readable from '../lib/readable'
 
 export default {
-  props: [
-    'list'
-  ],
+  props: {
+    'list': Array,
+    'announce': Function
+  },
   data: function () {
     return {
       header: [
@@ -28,8 +29,9 @@ export default {
     }
   },
   computed: {
-    readableDeliverList: function () {
+    readableDeliverList () {
       if (this.list) {
+        this.announce('物流紀錄更新了！')
         return readable.toReadableDeliverList(this.list)
       } else {
         return []

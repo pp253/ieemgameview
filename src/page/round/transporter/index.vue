@@ -1,12 +1,14 @@
 <template>
   <div class="round">
-    <v-toolbar :class="mainColor">
+    <v-toolbar :class="color.primary">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
-      <!-- <team-storage-list></team-storage-list> -->
+      <v-card>
+        <v-card-content>
+          <game-clock></game-clock>
+        </v-card-content>
+      </v-card>
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar
@@ -35,14 +37,10 @@ export default {
       state: api.nowUser.getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: api.nowUser.getColor()
     }
   },
   computed: {
-    toolbarInfo () {
-      return readable.toReadableGameTime(this.state)
-    },
     intoBelong () {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:

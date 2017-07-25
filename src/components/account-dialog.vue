@@ -39,8 +39,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="accountDialog = false">取消</v-btn>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="act">登記</v-btn>
+        <v-btn :class="color.accent" flat="flat" @click.native="accountDialog = false">取消</v-btn>
+        <v-btn :class="color.accent" flat="flat" @click.native="act">登記</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -63,7 +63,8 @@ export default {
       selectedTeam: null,
       amount: null,
       balance: null,
-      state: api.nowUser.getState()
+      state: api.nowUser.getState(),
+      color: api.nowUser.getColor()
     }
   },
   computed: {

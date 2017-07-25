@@ -16,20 +16,54 @@
 import * as readable from '../lib/readable'
 
 export default {
-  props: [
-    'list'
-  ],
+  props: {
+    'list': Array,
+    'announce': Function
+  },
   data: function () {
     return {
       header: [
         {text: '產品', align: 'left', value: 'readableProduct'},
         {text: '數量', value: 'amount'}
-      ]
+      ],
+      lastList: []
     }
   },
   computed: {
-    readableStorageList: function () {
+    readableStorageList () {
       if (this.list) {
+        let same = true
+        // check last list
+        for (let i of this.list) {
+          let founded = false
+          for (let n of this.lastList) {
+            if (n.product === i.product) {
+              founded = true
+              if (n.amount !== i.amount) {
+                console.log('1', n, i)
+                same = false
+              }
+              break
+            }
+          }
+          if (!founded || !same) {
+                console.log('2', i)
+            same = false
+            break
+          }
+        }
+
+        // copy lastList
+        this.lastList = []
+        for (let i of this.list) {
+          this.lastList.push({
+            product: i.product,
+            amount: i.amount
+          })
+        }
+        if (!same) {
+          this.announce ? this.announce('庫存更新了！') : null
+        }
         return readable.toReadableStorageList(this.list)
       } else {
         return [{readableProduct:'A', amount:123}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}, {readableProduct:'B', amount:456}]

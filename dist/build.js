@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 173);
+/******/ 	return __webpack_require__(__webpack_require__.s = 178);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -265,7 +265,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(172)
+var listToStyles = __webpack_require__(177)
 
 /*
 type StyleObject = {
@@ -640,6 +640,7 @@ function toReadableProduct(product) {
 function toReadableDeliverList(list) {
   var result = [];
   var realAmount = 0;
+  var lastAmount = 0;
   var _iteratorNormalCompletion2 = true;
   var _didIteratorError2 = false;
   var _iteratorError2 = undefined;
@@ -648,11 +649,12 @@ function toReadableDeliverList(list) {
     for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
       var item = _step2.value;
 
-      realAmount = parseInt(item.amount) - realAmount;
+      realAmount = parseInt(item.amount) - lastAmount;
       result.push({
         readableGameTime: toReadableGameTime(item),
         amount: realAmount
       });
+      lastAmount = parseInt(item.amount);
     }
   } catch (err) {
     _didIteratorError2 = true;
@@ -688,19 +690,36 @@ function readableProductList() {
   return list;
 }
 
-function toReadableOrderList(list, getList) {
+function toReadableOrderList(list, getListType, getList) {
   var result = [];
-  if (!getList) {
-    getList = [];
+  var accumulateAmount = 0;
+  switch (getListType) {
+    case 'number':
+      accumulateAmount = getList;
+      break;
+
+    case 'list':
+      accumulateAmount = getList.length > 0 ? getList[getList.length - 1].amount : 0;
+      break;
   }
-  var accumulateAmmount = 0;
+
+  var realAmount = 0;
   var _iteratorNormalCompletion3 = true;
   var _didIteratorError3 = false;
   var _iteratorError3 = undefined;
 
   try {
-    for (var _iterator3 = getList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var i = _step3.value;
+    for (var _iterator3 = list[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+      var item = _step3.value;
+
+      realAmount = parseInt(item.amount) - realAmount;
+      var delivered = accumulateAmount > realAmount ? realAmount : accumulateAmount;
+      accumulateAmount = accumulateAmount > realAmount ? accumulateAmount - realAmount : 0;
+      result.push({
+        readableGameTime: toReadableGameTime(item, false),
+        amount: realAmount,
+        delivered: accumulateAmount > realAmount ? realAmount : delivered
+      });
     }
   } catch (err) {
     _didIteratorError3 = true;
@@ -717,37 +736,6 @@ function toReadableOrderList(list, getList) {
     }
   }
 
-  var realAmount = 0;
-  var _iteratorNormalCompletion4 = true;
-  var _didIteratorError4 = false;
-  var _iteratorError4 = undefined;
-
-  try {
-    for (var _iterator4 = list[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-      var item = _step4.value;
-
-      realAmount = parseInt(item.amount) - realAmount;
-      result.push({
-        readableGameTime: toReadableGameTime(item, false),
-        amount: realAmount,
-        delivered: 0
-      });
-    }
-  } catch (err) {
-    _didIteratorError4 = true;
-    _iteratorError4 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion4 && _iterator4.return) {
-        _iterator4.return();
-      }
-    } finally {
-      if (_didIteratorError4) {
-        throw _iteratorError4;
-      }
-    }
-  }
-
   return result;
 }
 
@@ -759,12 +747,13 @@ function toReadableOrderList(list, getList) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__account__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__deliver__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__order__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__deliver__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__order__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__storage__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__news__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__data__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__news__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__data__ = __webpack_require__(12);
 /* unused harmony export isStaffTeam */
+/* unused harmony export DEFAULT_STATE */
 /* unused harmony export isStaffJob */
 /* unused harmony export User */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return nowUser; });
@@ -783,6 +772,36 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
+var DEFAULT_STATE = function DEFAULT_STATE() {
+  return {
+    gameId: __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN,
+    teamIndex: __WEBPACK_IMPORTED_MODULE_0__constant__["f" /* TEAMS */].UNKNOWN,
+    job: __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].UNKNOWN,
+    gameConfig: {},
+    stage: __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].UNKNOWN,
+    day: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].DAY,
+    time: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].TIME,
+    isWorking: false,
+    dayStartTime: __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */],
+    balance: 0,
+    storage: [],
+    receivedOrder: [],
+    orderHistory: [],
+    deliverHistory: [],
+    news: [],
+    color: {
+      primary: 'light-blue',
+      accent: 'yellow'
+    },
+    market: {
+      orderAmount: 0,
+      storageAmount: 0,
+      price: 0
+    },
+    deliveredNumber: 0
+  };
+};
+
 function _isStaffTeam(team) {
   return team === 0;
 }
@@ -796,23 +815,7 @@ var User = function () {
     _classCallCheck(this, User);
 
     // these are made for auto-updating time
-    this.state = {
-      gameId: __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN,
-      teamIndex: __WEBPACK_IMPORTED_MODULE_0__constant__["f" /* TEAMS */].UNKNOWN,
-      job: __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].UNKNOWN,
-      gameConfig: {},
-      stage: __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].UNKNOWN,
-      day: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].DAY,
-      time: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].TIME,
-      isWorking: false,
-      dayStartTime: __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */],
-      balance: 0,
-      storage: [],
-      receivedOrder: [],
-      orderHistory: [],
-      deliverHistory: [],
-      news: []
-    };
+    this.state = DEFAULT_STATE();
 
     this.timer = setInterval(this._update.bind(this), 1000);
 
@@ -822,23 +825,7 @@ var User = function () {
   _createClass(User, [{
     key: 'resetState',
     value: function resetState() {
-      this.state = Object.assign(this.getState(), {
-        gameId: __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN,
-        teamIndex: __WEBPACK_IMPORTED_MODULE_0__constant__["f" /* TEAMS */].UNKNOWN,
-        job: __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].UNKNOWN,
-        gameConfig: {},
-        stage: __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].UNKNOWN,
-        day: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].DAY,
-        time: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].TIME,
-        isWorking: false,
-        dayStartTime: __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */],
-        balance: 0,
-        storage: [],
-        receivedOrder: [],
-        orderHistory: [],
-        deliverHistory: [],
-        news: []
-      });
+      this.state = Object.assign(this.getState(), DEFAULT_STATE());
     }
   }, {
     key: 'getState',
@@ -854,6 +841,11 @@ var User = function () {
     key: 'getDayTime',
     value: function getDayTime() {
       return this.getState();
+    }
+  }, {
+    key: 'getColor',
+    value: function getColor() {
+      return this.getState().color;
     }
   }, {
     key: '_update',
@@ -958,6 +950,13 @@ var User = function () {
             }
           };
 
+          var updateDeliveredNumberFromRes = function updateDeliveredNumberFromRes(deliveredNumber) {
+            if (_this.getState().deliveredNumber !== deliveredNumber) {
+              _this.getState().deliveredNumber = deliveredNumber;
+              console.log('DeliveredNumber has been set to', deliveredNumber);
+            }
+          };
+
           switch (this.getJob()) {
             case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].FACTORY:
               // update deliver history
@@ -969,6 +968,7 @@ var User = function () {
               updateDeliverHistoryFromRes(data.deliverHistory);
               updateReceivedOrderFromRes(data.receivedOrder);
               updateOrderHistoryFromRes(data.orderHistory);
+              updateDeliveredNumberFromRes(data.deliveredNumber);
               break;
 
             case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].RETAILER:
@@ -976,6 +976,19 @@ var User = function () {
               updateReceivedOrderFromRes(data.receivedOrder);
               updateOrderHistoryFromRes(data.orderHistory);
               updateNewsFromRes(data.news);
+              updateDeliveredNumberFromRes(data.deliveredNumber);
+              break;
+          }
+        } else if (this.isStaffTeam()) {
+          var updateMarketFromRes = function updateMarketFromRes(market) {
+            _this.getState().market.orderAmount = market.orderAmount;
+            _this.getState().market.storageAmount = market.storageAmount;
+            _this.getState().market.price = market.price;
+          };
+
+          switch (this.getJob()) {
+            case __WEBPACK_IMPORTED_MODULE_0__constant__["h" /* STAFF_JOBS */].CONSOLER:
+              updateMarketFromRes(data.market);
               break;
           }
         }
@@ -1004,6 +1017,20 @@ var User = function () {
     key: 'setJob',
     value: function setJob(job) {
       this.getState().job = job;
+      switch (job) {
+        case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].RETAILER:
+          this.getColor().primary = 'blue-grey';
+          this.getColor().accent = 'light-blue';
+          break;
+        case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].WHOLESALER:
+          this.getColor().primary = 'teal';
+          this.getColor().accent = 'lime';
+          break;
+        case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* JOBS */].FACTORY:
+          this.getColor().primary = 'amber';
+          this.getColor().accent = 'indigo';
+          break;
+      }
       return this;
     }
   }, {
@@ -1298,43 +1325,43 @@ var READABLE_JOBS = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__ = __webpack_require__(91);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__ = __webpack_require__(92);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__ = __webpack_require__(95);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__ = __webpack_require__(93);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__ = __webpack_require__(96);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__ = __webpack_require__(99);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__ = __webpack_require__(107);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__ = __webpack_require__(112);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__ = __webpack_require__(108);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__ = __webpack_require__(106);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__ = __webpack_require__(111);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__ = __webpack_require__(109);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__ = __webpack_require__(102);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__ = __webpack_require__(105);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return router; });
 
@@ -1377,6 +1404,11 @@ var router = new VueRouter({
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = getGameIdList;
 /* harmony export (immutable) */ __webpack_exports__["b"] = newGame;
+/* unused harmony export getCode */
+/* unused harmony export getRegist */
+/* unused harmony export regist */
+/* unused harmony export setRegistByCode */
+/* unused harmony export enroll */
 function getGameIdList() {
   return new Promise(function (resolve, reject) {
     axios.post('/api/enter/get_game_list').then(function (res) {
@@ -1394,6 +1426,85 @@ function newGame(gameConfig) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/enter/new_game', {
       gameConfig: gameConfig
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function getCode() {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/enter/get_code', {
+      gameConfig: gameConfig
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function getRegist() {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/enter/get_regist', {
+      gameConfig: gameConfig
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function regist(nickname, code) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/enter/regist', {
+      nickname: nickname,
+      code: code
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function setRegistByCode(code) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/enter/set_regist_by_code', {
+      code: code
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function enroll(userId, gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/enter/enroll', {
+      userId: userId,
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
     }).then(function (res) {
       if (res.data.err) {
         reject(res);
@@ -1603,87 +1714,6 @@ function take(gameId, teamIndex, balance) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getUpdate;
-/* harmony export (immutable) */ __webpack_exports__["b"] = getBalanceByGame;
-function getUpdate(gameId, teamIndex, job) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/data/get_update', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-function getBalanceByGame(gameId) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/data/get_balance_by_game', {
-      gameId: gameId
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-/***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = getHistory;
-/* harmony export (immutable) */ __webpack_exports__["b"] = setDeliver;
-function getHistory(gameId, teamIndex, job) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/deliver/get_history', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-function setDeliver(gameId, teamIndex, job, product, amount) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/deliver/set_deliver', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job,
-      product: product,
-      amount: amount
-    }).then(function (res) {
-      if (res.data.error) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-/***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["b"] = getHistory;
 /* harmony export (immutable) */ __webpack_exports__["a"] = getReceived;
 /* harmony export (immutable) */ __webpack_exports__["c"] = setOrder;
@@ -1741,52 +1771,108 @@ function setOrder(gameId, teamIndex, job, product, amount) {
 }
 
 /***/ }),
+/* 12 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getUpdate;
+/* harmony export (immutable) */ __webpack_exports__["b"] = getBalanceByGame;
+/* unused harmony export getMarketInfo */
+function getUpdate(gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_update', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+function getBalanceByGame(gameId) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_balance_by_game', {
+      gameId: gameId
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+function getMarketInfo(gameId) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_market_info', {
+      gameId: gameId
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+/***/ }),
+/* 13 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getHistory;
+/* harmony export (immutable) */ __webpack_exports__["b"] = setDeliver;
+function getHistory(gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/deliver/get_history', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function setDeliver(gameId, teamIndex, job, product, amount) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/deliver/set_deliver', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job,
+      product: product,
+      amount: amount
+    }).then(function (res) {
+      if (res.data.error) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+/***/ }),
 /* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components__ = __webpack_require__(15);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components__);
-
-
-
-var mainFrame = new Vue({
-  el: '#main-frame',
-  router: __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */]
-});
-
-__WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/');
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports, __webpack_require__) {
-
-Vue.component('deliver-history', __webpack_require__(81));
-Vue.component('storage-list', __webpack_require__(88));
-Vue.component('order-history', __webpack_require__(87));
-Vue.component('news-list', __webpack_require__(84));
-Vue.component('order-dialog', __webpack_require__(86));
-Vue.component('game-clock', __webpack_require__(82));
-Vue.component('team-storage-list', __webpack_require__(90));
-Vue.component('storage-register-dialog', __webpack_require__(89));
-Vue.component('deliver-dialog', __webpack_require__(80));
-// Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
-Vue.component('online-status', __webpack_require__(85));
-Vue.component('info-panel', __webpack_require__(83));
-Vue.component('account-dialog', __webpack_require__(79));
-
-// Discarded:
-// Vue.component('received-order', require('./received-order.vue'))
-// Vue.component('line-chart', require('./line-chart.vue'))
-
-/***/ }),
-/* 16 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = getNews;
+/* harmony export (immutable) */ __webpack_exports__["b"] = setNewsList;
 function getNews(gameId) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/news/get_news', {
@@ -1801,6 +1887,64 @@ function getNews(gameId) {
     });
   });
 }
+
+function setNewsList(gameId, newsList) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/news/set_news_list', {
+      gameId: gameId,
+      newsList: newsList
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+/***/ }),
+/* 15 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components__);
+
+
+
+var mainFrame = new Vue({
+  el: '#main-frame',
+  router: __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */]
+});
+
+__WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/');
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports, __webpack_require__) {
+
+Vue.component('deliver-history', __webpack_require__(83));
+Vue.component('storage-list', __webpack_require__(91));
+Vue.component('order-history', __webpack_require__(90));
+Vue.component('news-list', __webpack_require__(87));
+Vue.component('order-dialog', __webpack_require__(89));
+Vue.component('game-clock', __webpack_require__(84));
+Vue.component('team-storage-list', __webpack_require__(93));
+Vue.component('storage-register-dialog', __webpack_require__(92));
+Vue.component('deliver-dialog', __webpack_require__(82));
+// Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
+Vue.component('online-status', __webpack_require__(88));
+Vue.component('info-panel', __webpack_require__(85));
+Vue.component('account-dialog', __webpack_require__(81));
+Vue.component('msg-dialog', __webpack_require__(86));
+
+// Discarded:
+// Vue.component('received-order', require('./received-order.vue'))
+// Vue.component('line-chart', require('./line-chart.vue'))
 
 /***/ }),
 /* 17 */
@@ -1877,7 +2021,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       selectedTeam: null,
       amount: null,
       balance: null,
-      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState()
+      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
+      color: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getColor()
     };
   },
   computed: {
@@ -1930,7 +2075,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_deliver__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_deliver__ = __webpack_require__(13);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2006,9 +2159,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       selectedJob: null,
       selectedTeam: null,
       amount: null,
-      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState()
+      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
+      msgDialog: {
+        show: false,
+        title: '',
+        content: ''
+      }
     };
   },
+
   computed: {
     teamList: function teamList() {
       return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["a" /* toReadableTeamList */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getTeamNumber());
@@ -2021,6 +2180,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     btnClass: function btnClass() {
       return this.secondary ? 'floating-right-bottom-secondary' : 'floating-right-bottom';
+    },
+    btnShow: function btnShow() {
+      return this.selectedTeam && this.selectedJob && this.amount;
     }
   },
   methods: {
@@ -2028,12 +2190,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.deliverDialog = false;
       __WEBPACK_IMPORTED_MODULE_3__lib_api_deliver__["b" /* setDeliver */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getGameId(), this.selectedTeam, this.selectedJob, 'CAR', this.amount).then(function (res) {
         var data = res.data;
-        this.announce('\u6210\u529F\u904B\u8F38\u7B2C' + data.teamIndex + '\u7D44' + data.job + '\u7684' + data.amount + '\u81FA\u8ECA');
+        this.msgBox('運輸成功', '\u6210\u529F\u904B\u8F38\u7B2C' + data.teamIndex + '\u7D44' + data.job + '\u7684' + data.amount + '\u81FA\u8ECA');
       }.bind(this)).catch(function (err) {
-        console.log(err);
         var data = err.data;
-        this.announce(data.readableMsg || data.msg);
+        this.msgBox('運輸失敗', data.readableMsg);
       }.bind(this));
+    },
+    msgBox: function msgBox(title, content) {
+      this.msgDialog.show = true;
+      this.msgDialog.title = title;
+      this.msgDialog.content = content;
     }
   }
 });
@@ -2063,7 +2229,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['list'],
+  props: {
+    'list': Array,
+    'announce': Function
+  },
   data: function data() {
     return {
       header: [{ text: '時間', align: 'left', value: 'readableGameTime' }, { text: '數量', value: 'amount' }]
@@ -2072,6 +2241,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     readableDeliverList: function readableDeliverList() {
       if (this.list) {
+        this.announce('物流紀錄更新了！');
         return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["n" /* toReadableDeliverList */](this.list);
       } else {
         return [];
@@ -2176,6 +2346,58 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_order__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    'msgShow': Object,
+    'msgTitle': String,
+    'msgContent': String,
+    'msgConfirmText': String,
+    'msgDenyText': String,
+    'msgConfirmAction': Function,
+    'msgDenyAction': Function
+  },
+  methods: {
+    confirm: function confirm() {
+      this.msgShow.show = false;
+      this.msgConfirmAction ? this.msgConfirmAction() : '';
+    },
+    deny: function deny() {
+      this.msgShow.show = false;
+      this.msgDenyAction ? this.msgDenyAction() : '';
+    }
+  }
+});
+
+/***/ }),
+/* 23 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
@@ -2208,10 +2430,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['list'],
+  props: {
+    'list': Array,
+    'announce': Function
+  },
   computed: {
     newsList: function newsList() {
       if (this.list) {
+        this.announce('市場新聞更新了！');
         return this.list;
       } else {
         return [];
@@ -2221,7 +2447,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2290,14 +2516,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_order__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_order__ = __webpack_require__(11);
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2347,7 +2579,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       amount: null,
-      orderDialog: false
+      orderDialog: false,
+      msgDialog: {
+        show: false,
+        title: '',
+        content: ''
+      },
+      color: __WEBPACK_IMPORTED_MODULE_1__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
@@ -2358,21 +2596,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   },
   methods: {
     order: function order() {
-      this.orderDialog = false;
       var user = __WEBPACK_IMPORTED_MODULE_1__lib_api__["a" /* nowUser */];
+      this.orderDialog = false;
       __WEBPACK_IMPORTED_MODULE_2__lib_api_order__["c" /* setOrder */](user.getGameId(), user.getTeam(), user.getJob(), 'CAR', this.amount).then(function (res) {
         var data = res.data;
-        this.announce('\u6210\u529F\u8A02\u8CFC' + data.amount + '\u81FA\u8ECA');
+        this.msgBox('訂購成功', '\u6210\u529F\u8A02\u8CFC' + data.amount + '\u81FA\u8ECA');
       }.bind(this)).catch(function (err) {
         var data = err.data;
-        this.announce(data.readableMsg || data.msg);
+        this.msgBox('訂購失敗', data.readableMsg || data.msg);
       }.bind(this));
+    },
+    msgBox: function msgBox(title, content) {
+      this.msgDialog.show = true;
+      this.msgDialog.title = title;
+      this.msgDialog.content = content;
     }
   }
 });
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2399,21 +2642,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     'list': Array,
-    'get-list': Array
+    'getList': Array,
+    'getNumber': Number,
+    'type': String,
+    'announce': Function
   },
   data: function data() {
     return {
-      header: [{ text: '時間', align: 'left', value: 'readableGameTime' }, { text: '數量', value: 'amount' /*,
-                                                                                                       { text: '已送達', value: 'delivered' }*/
-      }]
+      header: [{ text: '時間', align: 'left', value: 'readableGameTime' }, { text: '數量', value: 'amount' }, { text: '已送達', value: 'delivered' }]
     };
   },
 
   computed: {
     readableOrderList: function readableOrderList() {
       if (this.list) {
-        console.log(__WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list /*, this.getList*/));
-        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list /*, this.getList*/);
+        this.announce ? this.announce() : null;
+        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list, this.type, this.getList || this.getNumber);
       } else {
         return [{ readableGameTime: 'A', amount: 123 }, { readableGameTime: 'B', amount: 456 }];
       }
@@ -2422,7 +2666,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2446,15 +2690,117 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['list'],
+  props: {
+    'list': Array,
+    'announce': Function
+  },
   data: function data() {
     return {
-      header: [{ text: '產品', align: 'left', value: 'readableProduct' }, { text: '數量', value: 'amount' }]
+      header: [{ text: '產品', align: 'left', value: 'readableProduct' }, { text: '數量', value: 'amount' }],
+      lastList: []
     };
   },
   computed: {
     readableStorageList: function readableStorageList() {
       if (this.list) {
+        var same = true;
+        // check last list
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = this.list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var i = _step.value;
+
+            var founded = false;
+            var _iteratorNormalCompletion3 = true;
+            var _didIteratorError3 = false;
+            var _iteratorError3 = undefined;
+
+            try {
+              for (var _iterator3 = this.lastList[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                var n = _step3.value;
+
+                if (n.product === i.product) {
+                  founded = true;
+                  if (n.amount !== i.amount) {
+                    console.log('1', n, i);
+                    same = false;
+                  }
+                  break;
+                }
+              }
+            } catch (err) {
+              _didIteratorError3 = true;
+              _iteratorError3 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                  _iterator3.return();
+                }
+              } finally {
+                if (_didIteratorError3) {
+                  throw _iteratorError3;
+                }
+              }
+            }
+
+            if (!founded || !same) {
+              console.log('2', i);
+              same = false;
+              break;
+            }
+          }
+
+          // copy lastList
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        this.lastList = [];
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
+
+        try {
+          for (var _iterator2 = this.list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            var _i = _step2.value;
+
+            this.lastList.push({
+              product: _i.product,
+              amount: _i.amount
+            });
+          }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2.return) {
+              _iterator2.return();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
+          }
+        }
+
+        if (!same) {
+          this.announce ? this.announce('庫存更新了！') : null;
+        }
         return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["k" /* toReadableStorageList */](this.list);
       } else {
         return [{ readableProduct: 'A', amount: 123 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }];
@@ -2464,7 +2810,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2603,7 +2949,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2675,7 +3021,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2687,7 +3033,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(7);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
 //
 //
 //
@@ -2805,14 +3150,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 });
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_data__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_data__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__router__ = __webpack_require__(6);
@@ -2924,7 +3269,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3023,7 +3368,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3032,6 +3377,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
+//
+//
 //
 //
 //
@@ -3115,6 +3463,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    backToChooseTeam: function backToChooseTeam() {
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/choose/team');
+    },
     previewJob: function previewJob(job) {
       this.job = job;
       this.dialog = true;
@@ -3129,7 +3480,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3139,6 +3490,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(8);
+//
 //
 //
 //
@@ -3200,7 +3552,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3209,6 +3561,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
+//
+//
 //
 //
 //
@@ -3264,6 +3619,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    backToChoose: function backToChoose() {
+      __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/choose');
+    },
+
     intoTeam: function intoTeam(team) {
       console.log('User Team:', team);
       __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].setTeam(team);
@@ -3273,7 +3632,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3285,6 +3644,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_account__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_api_storage__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_api_game__ = __webpack_require__(8);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3373,9 +3759,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }, {
         id: 'chart-productivity',
         title: '產量'
-      }, {
-        id: 'chart-storage',
-        title: '倉儲'
       }],
       gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig()
     };
@@ -3534,7 +3917,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3563,14 +3946,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     intoRegist: function intoRegist() {
-      // router.push('/regist')
-      __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/choose');
+      __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/regist');
+      // router.push('/choose')
     }
   }
 });
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3632,7 +4015,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3722,7 +4105,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3816,7 +4199,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3826,6 +4209,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_api_news__ = __webpack_require__(14);
 //
 //
 //
@@ -3924,6 +4308,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -3940,7 +4354,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       activeTab: null,
       snackbar: false,
       snackbarText: '',
-      gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig()
+      gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig(),
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor(),
+      newsList: ''
     };
   },
 
@@ -3950,7 +4366,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
-    intoBoardCast: function intoBoardCast() {
+    intoBoardcast: function intoBoardcast() {
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/boardcast');
     },
     nextGameStage: function nextGameStage() {
@@ -3976,6 +4392,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     test: function test() {
       __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].test();
     },
+    setNewsList: function setNewsList() {
+      __WEBPACK_IMPORTED_MODULE_5__lib_api_news__["b" /* setNewsList */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameId(), JSON.parse(this.newsList)).then(function (res) {
+        this.announce('新聞設定成功！');
+      }.bind(this)).catch(function (err) {
+        this.announce('新聞設定失敗！');
+      });
+    },
     announce: function announce(msg) {
       this.snackbarText = msg;
       this.snackbar = true;
@@ -3984,7 +4407,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3993,6 +4416,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
+//
 //
 //
 //
@@ -4030,15 +4455,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
   computed: {
-    toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
-    },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
         case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["e" /* GAME_STAGE */].END:
@@ -4057,7 +4478,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4066,7 +4487,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
-//
 //
 //
 //
@@ -4142,13 +4562,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
-      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單', content: 'something2...' }, { index: 2, id: 'deliver-history', title: '運送紀錄', content: 'something3...' }],
+      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單', content: 'something2...' }, { index: 2, id: 'deliver-history', title: '物流紀錄', content: 'something3...' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
@@ -4169,76 +4588,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     announce: function announce(msg) {
       this.snackbarText = msg;
       this.snackbar = true;
-    }
-  }
-});
-
-/***/ }),
-/* 43 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(6);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
-      state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
-      snackbar: false,
-      snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
-    };
-  },
-
-  computed: {
-    toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
     },
-    intoBelong: function intoBelong() {
-      switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["e" /* GAME_STAGE */].END:
-          __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
-          break;
-      }
-      return '';
-    }
-  },
-  methods: {
-    announce: function announce(msg) {
-      this.snackbarText = msg;
-      this.snackbar = true;
+    announceReceivedOrder: function announceReceivedOrder() {
+      this.announce('收到的訂單更新了');
     }
   }
 });
@@ -4275,6 +4627,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -4284,20 +4638,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      secondary: true,
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
   computed: {
-    toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
-    },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
         case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["e" /* GAME_STAGE */].END:
@@ -4347,6 +4696,76 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      secondary: true,
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
+      snackbar: false,
+      snackbarText: '',
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
+    };
+  },
+
+  computed: {
+    toolbarInfo: function toolbarInfo() {
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
+    },
+    intoBelong: function intoBelong() {
+      switch (this.state.stage) {
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["e" /* GAME_STAGE */].END:
+          __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
+          break;
+      }
+      return '';
+    }
+  },
+  methods: {
+    announce: function announce(msg) {
+      this.snackbarText = msg;
+      this.snackbar = true;
+    }
+  }
+});
+
+/***/ }),
+/* 46 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__router__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4409,13 +4828,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
-      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'news-list', title: '市場新聞' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '運送紀錄' }],
+      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'news-list', title: '市場新聞' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '物流紀錄' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
@@ -4441,7 +4859,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4450,6 +4868,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_constant__ = __webpack_require__(5);
+//
+//
 //
 //
 //
@@ -4487,15 +4907,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
   computed: {
-    toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_1__lib_readable__["d" /* toReadableGameTime */](this.state);
-    },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
         case __WEBPACK_IMPORTED_MODULE_3__lib_constant__["e" /* GAME_STAGE */].END:
@@ -4514,7 +4930,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4607,13 +5023,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
-      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '運送紀錄' }],
+      tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '物流紀錄' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getColor()
     };
   },
 
@@ -4634,23 +5049,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     announce: function announce(msg) {
       this.snackbarText = msg;
       this.snackbar = true;
+    },
+    announceReceivedOrder: function announceReceivedOrder() {
+      this.announce('收到的訂單更新了！');
     }
   }
 });
-
-/***/ }),
-/* 48 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
-
-// exports
-
 
 /***/ }),
 /* 49 */
@@ -4661,7 +5065,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?40d1ef97"],"names":[],"mappings":";AAqQA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"cyan elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"cyan\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                single-line\r\n                item-value=\"index\"\r\n                bottom\r\n              ></v-select>\r\n              \r\n              <div\r\n                v-for=\"(chart, key) in charts\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < charts.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ loadChart }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      teamNumber: 4,\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'charts', title: '圖表' },\r\n        { index: 1, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      charts: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        },\r\n        {\r\n          id: 'chart-storage',\r\n          title: '倉儲'\r\n        }\r\n      ],\r\n      gameConfig: api.nowUser.getGameConfig()\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      let list = [{\r\n        index: 0,\r\n        text: '全部'\r\n      }]\r\n      return list.concat(readable.toReadableTeamList(api.nowUser.getTeamNumber()))\r\n    },\r\n    loadChart () {\r\n      if (this.selectedTeam === 0) {\r\n        return\r\n      }\r\n\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 10\r\n\r\n      accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          let calculate = (day, time) => {\r\n            let n = 0\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n                if (item.balance > g) {\r\n                  n += item.balance - g\r\n                }\r\n                g = item.balance\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return [g, n]\r\n          }\r\n\r\n          let dataTable = [['時間', '毛利', '淨利']]\r\n          for (let d = 1; d <= days; d++) {\r\n            for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n              let result = calculate(d, i * interval)\r\n              dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n            }\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          // material design charts\r\n          // remember to add 'line' package to 'google.charts.load' before using this\r\n          // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n          // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n          let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n      \r\n      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, constant.JOBS.FACTORY)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          // chart-productivity\r\n          let calculate = (day) => {\r\n            let n = 0 // accumulate\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day <= day) {\r\n                if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n                  n += item.amount - g\r\n                }\r\n                g = item.amount\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return n\r\n          }\r\n\r\n          let dataTable = [['日子', '累積產量', '單日產量']]\r\n          let k = 0\r\n          for (let d = 1; d <= days; d++) {\r\n            let result = calculate(d)\r\n            k = result - k\r\n            dataTable.push([readable.toReadableDay(d), result, k])\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    drawStorageChart (history) {\r\n      let calculate = (day) => {\r\n        let n = 0 // accumulate\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > n) {\r\n              n += item.amount\r\n            }\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      let dataTable = [['日子', '累積產量', '單日產量']]\r\n      let k = 0\r\n      for (let d = 1; d <= days; d++) {\r\n        let result = calculate(d)\r\n        k = result - k\r\n        dataTable.push([readable.toReadableDay(d), result, k])\r\n      }\r\n      let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n      let options = {\r\n        chartArea: {left: '15%', width: '85%', height: '70%'},\r\n        legend: { position: 'bottom' },\r\n        height: 300\r\n      }\r\n\r\n      let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n      chart.draw(data, options)\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/wholesaler/index.vue?3e384f77"],"names":[],"mappings":";AA4HA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round wholesaler\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              class=\"white--text\"\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'received-order'\"\r\n          >\r\n            <order-history :list=\"state.receivedOrder\" type=\"list\" :get-list=\"state.deliverHistory\" :announce=\"announceReceivedOrder\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n\r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'received-order', title: '收到的訂單' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    },\r\n    announceReceivedOrder () {\r\n      this.announce('收到的訂單更新了！')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4675,7 +5079,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?632bcdb5"],"names":[],"mappings":";AA4RA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                single-line\r\n                item-value=\"index\"\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">10次，150臺</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in charts\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < charts.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ loadChart }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      teamNumber: 4,\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'charts', title: '圖表' },\r\n        { index: 1, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      charts: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      gameConfig: api.nowUser.getGameConfig()\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      let list = [{\r\n        index: 0,\r\n        text: '全部'\r\n      }]\r\n      return list.concat(readable.toReadableTeamList(api.nowUser.getTeamNumber()))\r\n    },\r\n    loadChart () {\r\n      if (this.selectedTeam === 0) {\r\n        return\r\n      }\r\n\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 10\r\n\r\n      accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          let calculate = (day, time) => {\r\n            let n = 0\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n                if (item.balance > g) {\r\n                  n += item.balance - g\r\n                }\r\n                g = item.balance\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return [g, n]\r\n          }\r\n\r\n          let dataTable = [['時間', '毛利', '淨利']]\r\n          for (let d = 1; d <= days; d++) {\r\n            for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n              let result = calculate(d, i * interval)\r\n              dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n            }\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          // material design charts\r\n          // remember to add 'line' package to 'google.charts.load' before using this\r\n          // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n          // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n          let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n      \r\n      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, constant.JOBS.FACTORY)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          // chart-productivity\r\n          let calculate = (day) => {\r\n            let n = 0 // accumulate\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day <= day) {\r\n                if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n                  n += item.amount - g\r\n                }\r\n                g = item.amount\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return n\r\n          }\r\n\r\n          let dataTable = [['日子', '累積產量', '單日產量']]\r\n          let k = 0\r\n          for (let d = 1; d <= days; d++) {\r\n            let result = calculate(d)\r\n            k = result - k\r\n            dataTable.push([readable.toReadableDay(d), result, k])\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    drawStorageChart (history) {\r\n      let calculate = (day) => {\r\n        let n = 0 // accumulate\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > n) {\r\n              n += item.amount\r\n            }\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      let dataTable = [['日子', '累積產量', '單日產量']]\r\n      let k = 0\r\n      for (let d = 1; d <= days; d++) {\r\n        let result = calculate(d)\r\n        k = result - k\r\n        dataTable.push([readable.toReadableDay(d), result, k])\r\n      }\r\n      let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n      let options = {\r\n        chartArea: {left: '15%', width: '85%', height: '70%'},\r\n        legend: { position: 'bottom' },\r\n        height: 300\r\n      }\r\n\r\n      let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n      chart.draw(data, options)\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4689,7 +5093,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4703,7 +5107,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n.progress-circular__info {\n  font-size: 30px;\n}\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/boardcast/scoreboard/index.vue?35bf82fb"],"names":[],"mappings":";AAwFA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,mBAAA;EACA,gBAAA;EACA,0BAAA;CACA;AAEA;EACA,gBAAA;EACA,wBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\n  <div id=\"scoreboard\" class=\"scoreboard\">\n    <main>\n      <v-layout row-sm column child-flex-sm>\n        <v-card class=\"clock elevation-0\">\n          <v-card-text>\n            <game-clock></game-clock>\n          </v-card-text>\n        </v-card>\n        <v-card class=\"score elevation-0\">\n          <v-card-text>\n            <div class=\"ranking\">\n              <h5>排行榜</h5>\n              <div\n                v-for=\"t in rankingList\"\n              >\n                <div :class=\"t.isTop ? 'top-ranking primary--text' : ''\">{{ t.readableTeam }}　{{ t.readableBalance }}</div>\n              </div>\n            </div>\n          </v-card-text>\n        </v-card>\n      </v-layout>\n    </main>\n  </div>\n</template>\n\n<script>\nimport * as api from '../../../lib/api'\nimport * as readable from '../../../lib/readable'\nimport * as dataApi from '../../../lib/api/data'\nimport * as constant from '../../../lib/constant'\nimport * as enterApi from '../../../lib/api/enter'\nimport {router} from '../../../router'\n\nexport default {\n  data () {\n    return {\n      state: api.nowUser.getState(),\n      rankingList: [],\n      timer: null\n    }\n  },\n  methods: {\n    updateRanking () {\n      dataApi.getBalanceByGame(api.nowUser.getGameId())\n        .then((function (res) {\n          let list = res.data.list\n          let result = []\n\n          list.forEach((function (i, k) {\n            result.push({\n              teamIndex: k + 1,\n              readableTeam: readable.toReadableTeam(k + 1),\n              isTop: false,\n              balance: i,\n              readableBalance: readable.toReadableDollar(i),\n            })\n          }).bind(this))\n\n          result.sort((a, b) => {\n            return a.balance < b.balance\n          })\n\n          let m = result[0].balance\n          for (let i of result) {\n            if (i.balance === m) {\n              i.isTop = true\n            }\n          }\n\n          this.rankingList.splice(0, this.rankingList.length)\n          result.forEach((function (i) {\n            this.rankingList.push(i)\n          }).bind(this))\n        }).bind(this))\n\n      if (this.state.stage === constant.GAME_STAGE.END) {\n        router.push('/boardcast/endpage')\n      }\n    }\n  },\n  mounted () {\n    this.timer = setInterval(this.updateRanking.bind(this), 1000)\n  }\n}\n</script>\n\n<style>\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n\n.progress-circular__info {\n  font-size: 30px;\n}\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4717,7 +5121,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.game-clock {  \r\n  text-align: center;\n}\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/game-clock.vue?21dba7b4"],"names":[],"mappings":";AA8CA;EACA,mBAAA;CACA;AAEA;EACA,gBAAA;EACA,kBAAA;CACA","file":"game-clock.vue","sourcesContent":["<template>\r\n  <div class=\"game-clock\">\r\n    <h5 class=\"more-info\">{{ readableDay }}</h5>\r\n    <v-progress-circular\r\n      :size=\"200\"\r\n      :width=\"15\"\r\n      :rotate=\"-90\"\r\n      :value=\"timeValue\"\r\n      class=\"primary--text\"\r\n    >\r\n      {{ readableTime }}\r\n    </v-progress-circular>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as constant from '../lib/constant'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      state: api.nowUser.getDayTime()\r\n    }\r\n  },\r\n  computed: {\r\n    timeValue () {\r\n      // full round is 100\r\n      if (this.state.isWorking) {\r\n        return 100 - (this.state.time / api.nowUser.getGameConfig().dayLong) / 10\r\n      } else {\r\n        return 0\r\n      }\r\n    },\r\n    readableTime () {\r\n      return readable.toReadableTime(this.state.time, this.state.isWorking, true)\r\n    },\r\n    readableDay () {\r\n      return readable.toReadableDay(this.state.day)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.game-clock {  \r\n  text-align: center;\r\n}\r\n\r\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/boardcast/scoreboard/index.vue?60448e47"],"names":[],"mappings":";AAwFA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,sBAAA;CACA;AAEA;EACA,mBAAA;EACA,gBAAA;EACA,0BAAA;CACA;AAEA;EACA,gBAAA;EACA,wBAAA;CACA","file":"index.vue","sourcesContent":["<template>\n  <div id=\"scoreboard\" class=\"scoreboard\">\n    <main>\n      <v-layout row-sm column child-flex-sm>\n        <v-card class=\"clock elevation-0\">\n          <v-card-text>\n            <game-clock></game-clock>\n          </v-card-text>\n        </v-card>\n        <v-card class=\"score elevation-0\">\n          <v-card-text>\n            <div class=\"ranking\">\n              <h5>排行榜</h5>\n              <div\n                v-for=\"t in rankingList\"\n              >\n                <div :class=\"t.isTop ? 'top-ranking primary--text' : ''\">{{ t.readableTeam }}　{{ t.readableBalance }}</div>\n              </div>\n            </div>\n          </v-card-text>\n        </v-card>\n      </v-layout>\n    </main>\n  </div>\n</template>\n\n<script>\nimport * as api from '../../../lib/api'\nimport * as readable from '../../../lib/readable'\nimport * as dataApi from '../../../lib/api/data'\nimport * as constant from '../../../lib/constant'\nimport * as enterApi from '../../../lib/api/enter'\nimport {router} from '../../../router'\n\nexport default {\n  data () {\n    return {\n      state: api.nowUser.getState(),\n      rankingList: [],\n      timer: null\n    }\n  },\n  methods: {\n    updateRanking () {\n      dataApi.getBalanceByGame(api.nowUser.getGameId())\n        .then((function (res) {\n          let list = res.data.list\n          let result = []\n\n          list.forEach((function (i, k) {\n            result.push({\n              teamIndex: k + 1,\n              readableTeam: readable.toReadableTeam(k + 1),\n              isTop: false,\n              balance: i,\n              readableBalance: readable.toReadableDollar(i),\n            })\n          }).bind(this))\n\n          result.sort((a, b) => {\n            return a.balance < b.balance\n          })\n\n          let m = result[0].balance\n          for (let i of result) {\n            if (i.balance === m) {\n              i.isTop = true\n            }\n          }\n\n          this.rankingList.splice(0, this.rankingList.length)\n          result.forEach((function (i) {\n            this.rankingList.push(i)\n          }).bind(this))\n        }).bind(this))\n\n      if (this.state.stage === constant.GAME_STAGE.END) {\n        router.push('/boardcast/endpage')\n      }\n    }\n  },\n  mounted () {\n    this.timer = setInterval(this.updateRanking.bind(this), 1000)\n  }\n}\n</script>\n\n<style>\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4731,7 +5135,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"team-storage-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\n}\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\n}\n.game-clock .more-info {\r\n  font-size: 20px;\n}\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/game-clock.vue?c2ccdc30"],"names":[],"mappings":";AA8CA;EACA,mBAAA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,gBAAA;EACA,kBAAA;CACA;AAEA;EACA,gBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"game-clock.vue","sourcesContent":["<template>\r\n  <div class=\"game-clock\">\r\n    <h5 class=\"more-info\">{{ readableDay }}</h5>\r\n    <v-progress-circular\r\n      :size=\"200\"\r\n      :width=\"15\"\r\n      :rotate=\"-90\"\r\n      :value=\"timeValue\"\r\n      class=\"primary--text\"\r\n    >\r\n      {{ readableTime }}\r\n    </v-progress-circular>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as constant from '../lib/constant'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      state: api.nowUser.getDayTime()\r\n    }\r\n  },\r\n  computed: {\r\n    timeValue () {\r\n      // full round is 100\r\n      if (this.state.isWorking) {\r\n        return 100 - (this.state.time / api.nowUser.getGameConfig().dayLong) / 10\r\n      } else {\r\n        return 0\r\n      }\r\n    },\r\n    readableTime () {\r\n      return readable.toReadableTime(this.state.time, this.state.isWorking, true)\r\n    },\r\n    readableDay () {\r\n      return readable.toReadableDay(this.state.day)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\r\n}\r\n\r\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\r\n}\r\n\r\n.game-clock .more-info {\r\n  font-size: 20px;\r\n}\r\n\r\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4745,7 +5149,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"team-storage-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4759,7 +5163,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-register-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4773,7 +5177,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-register-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4787,7 +5191,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4801,7 +5205,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4815,7 +5219,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"news-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4829,7 +5233,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"news-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4843,7 +5247,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/new/index.vue?bc0b6be8"],"names":[],"mappings":";AAqDA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>這個認證碼代表著你的身分，如果之後想要重新進入遊戲的話，你必須輸入這個認證碼。</p>\r\n          <p><b>請將認證碼記錄下來</b>，以備等一下所需。</p>\r\n          <input :value=\"code\" class=\"code-text\" readonly></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-btn class=\"blue--text darken-1\" flat @click.native=\"intoRegistOld\">我已經有認證碼</v-btn>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native=\"intoRegistPlayer\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '認證碼',\r\n      code: '1234'\r\n    }\r\n  },\r\n  methods: {\r\n    intoRegistOld () {\r\n      router.push('/regist/old')\r\n    },\r\n    intoRegistPlayer () {\r\n      router.push('/regist/player')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4857,7 +5261,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/new/index.vue?bc0b6be8"],"names":[],"mappings":";AAqDA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>這個認證碼代表著你的身分，如果之後想要重新進入遊戲的話，你必須輸入這個認證碼。</p>\r\n          <p><b>請將認證碼記錄下來</b>，以備等一下所需。</p>\r\n          <input :value=\"code\" class=\"code-text\" readonly></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-btn class=\"blue--text darken-1\" flat @click.native=\"intoRegistOld\">我已經有認證碼</v-btn>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native=\"intoRegistPlayer\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '認證碼',\r\n      code: '1234'\r\n    }\r\n  },\r\n  methods: {\r\n    intoRegistOld () {\r\n      router.push('/regist/old')\r\n    },\r\n    intoRegistPlayer () {\r\n      router.push('/regist/player')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4871,7 +5275,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4885,7 +5289,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4899,7 +5303,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/old/index.vue?35217dcd"],"names":[],"mappings":";AAiFA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-btn icon v-on:click.native=\"backToRegistNew\">\r\n        <v-icon>arrow_back</v-icon>\r\n      </v-btn>\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>請輸入你的認證碼。</p>\r\n          <input class=\"code-text\" v-model=\"code\"></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native.stop=\"setCode\" :disabled=\"btnDisabled\">確定</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n    <v-dialog v-model=\"errorDialog\">\r\n      <v-card>\r\n        <v-card-title class=\"headline\">錯誤</v-card-title>\r\n        <v-card-text>{{ errorDialogMsg }}</v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn class=\"green--text darken-1\" flat=\"flat\" @click.native=\"errorDialog = false\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n    </v-dialog>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '輸入認證碼',\r\n      code: null,\r\n      btnDisabled: true,\r\n      errorDialog: false,\r\n      errorDialogMsg: ''\r\n    }\r\n  },\r\n  watch: {\r\n    code () {\r\n      this.btnDisabled = !this.code\r\n    }\r\n  },\r\n  methods: {\r\n    backToRegistNew () {\r\n      router.push('/regist/new')\r\n    },\r\n    setCode () {\r\n      let code = parseInt(this.code)\r\n      if (code < 0 || code > 9999) {\r\n        this.errorDialogMsg = '你的認證碼不正確，應該是由四位數字組成。'\r\n        this.errorDialog = true\r\n      } else {\r\n        this.intoChoose()\r\n      }\r\n    },\r\n    intoChoose () {\r\n      router.push('/choose')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4913,7 +5317,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/old/index.vue?35217dcd"],"names":[],"mappings":";AAiFA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-btn icon v-on:click.native=\"backToRegistNew\">\r\n        <v-icon>arrow_back</v-icon>\r\n      </v-btn>\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>請輸入你的認證碼。</p>\r\n          <input class=\"code-text\" v-model=\"code\"></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native.stop=\"setCode\" :disabled=\"btnDisabled\">確定</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n    <v-dialog v-model=\"errorDialog\">\r\n      <v-card>\r\n        <v-card-title class=\"headline\">錯誤</v-card-title>\r\n        <v-card-text>{{ errorDialogMsg }}</v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn class=\"green--text darken-1\" flat=\"flat\" @click.native=\"errorDialog = false\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n    </v-dialog>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '輸入認證碼',\r\n      code: null,\r\n      btnDisabled: true,\r\n      errorDialog: false,\r\n      errorDialogMsg: ''\r\n    }\r\n  },\r\n  watch: {\r\n    code () {\r\n      this.btnDisabled = !this.code\r\n    }\r\n  },\r\n  methods: {\r\n    backToRegistNew () {\r\n      router.push('/regist/new')\r\n    },\r\n    setCode () {\r\n      let code = parseInt(this.code)\r\n      if (code < 0 || code > 9999) {\r\n        this.errorDialogMsg = '你的認證碼不正確，應該是由四位數字組成。'\r\n        this.errorDialog = true\r\n      } else {\r\n        this.intoChoose()\r\n      }\r\n    },\r\n    intoChoose () {\r\n      router.push('/choose')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4927,7 +5331,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.home {\r\n  min-height: 100%;\n}\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100% !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?0605244a"],"names":[],"mappings":";AA6BA;EACA,iBAAA;CACA;AAEA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,wBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      // router.push('/regist')\r\n      router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.home {\r\n  min-height: 100%;\r\n}\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100% !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4941,7 +5345,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100vh !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?57253084"],"names":[],"mappings":";AA8BA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,yBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      router.push('/regist')\r\n      // router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100vh !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4955,7 +5359,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-history.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4969,7 +5373,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-history.vue","sourceRoot":""}]);
 
 // exports
 
@@ -4983,7 +5387,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/retailer/index.vue?70ab7c64"],"names":[],"mappings":";AAwHA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round retailer\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'news-list'\"\r\n          >\r\n            <news-list :list=\"state.news\" :announce=\"announce\"></news-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n      \r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'news-list', title: '市場新聞' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -4997,7 +5401,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5011,7 +5415,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5025,7 +5429,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"account-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5039,7 +5443,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\n}\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/online-status.vue?1a4daff2"],"names":[],"mappings":";AAgEA;EACA,YAAA;EACA,mBAAA;EACA,gBAAA;EACA,gBAAA;CACA;AAEA;EACA,qBAAA;CACA","file":"online-status.vue","sourcesContent":["<template>\r\n  <div class=\"online-status\">\r\n    <v-expansion-panel expand>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">小隊員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap v-for=\"team in teamList\" :key=\"team.index\">\r\n            <v-flex xs3>\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ team.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n            <v-flex xs3 v-for=\"job in jobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">工作人員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap>\r\n            <v-flex xs3 v-for=\"job in staffJobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n    </v-expansion-panel>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  props: [\r\n    'list'\r\n  ],\r\n  data () {\r\n    return {\r\n      teamNumber: 4\r\n    }\r\n  },\r\n  computed: {\r\n    jobList () {\r\n      return readable.readableJobList()\r\n    },\r\n    staffJobList () {\r\n      return readable.readableStaffJobList()\r\n    },\r\n    teamList () {\r\n      return readable.toReadableTeamList(this.teamNumber)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\r\n}\r\n\r\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"account-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5053,7 +5457,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"info-panel.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\n}\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/online-status.vue?1a4daff2"],"names":[],"mappings":";AAgEA;EACA,YAAA;EACA,mBAAA;EACA,gBAAA;EACA,gBAAA;CACA;AAEA;EACA,qBAAA;CACA","file":"online-status.vue","sourcesContent":["<template>\r\n  <div class=\"online-status\">\r\n    <v-expansion-panel expand>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">小隊員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap v-for=\"team in teamList\" :key=\"team.index\">\r\n            <v-flex xs3>\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ team.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n            <v-flex xs3 v-for=\"job in jobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">工作人員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap>\r\n            <v-flex xs3 v-for=\"job in staffJobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n    </v-expansion-panel>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  props: [\r\n    'list'\r\n  ],\r\n  data () {\r\n    return {\r\n      teamNumber: 4\r\n    }\r\n  },\r\n  computed: {\r\n    jobList () {\r\n      return readable.readableJobList()\r\n    },\r\n    staffJobList () {\r\n      return readable.readableStaffJobList()\r\n    },\r\n    teamList () {\r\n      return readable.toReadableTeamList(this.teamNumber)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\r\n}\r\n\r\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5067,7 +5471,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"info-panel.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5076,16 +5480,44 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 /* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"msg-dialog.vue","sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 81 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(168)
+  __webpack_require__(172)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(17),
   /* template */
-  __webpack_require__(137),
+  __webpack_require__(140),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5117,19 +5549,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(148)
+  __webpack_require__(152)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(18),
   /* template */
-  __webpack_require__(117),
+  __webpack_require__(120),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5161,19 +5593,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 81 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(163)
+  __webpack_require__(167)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(19),
   /* template */
-  __webpack_require__(132),
+  __webpack_require__(135),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5205,19 +5637,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 82 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(146)
+  __webpack_require__(150)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(20),
   /* template */
-  __webpack_require__(115),
+  __webpack_require__(118),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5249,19 +5681,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 83 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(170)
+  __webpack_require__(174)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(21),
   /* template */
-  __webpack_require__(139),
+  __webpack_require__(142),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5293,19 +5725,63 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 84 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(153)
+  __webpack_require__(176)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(22),
   /* template */
-  __webpack_require__(122),
+  __webpack_require__(144),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "d:\\Coding\\ieemgameview\\src\\components\\msg-dialog.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] msg-dialog.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-fef971c8", Component.options)
+  } else {
+    hotAPI.reload("data-v-fef971c8", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(157)
+}
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(23),
+  /* template */
+  __webpack_require__(125),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5337,19 +5813,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 85 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(169)
+  __webpack_require__(173)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(23),
+  __webpack_require__(24),
   /* template */
-  __webpack_require__(138),
+  __webpack_require__(141),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5381,19 +5857,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 86 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(158)
+  __webpack_require__(162)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(24),
+  __webpack_require__(25),
   /* template */
-  __webpack_require__(127),
+  __webpack_require__(130),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5425,19 +5901,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 87 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(165)
+  __webpack_require__(169)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(25),
+  __webpack_require__(26),
   /* template */
-  __webpack_require__(134),
+  __webpack_require__(137),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5469,19 +5945,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 88 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(143)
+  __webpack_require__(147)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(26),
+  __webpack_require__(27),
   /* template */
-  __webpack_require__(112),
+  __webpack_require__(115),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5513,19 +5989,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 89 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(149)
+  __webpack_require__(153)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(27),
+  __webpack_require__(28),
   /* template */
-  __webpack_require__(118),
+  __webpack_require__(121),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5557,19 +6033,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 90 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(147)
+  __webpack_require__(151)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(28),
+  __webpack_require__(29),
   /* template */
-  __webpack_require__(116),
+  __webpack_require__(119),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5601,19 +6077,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 91 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(162)
+  __webpack_require__(166)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(29),
+  __webpack_require__(30),
   /* template */
-  __webpack_require__(131),
+  __webpack_require__(134),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5645,19 +6121,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 92 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(145)
+  __webpack_require__(149)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(30),
+  __webpack_require__(31),
   /* template */
-  __webpack_require__(114),
+  __webpack_require__(117),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5689,19 +6165,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 93 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(156)
+  __webpack_require__(160)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(31),
+  __webpack_require__(32),
   /* template */
-  __webpack_require__(125),
+  __webpack_require__(128),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5733,19 +6209,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 94 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(152)
+  __webpack_require__(156)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(32),
+  __webpack_require__(33),
   /* template */
-  __webpack_require__(121),
+  __webpack_require__(124),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5777,19 +6253,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 95 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(144)
+  __webpack_require__(148)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(33),
+  __webpack_require__(34),
   /* template */
-  __webpack_require__(113),
+  __webpack_require__(116),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5821,19 +6297,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 96 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(150)
+  __webpack_require__(154)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(34),
+  __webpack_require__(35),
   /* template */
-  __webpack_require__(119),
+  __webpack_require__(122),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5865,19 +6341,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 97 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(142)
+  __webpack_require__(146)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(35),
+  __webpack_require__(36),
   /* template */
-  __webpack_require__(111),
+  __webpack_require__(114),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5909,19 +6385,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 98 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(161)
+  __webpack_require__(165)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(37),
   /* template */
-  __webpack_require__(130),
+  __webpack_require__(133),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5953,19 +6429,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 99 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(155)
+  __webpack_require__(159)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(124),
+  __webpack_require__(127),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5997,19 +6473,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 100 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(159)
+  __webpack_require__(163)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(38),
+  __webpack_require__(39),
   /* template */
-  __webpack_require__(128),
+  __webpack_require__(131),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6041,19 +6517,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 101 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(157)
+  __webpack_require__(161)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(40),
   /* template */
-  __webpack_require__(126),
+  __webpack_require__(129),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6085,19 +6561,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 102 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(166)
+  __webpack_require__(170)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(40),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(135),
+  __webpack_require__(138),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6129,19 +6605,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 103 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(171)
+  __webpack_require__(175)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(41),
+  __webpack_require__(42),
   /* template */
-  __webpack_require__(140),
+  __webpack_require__(143),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6173,19 +6649,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 104 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(167)
+  __webpack_require__(171)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(43),
   /* template */
-  __webpack_require__(136),
+  __webpack_require__(139),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6217,19 +6693,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 105 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(151)
+  __webpack_require__(155)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(43),
+  __webpack_require__(44),
   /* template */
-  __webpack_require__(120),
+  __webpack_require__(123),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6261,19 +6737,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 106 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(154)
+  __webpack_require__(158)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(44),
+  __webpack_require__(45),
   /* template */
-  __webpack_require__(123),
+  __webpack_require__(126),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6305,19 +6781,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 107 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(164)
+  __webpack_require__(168)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(45),
+  __webpack_require__(46),
   /* template */
-  __webpack_require__(133),
+  __webpack_require__(136),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6349,19 +6825,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 108 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(160)
+  __webpack_require__(164)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(46),
+  __webpack_require__(47),
   /* template */
-  __webpack_require__(129),
+  __webpack_require__(132),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6393,19 +6869,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 109 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(141)
+  __webpack_require__(145)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(47),
+  __webpack_require__(48),
   /* template */
-  __webpack_require__(110),
+  __webpack_require__(113),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6437,19 +6913,15 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 110 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "round"
+    staticClass: "round wholesaler"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
-  }, [_c('v-toolbar-title', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
+    class: _vm.color.primary + ' white--text'
+  }, [_c('v-toolbar-title', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
     staticClass: "bg-box",
     attrs: {
       "row": ""
@@ -6462,8 +6934,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "mobile-tabs-1",
       "grow": "",
-      "scroll-bars": "",
-      "light": ""
+      "scroll-bars": ""
     },
     model: {
       value: (_vm.activeTab),
@@ -6473,18 +6944,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    class: 'tabs ' + _vm.mainColor,
+    class: _vm.color.primary,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
       key: tab.index,
+      staticClass: "white--text",
       attrs: {
         "href": '#' + tab.id,
         "ripple": ""
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
   }), _vm._v(" "), _c('v-tabs-slider', {
-    class: _vm.subColor
+    class: _vm.color.accent
   })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {
@@ -6492,7 +6964,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('storage-list', {
     attrs: {
-      "list": _vm.state.storage
+      "list": _vm.state.storage,
+      "announce": _vm.announce
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 1,
@@ -6501,7 +6974,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('order-history', {
     attrs: {
-      "list": _vm.state.receivedOrder
+      "list": _vm.state.receivedOrder,
+      "type": "list",
+      "get-list": _vm.state.deliverHistory,
+      "announce": _vm.announceReceivedOrder
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 2,
@@ -6510,7 +6986,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('order-history', {
     attrs: {
-      "list": _vm.state.orderHistory
+      "list": _vm.state.orderHistory,
+      "type": "number",
+      "get-number": _vm.state.deliveredNumber
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 3,
@@ -6519,7 +6997,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('deliver-history', {
     attrs: {
-      "list": _vm.state.deliverHistory
+      "list": _vm.state.deliverHistory,
+      "announce": _vm.announce
     }
   })], 1)], 1)], 1), _vm._v(" "), _c('order-dialog', {
     directives: [{
@@ -6564,7 +7043,7 @@ if (false) {
 }
 
 /***/ }),
-/* 111 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -6584,7 +7063,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-toolbar', {
-    staticClass: "cyan elevation-0",
+    staticClass: "light-blue elevation-0",
     attrs: {
       "dark": ""
     }
@@ -6598,7 +7077,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_c('v-icon', [_vm._v("arrow_back")])], 1), _vm._v(" "), _c('v-toolbar-title', [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('v-tabs-bar', {
-    staticClass: "cyan",
+    staticClass: "light-blue",
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -6629,7 +7108,60 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "selectedTeam"
     }
-  }), _vm._v(" "), _vm._l((_vm.charts), function(chart, key) {
+  }), _vm._v(" "), _c('v-layout', {
+    attrs: {
+      "row": "",
+      "wrap": ""
+    }
+  }, [_c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("毛利")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("$10000")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("淨利")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("$10000")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("總產量")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("$10000")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("總成本")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("$10000")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("運輸次數")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("10次，150臺")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("囤貨成本")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v("$10000")])])], 1), _vm._v(" "), _c('v-divider'), _vm._v(" "), _vm._l((_vm.charts), function(chart, key) {
     return _c('div', {
       key: key
     }, [_c('h5', {
@@ -6659,7 +7191,7 @@ if (false) {
 }
 
 /***/ }),
-/* 112 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -6689,15 +7221,15 @@ if (false) {
 }
 
 /***/ }),
-/* 113 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "home choose"
   }, [_c('v-toolbar', {
-    staticClass: "orange elevation-5"
-  }, [_c('v-toolbar-title', [_vm._v("首頁")]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
+    staticClass: "light-blue elevation-5"
+  }, [_c('v-toolbar-title', [_vm._v("準備開始")]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
     staticClass: "white--text"
   }), _vm._v(" "), _c('v-progress-circular', {
     staticClass: "white--text",
@@ -6711,7 +7243,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "logo"
   }), _vm._v(" "), _c('h5', {
     staticClass: "headline"
-  }, [_vm._v("請稍後，遊戲即將開始")]), _vm._v("\n      如果剛剛的講解有任何不清楚的地方，你現在可以向旁邊的隊輔們提出疑問，他們會為你解答。"), _c('br'), _c('br'), _c('br'), _vm._v(" "), _c('span', {
+  }, [_vm._v("請稍後，遊戲即將開始")]), _vm._v(" "), _c('span', {
+    staticClass: "gray--text"
+  }, [_vm._v("如果剛剛的講解有任何不清楚的地方，你現在可以向身旁的隊輔們提出疑問，他們會為你解答。")]), _vm._v(" "), _c('br'), _c('br'), _c('br'), _vm._v(" "), _c('span', {
     staticClass: "gray--text"
   }, [_vm._v(_vm._s(_vm.readableTeam) + " " + _vm._s(_vm.readableJob))])])]), _vm._v("\n  " + _vm._s(_vm.intoBelong) + "\n")], 1)
 },staticRenderFns: []}
@@ -6724,7 +7258,7 @@ if (false) {
 }
 
 /***/ }),
-/* 114 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -6760,7 +7294,7 @@ if (false) {
 }
 
 /***/ }),
-/* 115 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -6787,7 +7321,7 @@ if (false) {
 }
 
 /***/ }),
-/* 116 */
+/* 119 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -6840,12 +7374,28 @@ if (false) {
 }
 
 /***/ }),
-/* 117 */
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('v-dialog', {
-    staticClass: "dialog",
+  return _c('div', [_c('div', {
+    staticClass: "dialog"
+  }, [_c('v-btn', {
+    class: _vm.btnClass,
+    attrs: {
+      "primary": "",
+      "fab": "",
+      "small": _vm.secondary
+    },
+    nativeOn: {
+      "click": function($event) {
+        $event.stopPropagation();
+        _vm.deliverDialog = true
+      }
+    }
+  }, [_c('v-icon', {
+    staticClass: "white--text"
+  }, [_vm._v("local_shipping")])], 1), _vm._v(" "), _c('v-dialog', {
     attrs: {
       "persistent": ""
     },
@@ -6856,17 +7406,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "deliverDialog"
     }
-  }, [_c('v-btn', {
-    class: _vm.btnClass,
-    attrs: {
-      "primary": "",
-      "fab": "",
-      "small": _vm.secondary
-    },
-    slot: "activator"
-  }, [_c('v-icon', {
-    staticClass: "white--text"
-  }, [_vm._v("local_shipping")])], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("運輸貨物")]), _vm._v(" "), _c('v-card-text', [_c('v-select', {
+  }, [_c('v-card', [_c('v-card-title', [_vm._v("運輸貨物")]), _vm._v(" "), _c('v-card-text', [_c('v-select', {
     attrs: {
       "items": _vm.teamList,
       "label": "選擇組別",
@@ -6914,24 +7454,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })], 1), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     staticClass: "blue--text darken-1",
     attrs: {
-      "flat": "flat"
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
+        $event.stopPropagation();
         _vm.deliverDialog = false
       }
     }
   }, [_vm._v("取消")]), _vm._v(" "), _c('v-btn', {
     staticClass: "blue--text darken-1",
     attrs: {
-      "flat": "flat"
+      "disabled": !_vm.btnShow,
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
+        $event.stopPropagation();
         _vm.deliver($event)
       }
     }
-  }, [_vm._v("運貨")])], 1)], 1)], 1)
+  }, [_vm._v("運貨")])], 1)], 1)], 1)], 1), _vm._v(" "), _c('msg-dialog', {
+    attrs: {
+      "msg-show": _vm.msgDialog,
+      "msg-title": _vm.msgDialog.title,
+      "msg-content": _vm.msgDialog.content
+    }
+  })], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -6942,7 +7491,7 @@ if (false) {
 }
 
 /***/ }),
-/* 118 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7031,15 +7580,26 @@ if (false) {
 }
 
 /***/ }),
-/* 119 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "choose"
   }, [_c('v-toolbar', {
-    staticClass: "orange"
-  }, [_c('v-toolbar-title', [_vm._v("首頁")])], 1), _vm._v(" "), _c('main', [_c('h5', [_vm._v("請選擇你的小隊")]), _vm._v(" "), _c('v-layout', {
+    staticClass: "light-blue white--text"
+  }, [_c('v-btn', {
+    attrs: {
+      "icon": ""
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.backToChoose($event)
+      }
+    }
+  }, [_c('v-icon', {
+    staticClass: "white--text"
+  }, [_vm._v("arrow_back")])], 1), _vm._v(" "), _c('v-toolbar-title', [_vm._v("選擇組別")])], 1), _vm._v(" "), _c('main', [_c('h5', [_vm._v("請選擇你的小隊")]), _vm._v(" "), _c('v-layout', {
     attrs: {
       "row": ""
     }
@@ -7069,17 +7629,17 @@ if (false) {
 }
 
 /***/ }),
-/* 120 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
+    class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main'), _vm._v(" "), _c('v-snackbar', {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-text', [_c('game-clock')], 1)], 1)], 1), _vm._v(" "), _c('v-snackbar', {
     attrs: {
       "timeout": 6000,
       "secondary": ""
@@ -7112,15 +7672,26 @@ if (false) {
 }
 
 /***/ }),
-/* 121 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "choose"
   }, [_c('v-toolbar', {
-    staticClass: "orange"
-  }, [_c('v-toolbar-title', [_vm._v("首頁")])], 1), _vm._v(" "), _c('main', [_c('h5', [_vm._v("請選擇你的工作")]), _vm._v(" "), _c('v-subheader', {
+    staticClass: "light-blue white--text"
+  }, [_c('v-btn', {
+    attrs: {
+      "icon": ""
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.backToChooseTeam($event)
+      }
+    }
+  }, [_c('v-icon', {
+    staticClass: "white--text"
+  }, [_vm._v("arrow_back")])], 1), _vm._v(" "), _c('v-toolbar-title', [_vm._v("選擇工作")])], 1), _vm._v(" "), _c('main', [_c('h5', [_vm._v("請選擇你的工作")]), _vm._v(" "), _c('v-subheader', {
     directives: [{
       name: "show",
       rawName: "v-show",
@@ -7147,8 +7718,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "textContent": _vm._s(item.text)
       }
     })], 1)], 1), _vm._v(" "), (index + 1 < _vm.itemJob.length) ? _c('v-divider') : _vm._e()]
-  })], 2)], 1), _vm._v(" "), _c('v-dialog', {
-    staticClass: "dialog",
+  })], 2)], 1)], 1), _vm._v(" "), _c('v-dialog', {
     model: {
       value: (_vm.dialog),
       callback: function($$v) {
@@ -7156,10 +7726,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "dialog"
     }
-  }, [_c('v-card', [_c('v-card-title', [_vm._v("工作確認")]), _vm._v(" "), _c('v-card-text', [_vm._v("\n          請確定你是" + _vm._s(_vm.readableTeam) + "的" + _vm._s(_vm.readableJob) + "。\n        ")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+  }, [_c('v-card', [_c('v-card-title', [_vm._v("工作確認")]), _vm._v(" "), _c('v-card-text', [_vm._v("\n        請確定你是" + _vm._s(_vm.readableTeam) + "的" + _vm._s(_vm.readableJob) + "。\n      ")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+    staticClass: "light-blue--text",
     attrs: {
-      "flat": "flat"
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
@@ -7167,16 +7737,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("重新選擇")]), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+    staticClass: "light-blue--text",
     attrs: {
-      "flat": "flat"
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
         _vm.intoJob(_vm.job)
       }
     }
-  }, [_vm._v("確定")])], 1)], 1)], 1)], 1), _vm._v("\n  " + _vm._s(_vm.intoBelong) + "\n")], 1)
+  }, [_vm._v("確定")])], 1)], 1)], 1), _vm._v("\n  " + _vm._s(_vm.intoBelong) + "\n")], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -7187,7 +7757,7 @@ if (false) {
 }
 
 /***/ }),
-/* 122 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7233,14 +7803,14 @@ if (false) {
 }
 
 /***/ }),
-/* 123 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
+    class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('deliver-dialog', {
@@ -7280,7 +7850,7 @@ if (false) {
 }
 
 /***/ }),
-/* 124 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7332,14 +7902,14 @@ if (false) {
 }
 
 /***/ }),
-/* 125 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "choose"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    staticClass: "light-blue white--text"
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
   }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-container', {
@@ -7362,7 +7932,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "xs12": ""
       }
     }, [_c('v-card', {
-      staticClass: "cyan darken-2 white--text"
+      staticClass: "blue darken-2 white--text"
     }, [_c('v-card-title', {
       attrs: {
         "primary-title": ""
@@ -7371,6 +7941,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "headline"
     }, [_vm._v(_vm._s(item.text))]), _c('br'), _vm._v(" "), _c('div', [_vm._v(_vm._s(item.describe))])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
       attrs: {
+        "outline": "",
         "flat": "",
         "dark": ""
       },
@@ -7391,7 +7962,7 @@ if (false) {
 }
 
 /***/ }),
-/* 126 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7475,11 +8046,11 @@ if (false) {
 }
 
 /***/ }),
-/* 127 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('v-dialog', {
+  return _c('div', [_c('v-dialog', {
     staticClass: "dialog",
     model: {
       value: (_vm.orderDialog),
@@ -7489,9 +8060,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "orderDialog"
     }
   }, [_c('v-btn', {
-    class: _vm.btnClass,
+    class: _vm.color.accent + ' ' + _vm.btnClass,
     attrs: {
-      "primary": "",
       "fab": "",
       "small": _vm.secondary
     },
@@ -7513,9 +8083,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "amount"
     }
   })], 1), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+    class: _vm.color.primary + '--text',
     attrs: {
-      "flat": "flat"
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
@@ -7523,16 +8093,22 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("取消")]), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+    class: _vm.color.primary + '--text',
     attrs: {
-      "flat": "flat"
+      "flat": ""
     },
     nativeOn: {
       "click": function($event) {
         _vm.order($event)
       }
     }
-  }, [_vm._v("訂購")])], 1)], 1)], 1)
+  }, [_vm._v("訂購")])], 1)], 1)], 1), _vm._v(" "), _c('msg-dialog', {
+    attrs: {
+      "msg-show": _vm.msgDialog,
+      "msg-title": _vm.msgDialog.title,
+      "msg-content": _vm.msgDialog.content
+    }
+  })], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -7543,7 +8119,7 @@ if (false) {
 }
 
 /***/ }),
-/* 128 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7625,17 +8201,17 @@ if (false) {
 }
 
 /***/ }),
-/* 129 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
+    class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('deliver-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-content', [_c('game-clock')], 1)], 1), _vm._v(" "), _c('deliver-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -7672,7 +8248,7 @@ if (false) {
 }
 
 /***/ }),
-/* 130 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7705,7 +8281,7 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7721,7 +8297,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Create a Game")]), _vm._v(" "), _c('v-card-text', [_c('v-text-field', {
     attrs: {
       "label": "Config",
-      "single-line": "",
       "multi-line": ""
     },
     model: {
@@ -7774,7 +8349,7 @@ if (false) {
 }
 
 /***/ }),
-/* 132 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7804,19 +8379,15 @@ if (false) {
 }
 
 /***/ }),
-/* 133 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "round"
+    staticClass: "round retailer"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
-  }, [_c('v-toolbar-title', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
+    class: _vm.color.primary + ' white--text'
+  }, [_c('v-toolbar-title', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
     staticClass: "bg-box",
     attrs: {
       "row": ""
@@ -7829,8 +8400,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "mobile-tabs-1",
       "grow": "",
-      "scroll-bars": "",
-      "light": ""
+      "scroll-bars": ""
     },
     model: {
       value: (_vm.activeTab),
@@ -7840,7 +8410,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    class: 'tabs ' + _vm.mainColor,
+    class: _vm.color.primary,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -7851,7 +8421,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
   }), _vm._v(" "), _c('v-tabs-slider', {
-    class: _vm.subColor
+    class: _vm.color.accent
   })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {
@@ -7859,7 +8429,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('storage-list', {
     attrs: {
-      "list": _vm.state.storage
+      "list": _vm.state.storage,
+      "announce": _vm.announce
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 1,
@@ -7868,7 +8439,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('news-list', {
     attrs: {
-      "list": _vm.state.news
+      "list": _vm.state.news,
+      "announce": _vm.announce
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 2,
@@ -7877,7 +8449,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('order-history', {
     attrs: {
-      "list": _vm.state.orderHistory
+      "list": _vm.state.orderHistory,
+      "type": "number",
+      "get-number": _vm.state.deliveredNumber
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 3,
@@ -7886,7 +8460,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('deliver-history', {
     attrs: {
-      "list": _vm.state.deliverHistory
+      "list": _vm.state.deliverHistory,
+      "announce": _vm.announce
     }
   })], 1)], 1)], 1), _vm._v(" "), _c('order-dialog', {
     directives: [{
@@ -7931,7 +8506,7 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7947,7 +8522,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       fn: function(props) {
         return [_c('td', [_vm._v(_vm._s(props.item.readableGameTime))]), _vm._v(" "), _c('td', {
           staticClass: "text-xs-right"
-        }, [_vm._v(_vm._s(props.item.amount))])]
+        }, [_vm._v(_vm._s(props.item.amount))]), _vm._v(" "), _c('td', {
+          staticClass: "text-xs-right"
+        }, [_vm._v(_vm._s(props.item.delivered))])]
       }
     }])
   })
@@ -7961,7 +8538,7 @@ if (false) {
 }
 
 /***/ }),
-/* 135 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8023,7 +8600,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.nextDay($event)
       }
     }
-  }, [_vm._v("下一天")])], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("特別功能")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('account-dialog', {
+  }, [_vm._v("下一天")])], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("特別功能")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+    attrs: {
+      "primary": ""
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.intoBoardcast($event)
+      }
+    }
+  }, [_vm._v("前往記分板")]), _vm._v(" "), _c('account-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -8045,7 +8631,29 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "game-config": _vm.gameConfig
     }
-  })], 1)], 1)], 1), _vm._v(" "), _c('v-snackbar', {
+  }), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("\n            市場資訊\n          ")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("市場需求量：" + _vm._s(_vm.state.market.orderAmount))]), _vm._v(" "), _c('li', [_vm._v("市場供應量：" + _vm._s(_vm.state.market.storageAmount))]), _vm._v(" "), _c('li', [_vm._v("市場價格：" + _vm._s(_vm.state.market.price))])])])], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("\n            設定新聞\n          ")]), _vm._v(" "), _c('v-card-text', [_c('v-text-field', {
+    attrs: {
+      "label": "新聞",
+      "multi-line": ""
+    },
+    model: {
+      value: (_vm.newsList),
+      callback: function($$v) {
+        _vm.newsList = $$v
+      },
+      expression: "newsList"
+    }
+  })], 1), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+    staticClass: "light-blue--text",
+    attrs: {
+      "flat": ""
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.setNewsList($event)
+      }
+    }
+  }, [_vm._v("變更")])], 1)], 1)], 1)], 1)], 1), _vm._v(" "), _c('v-snackbar', {
     attrs: {
       "timeout": 6000,
       "secondary": ""
@@ -8078,19 +8686,15 @@ if (false) {
 }
 
 /***/ }),
-/* 136 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    class: _vm.mainColor
-  }, [_c('v-toolbar-title', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
-    staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
+    class: _vm.color.primary
+  }, [_c('v-toolbar-title', [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('v-layout', {
     staticClass: "bg-box",
     attrs: {
       "row": ""
@@ -8103,8 +8707,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "mobile-tabs-1",
       "grow": "",
-      "scroll-bars": "",
-      "light": ""
+      "scroll-bars": ""
     },
     model: {
       value: (_vm.activeTab),
@@ -8114,7 +8717,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "activeTab"
     }
   }, [_c('v-tabs-bar', {
-    class: 'tabs ' + _vm.mainColor,
+    class: '' + _vm.color.primary,
     slot: "activators"
   }, [_vm._l((_vm.tabs), function(tab) {
     return _c('v-tabs-item', {
@@ -8125,7 +8728,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }, [_vm._v("\n            " + _vm._s(tab.title) + "\n          ")])
   }), _vm._v(" "), _c('v-tabs-slider', {
-    class: _vm.subColor
+    class: _vm.color.accent
   })], 2), _vm._v(" "), _c('v-tabs-content', {
     key: 0,
     attrs: {
@@ -8133,7 +8736,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('storage-list', {
     attrs: {
-      "list": _vm.state.storage
+      "list": _vm.state.storage,
+      "announce": _vm.announce
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 1,
@@ -8143,7 +8747,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('order-history', {
     attrs: {
       "list": _vm.state.receivedOrder,
-      "get-list": _vm.state.deliverHistory
+      "type": "list",
+      "get-list": _vm.state.deliverHistory,
+      "announce": _vm.announceReceivedOrder
     }
   })], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 2,
@@ -8152,7 +8758,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('deliver-history', {
     attrs: {
-      "list": _vm.state.deliverHistory
+      "list": _vm.state.deliverHistory,
+      "announce": _vm.announce
     }
   })], 1)], 1)], 1)], 1), _vm._v(" "), _c('v-snackbar', {
     attrs: {
@@ -8187,7 +8794,7 @@ if (false) {
 }
 
 /***/ }),
-/* 137 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8253,7 +8860,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "balance"
     }
   })], 1), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+    class: _vm.color.accent,
     attrs: {
       "flat": "flat"
     },
@@ -8263,7 +8870,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   }, [_vm._v("取消")]), _vm._v(" "), _c('v-btn', {
-    staticClass: "blue--text darken-1",
+    class: _vm.color.accent,
     attrs: {
       "flat": "flat"
     },
@@ -8283,7 +8890,7 @@ if (false) {
 }
 
 /***/ }),
-/* 138 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8358,7 +8965,7 @@ if (false) {
 }
 
 /***/ }),
-/* 139 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8379,17 +8986,17 @@ if (false) {
 }
 
 /***/ }),
-/* 140 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "round"
   }, [_c('v-toolbar', {
-    staticClass: "green"
+    class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('storage-register-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-content', [_c('game-clock')], 1)], 1), _vm._v(" "), _c('storage-register-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -8406,6 +9013,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "snackbar"
     }
   }, [_vm._v("\n    " + _vm._s(_vm.snackbarText) + "\n    "), _c('v-btn', {
+    class: _vm.color.accent,
     attrs: {
       "dark": "",
       "flat": ""
@@ -8426,13 +9034,62 @@ if (false) {
 }
 
 /***/ }),
-/* 141 */
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('v-dialog', {
+    model: {
+      value: (_vm.msgShow.show),
+      callback: function($$v) {
+        _vm.msgShow.show = $$v
+      },
+      expression: "msgShow.show"
+    }
+  }, [_c('v-card', [_c('v-card-title', [_vm._v(_vm._s(_vm.msgTitle ? _vm.msgTitle : '訊息'))]), _vm._v(" "), _c('v-card-text', [_vm._v("\n      " + _vm._s(_vm.msgContent ? _vm.msgContent : '') + "\n    ")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+    directives: [{
+      name: "show",
+      rawName: "v-show",
+      value: (_vm.msgConfirmAction),
+      expression: "msgConfirmAction"
+    }],
+    staticClass: "green--text darken-1",
+    attrs: {
+      "flat": "flat"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.deny($event)
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.msgDenyText ? _vm.msgDenyText : '取消'))]), _vm._v(" "), _c('v-btn', {
+    staticClass: "green--text darken-1",
+    attrs: {
+      "flat": "flat"
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.confirm($event)
+      }
+    }
+  }, [_vm._v(_vm._s(_vm.msgConfirmText ? _vm.msgConfirmText : '確認'))])], 1)], 1)], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-fef971c8", module.exports)
+  }
+}
+
+/***/ }),
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(48);
+var content = __webpack_require__(49);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8452,13 +9109,13 @@ if(false) {
 }
 
 /***/ }),
-/* 142 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(49);
+var content = __webpack_require__(50);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8478,13 +9135,13 @@ if(false) {
 }
 
 /***/ }),
-/* 143 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(50);
+var content = __webpack_require__(51);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8504,13 +9161,13 @@ if(false) {
 }
 
 /***/ }),
-/* 144 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8530,13 +9187,13 @@ if(false) {
 }
 
 /***/ }),
-/* 145 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(52);
+var content = __webpack_require__(53);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8556,13 +9213,13 @@ if(false) {
 }
 
 /***/ }),
-/* 146 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(53);
+var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8582,13 +9239,13 @@ if(false) {
 }
 
 /***/ }),
-/* 147 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(54);
+var content = __webpack_require__(55);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8608,13 +9265,13 @@ if(false) {
 }
 
 /***/ }),
-/* 148 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(55);
+var content = __webpack_require__(56);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8634,13 +9291,13 @@ if(false) {
 }
 
 /***/ }),
-/* 149 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(56);
+var content = __webpack_require__(57);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8660,13 +9317,13 @@ if(false) {
 }
 
 /***/ }),
-/* 150 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(57);
+var content = __webpack_require__(58);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8686,13 +9343,13 @@ if(false) {
 }
 
 /***/ }),
-/* 151 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(58);
+var content = __webpack_require__(59);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8712,13 +9369,13 @@ if(false) {
 }
 
 /***/ }),
-/* 152 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(59);
+var content = __webpack_require__(60);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8738,13 +9395,13 @@ if(false) {
 }
 
 /***/ }),
-/* 153 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(60);
+var content = __webpack_require__(61);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8764,13 +9421,13 @@ if(false) {
 }
 
 /***/ }),
-/* 154 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(61);
+var content = __webpack_require__(62);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8790,13 +9447,13 @@ if(false) {
 }
 
 /***/ }),
-/* 155 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(62);
+var content = __webpack_require__(63);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8816,13 +9473,13 @@ if(false) {
 }
 
 /***/ }),
-/* 156 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(63);
+var content = __webpack_require__(64);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8842,13 +9499,13 @@ if(false) {
 }
 
 /***/ }),
-/* 157 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(64);
+var content = __webpack_require__(65);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8868,13 +9525,13 @@ if(false) {
 }
 
 /***/ }),
-/* 158 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(65);
+var content = __webpack_require__(66);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8894,13 +9551,13 @@ if(false) {
 }
 
 /***/ }),
-/* 159 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(66);
+var content = __webpack_require__(67);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8920,13 +9577,13 @@ if(false) {
 }
 
 /***/ }),
-/* 160 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(67);
+var content = __webpack_require__(68);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8946,13 +9603,13 @@ if(false) {
 }
 
 /***/ }),
-/* 161 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(68);
+var content = __webpack_require__(69);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8972,13 +9629,13 @@ if(false) {
 }
 
 /***/ }),
-/* 162 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(69);
+var content = __webpack_require__(70);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -8998,13 +9655,13 @@ if(false) {
 }
 
 /***/ }),
-/* 163 */
+/* 167 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(70);
+var content = __webpack_require__(71);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9024,13 +9681,13 @@ if(false) {
 }
 
 /***/ }),
-/* 164 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(71);
+var content = __webpack_require__(72);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9050,13 +9707,13 @@ if(false) {
 }
 
 /***/ }),
-/* 165 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(72);
+var content = __webpack_require__(73);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9076,13 +9733,13 @@ if(false) {
 }
 
 /***/ }),
-/* 166 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(73);
+var content = __webpack_require__(74);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9102,13 +9759,13 @@ if(false) {
 }
 
 /***/ }),
-/* 167 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(74);
+var content = __webpack_require__(75);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9128,13 +9785,13 @@ if(false) {
 }
 
 /***/ }),
-/* 168 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(75);
+var content = __webpack_require__(76);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9154,13 +9811,13 @@ if(false) {
 }
 
 /***/ }),
-/* 169 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(76);
+var content = __webpack_require__(77);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9180,13 +9837,13 @@ if(false) {
 }
 
 /***/ }),
-/* 170 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(77);
+var content = __webpack_require__(78);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9206,13 +9863,13 @@ if(false) {
 }
 
 /***/ }),
-/* 171 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(78);
+var content = __webpack_require__(79);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9232,7 +9889,33 @@ if(false) {
 }
 
 /***/ }),
-/* 172 */
+/* 176 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(80);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("7231e0da", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-fef971c8\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./msg-dialog.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-fef971c8\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./msg-dialog.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 177 */
 /***/ (function(module, exports) {
 
 /**
@@ -9265,10 +9948,10 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 173 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(14);
+module.exports = __webpack_require__(15);
 
 
 /***/ })

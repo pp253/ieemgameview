@@ -1,6 +1,6 @@
 <template>
   <div class="choose">
-    <v-toolbar class="green">
+    <v-toolbar class="light-blue white--text">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
     </v-toolbar>
     <main>
@@ -11,14 +11,14 @@
       >
         <v-layout row wrap>
           <v-flex v-for="(item, index) in gameList" :key="index" xs12>
-            <v-card class="cyan darken-2 white--text">
+            <v-card class="blue darken-2 white--text">
               <v-card-title primary-title>
                 <div class="headline">{{ item.text }}</div><br />
                 <div>{{ item.describe }}</div>
               </v-card-title>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn flat dark @click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
+                <v-btn outline flat dark @click.native="intoGame(item.index, item.gameConfig)">進入遊戲</v-btn>
               </v-card-actions>
             </v-card>
           </v-flex>

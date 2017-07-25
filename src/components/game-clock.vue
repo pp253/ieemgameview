@@ -44,12 +44,22 @@ export default {
 </script>
 
 <style>
-.game-clock {  
+.game-clock {
   text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .game-clock .time {
   font-size: 50px;
   line-height: 50px;
+}
+
+.game-clock .more-info {
+  font-size: 20px;
+}
+
+.game-clock .progress-circular__info {
+  font-size: 30px;
 }
 </style>

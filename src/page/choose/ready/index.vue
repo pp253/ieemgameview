@@ -1,7 +1,7 @@
 <template>
   <div class="home choose">
-    <v-toolbar class="orange elevation-5">
-      <v-toolbar-title>首頁</v-toolbar-title>
+    <v-toolbar class="light-blue elevation-5">
+      <v-toolbar-title>準備開始</v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="white--text"></span>
       <v-progress-circular indeterminate v-bind:size="25" class="white--text"></v-progress-circular>
@@ -10,7 +10,8 @@
       <div class="head text-xs-center">
         <div class="logo"></div>
         <h5 class="headline">請稍後，遊戲即將開始</h5>
-        如果剛剛的講解有任何不清楚的地方，你現在可以向旁邊的隊輔們提出疑問，他們會為你解答。<br /><br /><br />
+        <span class="gray--text">如果剛剛的講解有任何不清楚的地方，你現在可以向身旁的隊輔們提出疑問，他們會為你解答。</span>
+        <br /><br /><br />
         <span class="gray--text">{{ readableTeam }} {{ readableJob }}</span>
       </div>
     </main>

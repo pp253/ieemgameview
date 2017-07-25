@@ -19,17 +19,14 @@ import {router} from '../../router'
 export default {
   methods: {
     intoRegist () {
-      // router.push('/regist')
-      router.push('/choose')
+      router.push('/regist')
+      // router.push('/choose')
     }
   }
 }
 </script>
 
 <style>
-.home {
-  min-height: 100%;
-}
 
 .home .head {
   padding-top: 60px;
@@ -42,7 +39,7 @@ export default {
 }
 
 .home .card {
-  height: 100% !important;
+  height: 100vh !important;
 }
 
 .home .card__text {

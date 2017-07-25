@@ -1,6 +1,6 @@
 <template>
   <div class="round">
-    <v-toolbar :class="mainColor">
+    <v-toolbar :class="color.primary">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
       <span>{{ toolbarInfo }}</span>
@@ -34,8 +34,7 @@ export default {
       state: api.nowUser.getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: api.nowUser.getColor()
     }
   },
   computed: {

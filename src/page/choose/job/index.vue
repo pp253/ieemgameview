@@ -1,7 +1,10 @@
 <template>
   <div class="choose">
-    <v-toolbar class="orange">
-      <v-toolbar-title>首頁</v-toolbar-title>
+    <v-toolbar class="light-blue white--text">
+      <v-btn icon v-on:click.native="backToChooseTeam">
+        <v-icon class="white--text">arrow_back</v-icon>
+      </v-btn>
+      <v-toolbar-title>選擇工作</v-toolbar-title>
     </v-toolbar>
     <main>
       <h5>請選擇你的工作</h5>
@@ -21,20 +24,20 @@
           </template>
         </v-list>
       </v-layout>
-      <v-dialog class="dialog" v-model="dialog">
-        <v-card>
-          <v-card-title>工作確認</v-card-title>
-          <v-card-text>
-            請確定你是{{ readableTeam }}的{{ readableJob }}。
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn class="blue--text darken-1" flat="flat" @click.native="dialog = false">重新選擇</v-btn>
-            <v-btn class="blue--text darken-1" flat="flat" @click.native="intoJob(job)">確定</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
     </main>
+    <v-dialog v-model="dialog">
+      <v-card>
+        <v-card-title>工作確認</v-card-title>
+        <v-card-text>
+          請確定你是{{ readableTeam }}的{{ readableJob }}。
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="light-blue--text" flat @click.native="dialog = false">重新選擇</v-btn>
+          <v-btn class="light-blue--text" flat @click.native="intoJob(job)">確定</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     {{ intoBelong }}
   </div>
 </template>
@@ -80,6 +83,9 @@ export default {
     }
   },
   methods: {
+    backToChooseTeam () {
+      router.push('/choose/team')
+    },
     previewJob (job) {
       this.job = job
       this.dialog = true

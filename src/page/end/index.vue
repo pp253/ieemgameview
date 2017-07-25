@@ -5,7 +5,7 @@
         v-model="activeTab"
         dark fixed centered
       >
-        <v-toolbar dark class="cyan elevation-0">
+        <v-toolbar dark class="light-blue elevation-0">
           <v-btn icon v-on:click.native="backToHome">
             <v-icon>arrow_back</v-icon>
           </v-btn>
@@ -13,7 +13,7 @@
         </v-toolbar>
         <v-tabs-bar
           slot="activators"
-          class="cyan"
+          class="light-blue"
         >
           <v-tabs-item
             v-for="tab in tabs"
@@ -34,18 +34,51 @@
                 v-bind:items="itemTeam"
                 v-model="selectedTeam"
                 label="選擇小隊"
-                single-line
                 item-value="index"
+                single-line
                 bottom
               ></v-select>
-              
-              <div
-                v-for="(chart, key) in charts"
-                :key="key"
-              >
-                <h5 class="chart-title">{{ chart.title }}</h5>
-                <div :id="chart.id"></div>
-                <v-divider v-if="key + 1 < charts.length"></v-divider>
+
+              <div v-if="selectedTeam === 0">
+
+              </div>
+
+              <div v-else>
+                <v-layout row wrap>
+                  <v-flex xs6>
+                    <p class="title">毛利</p>
+                    <p class="result">$10000</p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="title">淨利</p>
+                    <p class="result">$10000</p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="title">總產量</p>
+                    <p class="result">$10000</p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="title">總成本</p>
+                    <p class="result">$10000</p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="title">運輸次數</p>
+                    <p class="result">10次，150臺</p>
+                  </v-flex>
+                  <v-flex xs6>
+                    <p class="title">囤貨成本</p>
+                    <p class="result">$10000</p>
+                  </v-flex>
+                </v-layout>
+                <v-divider></v-divider>
+                <div
+                  v-for="(chart, key) in charts"
+                  :key="key"
+                >
+                  <h5 class="chart-title">{{ chart.title }}</h5>
+                  <div :id="chart.id"></div>
+                  <v-divider v-if="key + 1 < charts.length"></v-divider>
+                </div>
               </div>
             </v-card-text>
           </v-card>
@@ -91,13 +124,10 @@ export default {
         {
           id: 'chart-productivity',
           title: '產量'
-        },
-        {
-          id: 'chart-storage',
-          title: '倉儲'
         }
       ],
-      gameConfig: api.nowUser.getGameConfig()
+      gameConfig: api.nowUser.getGameConfig(),
+      data: null
     }
   },
   computed: {
@@ -216,44 +246,30 @@ export default {
     backToHome () {
       router.push('/')
     },
-    drawStorageChart (history) {
-      let calculate = (day) => {
-        let n = 0 // accumulate
-        for (let key in history) {
-          let item = history[key]
-          if (item.day <= day) {
-            if (item.product === constant.PRODUCTS.CAR && item.amount > n) {
-              n += item.amount
-            }
-          } else {
-            break
-          }
-        }
-        return n
+    load () {
+      dataApi.getData(api.nowUser.getGameId())
+        .then((function (res) {
+          Object.assign(this.data, res.data)
+          this.draw()
+        }).bind(this))
+        .catch((err) => { console.error(err) })
+    },
+    draw () {
+      if (!this.data) {
+        this.load()
+        return
       }
 
-      let dataTable = [['日子', '累積產量', '單日產量']]
-      let k = 0
-      for (let d = 1; d <= days; d++) {
-        let result = calculate(d)
-        k = result - k
-        dataTable.push([readable.toReadableDay(d), result, k])
-      }
-      let data = google.visualization.arrayToDataTable(dataTable)
 
-      let options = {
-        chartArea: {left: '15%', width: '85%', height: '70%'},
-        legend: { position: 'bottom' },
-        height: 300
-      }
-
-      let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))
-      chart.draw(data, options)
+    },
+    toReadableDollar (val) {
+      return readable.toReadableDollar(val)
     }
   },
   mounted () {
     // this.loadChart()
     // google.charts.setOnLoadCallback(this.loadChart)
+    this.load()
   }
 }
 </script>
@@ -266,5 +282,15 @@ export default {
 
 .end .divider {
   margin-top: 20px;
+}
+
+.end .title {
+  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px !important;
+  margin-bottom: 0;
+}
+
+.end .result {
+  font-size: 20px;
 }
 </style>

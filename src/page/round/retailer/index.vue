@@ -1,24 +1,23 @@
 <template>
-  <div class="round">
-    <v-toolbar :class="mainColor">
-      <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+  <div class="round retailer">
+    <v-toolbar :class="color.primary + ' white--text'">
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="white--text">{{ toolbarInfo }}</span>
+      <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
       <v-layout row class="bg-box">
 
       </v-layout>
       <v-layout row>
-          <v-tabs
+        <v-tabs
           id="mobile-tabs-1"
           grow
           scroll-bars
           v-model="activeTab"
-          light
         >
           <v-tabs-bar
-            :class="'tabs ' + mainColor"
+            :class="color.primary"
             slot="activators"
           >
             <v-tabs-item
@@ -29,31 +28,31 @@
             >
               {{ tab.title }}
             </v-tabs-item>
-            <v-tabs-slider :class="subColor"></v-tabs-slider>
+            <v-tabs-slider :class="color.accent"></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-content
             :key="0"
             :id="'storage'"
           >
-            <storage-list :list="state.storage"></storage-list>
+            <storage-list :list="state.storage" :announce="announce"></storage-list>
           </v-tabs-content>
           <v-tabs-content
             :key="1"
             :id="'news-list'"
           >
-            <news-list :list="state.news"></news-list>
+            <news-list :list="state.news" :announce="announce"></news-list>
           </v-tabs-content>
           <v-tabs-content
             :key="2"
             :id="'order-history'"
           >
-            <order-history :list="state.orderHistory"></order-history>
+            <order-history :list="state.orderHistory" type="number" :get-number="state.deliveredNumber"></order-history>
           </v-tabs-content>
           <v-tabs-content
             :key="3"
             :id="'deliver-history'"
           >
-            <deliver-history :list="state.deliverHistory"></deliver-history>
+            <deliver-history :list="state.deliverHistory" :announce="announce"></deliver-history>
           </v-tabs-content>
         </v-tabs>
       </v-layout>
@@ -86,14 +85,13 @@ export default {
         { index: 0, id: 'storage', title: '庫存' },
         { index: 1, id: 'news-list', title: '市場新聞' },
         { index: 2, id: 'order-history', title: '寄出的訂單' },
-        { index: 3, id: 'deliver-history', title: '運送紀錄' }
+        { index: 3, id: 'deliver-history', title: '物流紀錄' }
       ],
       activeTab: null,
       state: api.nowUser.getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: api.nowUser.getColor()
     }
   },
   computed: {
@@ -120,4 +118,11 @@ export default {
 </script>
 
 <style>
+.round.retailer .tabs__item {
+  color: rgba(255,255,255,0.7) !important;
+}
+
+.round.retailer .tabs__item--active {
+  color: rgba(255,255,255,1) !important;
+}
 </style>

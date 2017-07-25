@@ -7,6 +7,36 @@ import * as storageApi from './storage'
 import * as newsApi from './news'
 import * as dataApi from './data'
 
+export const DEFAULT_STATE = () => {
+  return {
+    gameId: constant.GAMES.UNKNOWN,
+    teamIndex: constant.TEAMS.UNKNOWN,
+    job: constant.JOBS.UNKNOWN,
+    gameConfig: {},
+    stage: constant.GAME_STAGE.UNKNOWN,
+    day: constant.ZERO_DAYTIME.DAY,
+    time: constant.ZERO_DAYTIME.TIME,
+    isWorking: false,
+    dayStartTime: constant.UNKNOWN_TIME,
+    balance: 0,
+    storage: [],
+    receivedOrder: [],
+    orderHistory: [],
+    deliverHistory: [],
+    news: [],
+    color: {
+      primary: 'light-blue',
+      accent: 'yellow'
+    },
+    market: {
+      orderAmount: 0,
+      storageAmount: 0,
+      price: 0
+    },
+    deliveredNumber: 0
+  }
+}
+
 export function isStaffTeam (team) {
   return team === 0
 }
@@ -18,23 +48,7 @@ export function isStaffJob (job) {
 export class User {
   constructor () {
     // these are made for auto-updating time
-    this.state = {
-      gameId: constant.GAMES.UNKNOWN,
-      teamIndex: constant.TEAMS.UNKNOWN,
-      job: constant.JOBS.UNKNOWN,
-      gameConfig: {},
-      stage: constant.GAME_STAGE.UNKNOWN,
-      day: constant.ZERO_DAYTIME.DAY,
-      time: constant.ZERO_DAYTIME.TIME,
-      isWorking: false,
-      dayStartTime: constant.UNKNOWN_TIME,
-      balance: 0,
-      storage: [],
-      receivedOrder: [],
-      orderHistory: [],
-      deliverHistory: [],
-      news: []
-    }
+    this.state = DEFAULT_STATE()
 
     this.timer = setInterval(this._update.bind(this), 1000)
 
@@ -42,23 +56,7 @@ export class User {
   }
 
   resetState () {
-    this.state = Object.assign(this.getState(), {
-      gameId: constant.GAMES.UNKNOWN,
-      teamIndex: constant.TEAMS.UNKNOWN,
-      job: constant.JOBS.UNKNOWN,
-      gameConfig: {},
-      stage: constant.GAME_STAGE.UNKNOWN,
-      day: constant.ZERO_DAYTIME.DAY,
-      time: constant.ZERO_DAYTIME.TIME,
-      isWorking: false,
-      dayStartTime: constant.UNKNOWN_TIME,
-      balance: 0,
-      storage: [],
-      receivedOrder: [],
-      orderHistory: [],
-      deliverHistory: [],
-      news: []
-    })
+    this.state = Object.assign(this.getState(), DEFAULT_STATE())
   }
 
   getState () {
@@ -71,6 +69,10 @@ export class User {
 
   getDayTime () {
     return this.getState()
+  }
+
+  getColor () {
+    return this.getState().color
   }
 
   _update () {
@@ -178,6 +180,13 @@ export class User {
             }
           }
 
+          let updateDeliveredNumberFromRes = (deliveredNumber) => {
+            if (this.getState().deliveredNumber !== deliveredNumber) {
+              this.getState().deliveredNumber = deliveredNumber
+              console.log('DeliveredNumber has been set to', deliveredNumber)
+            }
+          }
+
           switch (this.getJob()) {
             case constant.JOBS.FACTORY:
               // update deliver history
@@ -189,6 +198,7 @@ export class User {
               updateDeliverHistoryFromRes(data.deliverHistory)
               updateReceivedOrderFromRes(data.receivedOrder)
               updateOrderHistoryFromRes(data.orderHistory)
+              updateDeliveredNumberFromRes(data.deliveredNumber)
               break
 
             case constant.JOBS.RETAILER:
@@ -196,6 +206,19 @@ export class User {
               updateReceivedOrderFromRes(data.receivedOrder)
               updateOrderHistoryFromRes(data.orderHistory)
               updateNewsFromRes(data.news)
+              updateDeliveredNumberFromRes(data.deliveredNumber)
+              break
+          }
+        } else if (this.isStaffTeam()) {
+          let updateMarketFromRes = (market) => {
+            this.getState().market.orderAmount = market.orderAmount
+            this.getState().market.storageAmount = market.storageAmount
+            this.getState().market.price = market.price
+          }
+
+          switch (this.getJob()) {
+            case constant.STAFF_JOBS.CONSOLER:
+              updateMarketFromRes(data.market)
               break
           }
         }
@@ -221,6 +244,20 @@ export class User {
 
   setJob (job) {
     this.getState().job = job
+    switch (job) {
+      case constant.JOBS.RETAILER:
+        this.getColor().primary = 'blue-grey'
+        this.getColor().accent = 'light-blue'
+        break
+      case constant.JOBS.WHOLESALER:
+        this.getColor().primary = 'teal'
+        this.getColor().accent = 'lime'
+        break
+      case constant.JOBS.FACTORY:
+        this.getColor().primary = 'amber'
+        this.getColor().accent = 'indigo'
+        break
+    }
     return this
   }
 

@@ -96,6 +96,10 @@ export default {
   height: 100vh !important;
 }
 
+.scoreboard .game-clock {
+  padding: 0 !important;
+}
+
 .scoreboard .ranking {
   text-align: center;
   font-size: 30px;
@@ -105,9 +109,5 @@ export default {
 .scoreboard .ranking .top-ranking {
   font-size: 40px;
   color: rgba(0, 0, 0, 1);
-}
-
-.progress-circular__info {
-  font-size: 30px;
 }
 </style>

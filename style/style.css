@@ -33,10 +33,6 @@
   padding-left: 0;
 }
 
-.choose .list__tile__title {
-  color: rgba(0, 0, 0, 0.87);
-}
-
 .choose h5 {
   padding: 14px;
   padding-bottom: 2px;
@@ -55,10 +51,6 @@
 
 .round .tabs__bar {
   height: 45px;
-}
-
-.round .tabs__item {
-  color: rgba(255, 255, 255, 0.87) !important;
 }
 
 .round .tabs__items {

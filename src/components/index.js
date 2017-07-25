@@ -11,6 +11,7 @@ Vue.component('deliver-dialog', require('./deliver-dialog.vue'))
 Vue.component('online-status', require('./online-status.vue'))
 Vue.component('info-panel', require('./info-panel.vue'))
 Vue.component('account-dialog', require('./account-dialog.vue'))
+Vue.component('msg-dialog', require('./msg-dialog.vue'))
 
 // Discarded:
 // Vue.component('received-order', require('./received-order.vue'))

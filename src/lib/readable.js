@@ -123,12 +123,14 @@ export function toReadableProduct (product) {
 export function toReadableDeliverList (list) {
   let result = []
   let realAmount = 0
+  let lastAmount = 0
   for (let item of list) {
-    realAmount = parseInt(item.amount) - realAmount
+    realAmount = parseInt(item.amount) - lastAmount
     result.push({
       readableGameTime: toReadableGameTime(item),
       amount: realAmount
     })
+    lastAmount = parseInt(item.amount)
   }
   return result
 }
@@ -149,23 +151,28 @@ export function readableProductList () {
   return list
 }
 
-export function toReadableOrderList (list, getList) {
+export function toReadableOrderList (list, getListType, getList) {
   let result = []
-  if (!getList) {
-    getList = []
-  }
-  let accumulateAmmount = 0
-  for (let i of getList) {
-    
+  let accumulateAmount = 0
+  switch (getListType) {
+    case 'number':
+      accumulateAmount = getList
+      break
+
+    case 'list':
+      accumulateAmount = getList.length > 0 ? getList[getList.length - 1].amount : 0
+      break
   }
 
   let realAmount = 0
   for (let item of list) {
     realAmount = parseInt(item.amount) - realAmount
+    let delivered = accumulateAmount > realAmount ? realAmount : accumulateAmount
+    accumulateAmount = accumulateAmount > realAmount ? accumulateAmount - realAmount : 0
     result.push({
       readableGameTime: toReadableGameTime(item, false),
       amount: realAmount,
-      delivered: 0
+      delivered: accumulateAmount > realAmount ? realAmount : delivered
     })
   }
   return result

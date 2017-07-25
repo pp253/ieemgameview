@@ -61,6 +61,7 @@
             <v-card-title>特別功能</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
+              <v-btn primary v-on:click.native="intoBoardcast">前往記分板</v-btn>
               <account-dialog :announce="announce"></account-dialog>
             </v-card-actions>
           </v-card>
@@ -82,6 +83,34 @@
           id="game-info"
         >
           <info-panel :game-config="gameConfig"></info-panel>
+          <v-card>
+            <v-card-title>
+              市場資訊
+            </v-card-title>
+            <v-card-text>
+              <ul>
+                <li>市場需求量：{{ state.market.orderAmount }}</li>
+                <li>市場供應量：{{ state.market.storageAmount }}</li>
+                <li>市場價格：{{ state.market.price }}</li>
+              </ul>
+            </v-card-text>
+          </v-card>
+          <v-card>
+            <v-card-title>
+              設定新聞
+            </v-card-title>
+            <v-card-text>
+              <v-text-field
+                v-model="newsList"
+                label="新聞"
+                multi-line
+              ></v-text-field>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn flat class="light-blue--text" @click.native="setNewsList">變更</v-btn>
+            </v-card-actions>
+          </v-card>
         </v-tabs-content>
       </v-tabs>
     </main>
@@ -102,6 +131,7 @@ import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 import * as gameApi from '../../../lib/api/game'
+import * as newsApi from '../../../lib/api/news'
 
 export default {
   data () {
@@ -116,7 +146,9 @@ export default {
       activeTab: null,
       snackbar: false,
       snackbarText: '',
-      gameConfig: api.nowUser.getGameConfig()
+      gameConfig: api.nowUser.getGameConfig(),
+      color: api.nowUser.getColor(),
+      newsList: ''
     }
   },
   computed: {
@@ -125,7 +157,7 @@ export default {
     }
   },
   methods: {
-    intoBoardCast () {
+    intoBoardcast () {
       router.push('/boardcast')
     },
     nextGameStage () {
@@ -154,6 +186,15 @@ export default {
     },
     test () {
       api.nowUser.test()
+    },
+    setNewsList () {
+      newsApi.setNewsList(api.nowUser.getGameId(), JSON.parse(this.newsList))
+        .then((function (res) {
+          this.announce('新聞設定成功！')
+        }).bind(this))
+        .catch(function (err) {
+          this.announce('新聞設定失敗！')
+        })
     },
     announce (msg) {
       this.snackbarText = msg

@@ -1,9 +1,9 @@
 <template>
   <div class="round">
-    <v-toolbar :class="mainColor">
-      <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
+    <v-toolbar :class="color.primary">
+      <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="white--text">{{ toolbarInfo }}</span>
+      <span>{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
       <v-layout row class="bg-box">
@@ -15,10 +15,9 @@
           grow
           scroll-bars
           v-model="activeTab"
-          light
         >
           <v-tabs-bar
-            :class="'tabs ' + mainColor"
+            :class="'' + color.primary"
             slot="activators"
           >
             <v-tabs-item
@@ -29,25 +28,25 @@
             >
               {{ tab.title }}
             </v-tabs-item>
-            <v-tabs-slider :class="subColor"></v-tabs-slider>
+            <v-tabs-slider :class="color.accent"></v-tabs-slider>
           </v-tabs-bar>
           <v-tabs-content
             :key="0"
             :id="'storage'"
           >
-            <storage-list :list="state.storage"></storage-list>
+            <storage-list :list="state.storage" :announce="announce"></storage-list>
           </v-tabs-content>
           <v-tabs-content
             :key="1"
             :id="'received-order'"
           >
-            <order-history :list="state.receivedOrder" :get-list="state.deliverHistory"></order-history>
+            <order-history :list="state.receivedOrder" type="list" :get-list="state.deliverHistory" :announce="announceReceivedOrder"></order-history>
           </v-tabs-content>
           <v-tabs-content
             :key="2"
             :id="'deliver-history'"
           >
-            <deliver-history :list="state.deliverHistory"></deliver-history>
+            <deliver-history :list="state.deliverHistory" :announce="announce"></deliver-history>
           </v-tabs-content>
         </v-tabs>
       </v-layout>
@@ -77,14 +76,13 @@ export default {
       tabs: [
         { index: 0, id: 'storage', title: '庫存' },
         { index: 1, id: 'received-order', title: '收到的訂單', content: 'something2...' },
-        { index: 2, id: 'deliver-history', title: '運送紀錄', content: 'something3...' }
+        { index: 2, id: 'deliver-history', title: '物流紀錄', content: 'something3...' }
       ],
       activeTab: null,
       state: api.nowUser.getState(),
       snackbar: false,
       snackbarText: '',
-      mainColor: 'green',
-      subColor: 'lime'
+      color: api.nowUser.getColor()
     }
   },
   computed: {
@@ -105,6 +103,9 @@ export default {
     announce (msg) {
       this.snackbarText = msg
       this.snackbar = true
+    },
+    announceReceivedOrder () {
+      this.announce('收到的訂單更新了')
     }
   }
 }

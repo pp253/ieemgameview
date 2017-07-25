@@ -1,7 +1,10 @@
 <template>
   <div class="choose">
-    <v-toolbar class="orange">
-      <v-toolbar-title>首頁</v-toolbar-title>
+    <v-toolbar class="light-blue white--text">
+      <v-btn icon v-on:click.native="backToChoose">
+        <v-icon class="white--text">arrow_back</v-icon>
+      </v-btn>
+      <v-toolbar-title>選擇組別</v-toolbar-title>
     </v-toolbar>
     <main>
       <h5>請選擇你的小隊</h5>
@@ -52,6 +55,9 @@ export default {
     }
   },
   methods: {
+    backToChoose () {
+      router.push('/choose')
+    },
     intoTeam: function (team) {
       console.log('User Team:', team)
       api.nowUser.setTeam(team)

@@ -10,7 +10,6 @@
           <v-text-field
             v-model="configText"
             label="Config"
-            single-line
             multi-line
           ></v-text-field>
         </v-card-text>

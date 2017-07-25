@@ -32,3 +32,35 @@ export function getBalanceByGame (gameId) {
       })
   })
 }
+export function getMarketInfo (gameId) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_market_info', {
+      gameId: gameId
+    })
+      .then(function (res) {
+        if (res.data.err) {
+          reject(res)
+        }
+        resolve(res)
+      })
+      .catch(function (err) {
+        reject(err)
+      })
+  })
+}
+export function getData (gameId) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_data', {
+      gameId: gameId
+    })
+      .then(function (res) {
+        if (res.data.err) {
+          reject(res)
+        }
+        resolve(res)
+      })
+      .catch(function (err) {
+        reject(err)
+      })
+  })
+}
