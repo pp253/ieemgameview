@@ -501,32 +501,32 @@ function toReadableTime(time) {
   var isWorking = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
   var showWorking = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
-  if (!isWorking || time === __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* UNKNOWN_TIME */]) {
-    return __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* READABLE_GAME_WORK */].OFF_WORK;
+  if (!isWorking || time === __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */]) {
+    return __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* READABLE_GAME_WORK */].OFF_WORK;
   }
   var t = parseInt(time / 1000);
   var s = t % 60 >= 0 ? t % 60 : 0;
   var m = (t - s) / 60;
-  return (showWorking ? __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* READABLE_GAME_WORK */].WORKING + ' ' : '') + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  return (showWorking ? __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* READABLE_GAME_WORK */].WORKING + ' ' : '') + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
 }
 
 function toReadableGameTime(dayTime) {
   var showWorking = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
 
   switch (dayTime.stage) {
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].UNKNOWN:
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].PREPARE:
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].READY:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].UNKNOWN:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].PREPARE:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].READY:
       return '尚未開始';
       break;
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].FINAL:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].FINAL:
       return '結算中';
       break;
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].END:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].END:
       return '已結束';
       break;
     default:
-    case __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].START:
+    case __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].START:
       return toReadableDay(dayTime.day) + ' ' + toReadableTime(dayTime.time, dayTime.isWorking, showWorking);
       break;
   }
@@ -676,7 +676,7 @@ function toReadableDeliverList(list) {
 
 function readableProductList() {
   var list = [];
-  for (var key in __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* PRODUCTS */]) {
+  for (var key in __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* PRODUCTS */]) {
     if (key === 'UNKNOWN') {
       continue;
     } else if (key === 'WAREHOUSE') {
@@ -778,11 +778,11 @@ var DEFAULT_STATE = function DEFAULT_STATE() {
     teamIndex: __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* TEAMS */].UNKNOWN,
     job: __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].UNKNOWN,
     gameConfig: {},
-    stage: __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].UNKNOWN,
+    stage: __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].UNKNOWN,
     day: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].DAY,
     time: __WEBPACK_IMPORTED_MODULE_0__constant__["l" /* ZERO_DAYTIME */].TIME,
     isWorking: false,
-    dayStartTime: __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* UNKNOWN_TIME */],
+    dayStartTime: __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */],
     balance: 0,
     storage: [],
     receivedOrder: [],
@@ -850,11 +850,11 @@ var User = function () {
   }, {
     key: '_update',
     value: function _update() {
-      if (this.getGameId() === __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].END) {
+      if (this.getGameId() === __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].END) {
         return;
       }
 
-      if (this.getTeam() === __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* TEAMS */].UNKNOWN || this.getJob() === __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].UNKNOWN || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].PREPARE || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].READY) {
+      if (this.getTeam() === __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* TEAMS */].UNKNOWN || this.getJob() === __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].UNKNOWN || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].PREPARE || this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].READY) {
         __WEBPACK_IMPORTED_MODULE_1__game__["a" /* getGameStage */](this.getGameId()).then(function (res) {
           var data = res.data;
           if (this.getGameStage() !== data.stage) {
@@ -886,10 +886,10 @@ var User = function () {
         }
         if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
           this.getState().time = this.getGameConfig().dayLong * 1000;
-          this.dayStartTime = __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* UNKNOWN_TIME */];
+          this.dayStartTime = __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */];
           this.getState().isWorking = false;
           if (this.day === this.getGameConfig().days) {
-            this.getState().state = __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].FINAL;
+            this.getState().state = __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].FINAL;
             this.isWorking = false;
           }
         } else {
@@ -1082,7 +1082,7 @@ var User = function () {
   }, {
     key: 'isOffWork',
     value: function isOffWork() {
-      return this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].START && !this.isWorking();
+      return this.getGameStage() === __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].START && !this.isWorking();
     }
   }, {
     key: 'getDay',
@@ -1092,9 +1092,9 @@ var User = function () {
   }, {
     key: 'getTime',
     value: function getTime() {
-      if (this.getGameStage() !== __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* GAME_STAGE */].START) {
-        return __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* UNKNOWN_TIME */];
-      } else if (this.getDayStartTime() === __WEBPACK_IMPORTED_MODULE_0__constant__["b" /* UNKNOWN_TIME */]) {
+      if (this.getGameStage() !== __WEBPACK_IMPORTED_MODULE_0__constant__["a" /* GAME_STAGE */].START) {
+        return __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */];
+      } else if (this.getDayStartTime() === __WEBPACK_IMPORTED_MODULE_0__constant__["c" /* UNKNOWN_TIME */]) {
         return this.getGameConfig().dayLong * 1000;
       } else {
         return Date.now() - this.getDayStartTime();
@@ -1201,16 +1201,16 @@ var nowUser = new User();
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return UNKNOWN_TIME; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return UNKNOWN_TIME; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return ZERO_DAYTIME; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return GAMES; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GAME_STAGE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return GAME_STAGE; });
 /* unused harmony export GAME_WORK */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return READABLE_GAME_WORK; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return READABLE_GAME_WORK; });
 /* unused harmony export READABLE_GAMES */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return TEAMS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return READABLE_TEAMS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return PRODUCTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return PRODUCTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return READABLE_PRODUCTS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return JOBS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return STAFF_JOBS; });
@@ -3128,7 +3128,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       dayLong: 300,
       defaultBalance: 19400,
       cost: {
-        storage: (_storage = {}, _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].FACTORY, (_constant$JOBS$FACTOR = {}, _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].CAR, 3000), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].WHEEL, 200), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].BODY, 200), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].ENGINE, 200), _constant$JOBS$FACTOR)), _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].WHOLESALER, _defineProperty({}, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].CAR, 6000)), _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].RETAILER, _defineProperty({}, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].CAR, 9000)), _defineProperty(_storage, 'patchSize', 10), _defineProperty(_storage, 'permanent', true), _storage),
+        storage: (_storage = {}, _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].FACTORY, (_constant$JOBS$FACTOR = {}, _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].CAR, 3000), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].WHEEL, 200), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].BODY, 200), _defineProperty(_constant$JOBS$FACTOR, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].ENGINE, 200), _constant$JOBS$FACTOR)), _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].WHOLESALER, _defineProperty({}, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].CAR, 6000)), _defineProperty(_storage, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["g" /* JOBS */].RETAILER, _defineProperty({}, __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].CAR, 9000)), _defineProperty(_storage, 'patchSize', 10), _defineProperty(_storage, 'permanent', true), _storage),
         transport: {
           cost: 200,
           patchSize: 4
@@ -3274,7 +3274,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }.bind(this));
       }.bind(this));
 
-      if (this.state.stage === __WEBPACK_IMPORTED_MODULE_3__lib_constant__["d" /* GAME_STAGE */].END) {
+      if (this.state.stage === __WEBPACK_IMPORTED_MODULE_3__lib_constant__["a" /* GAME_STAGE */].END) {
         __WEBPACK_IMPORTED_MODULE_5__router__["a" /* router */].push('/boardcast/endpage');
       }
     }
@@ -3475,7 +3475,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -3558,11 +3558,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/round/' + __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob().toLowerCase());
       }
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].START:
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].FINAL:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].START:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].FINAL:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/round/' + __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob().toLowerCase());
           break;
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -3631,7 +3631,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -3830,7 +3830,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         totalProductivity: 0
       },
       gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig(),
-      data: {}
+      data: {},
+      stage: __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].UNKNOWN,
+      timer: null
     };
   },
 
@@ -3850,6 +3852,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     load: function load() {
       __WEBPACK_IMPORTED_MODULE_7__lib_api_data__["a" /* getData */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameId()).then(function (res) {
         Object.assign(this.data, res.data);
+        this.stage = res.data.stage;
         this.draw(this.selectedTeam);
       }.bind(this)).catch(function (err) {
         console.error(err);
@@ -3889,7 +3892,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         for (var key in history) {
           var item = history[key];
           if (item.day <= day) {
-            if (item.product === __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* PRODUCTS */].CAR && item.amount > g) {
+            if (item.product === __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].CAR && item.amount > g) {
               n += item.amount - g;
             }
             g = item.amount;
@@ -4029,12 +4032,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     toReadableDollar: function toReadableDollar(val) {
       return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableDollar */](val);
+    },
+    update: function update() {
+      switch (this.stage) {
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].UNKNOWN:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].PREPARE:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].READY:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].START:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].FINAL:
+          this.load();
+          break;
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
+          break;
+      }
     }
   },
   mounted: function mounted() {
     // this.loadChart()
     // google.charts.setOnLoadCallback(this.loadChart)
-    this.load();
+    this.timer = setInterval(this.update.bind(this), 1000);
   }
 });
 
@@ -4584,7 +4600,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -4699,7 +4715,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -4771,7 +4787,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -4842,7 +4858,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -4965,7 +4981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -5036,7 +5052,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   computed: {
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_3__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_3__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -5160,7 +5176,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
-        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["d" /* GAME_STAGE */].END:
+        case __WEBPACK_IMPORTED_MODULE_1__lib_constant__["a" /* GAME_STAGE */].END:
           __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/end');
           break;
       }
@@ -5201,7 +5217,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\nrect {\r\n  stroke-width: 100%;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?4242b48c"],"names":[],"mappings":";AAmYA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA;AAEA;EACA,mBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"whole-charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataWhole.totalProductivity }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsWhole\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsWhole.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                item-value=\"index\"\r\n                single-line\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">{{ dataTeam.netIncome }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">{{ dataTeam.grossProfit }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataTeam.totalProductivity }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">{{ dataTeam.deliverCount }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsTeam\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsTeam.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"2\"\r\n          id=\"news\"\r\n        >\r\n          <news-list :list=\"data.news\"></news-list>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"3\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ autoDraw }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\nimport * as dataApi from '../../lib/api/data'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'whole-charts', title: '全部圖表' },\r\n        { index: 1, id: 'charts', title: '各組圖表' },\r\n        { index: 2, id: 'news', title: '新聞' },\r\n        { index: 3, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      chartsTeam: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      dataTeam: {\r\n        netIncome: 0,\r\n        grossProfit: 0,\r\n        totalProductivity: 0,\r\n        deliverCount: 0,\r\n        totalCost: 0,\r\n        storageCost: 0\r\n      },\r\n      chartsWhole: [\r\n        {\r\n          id: 'chart-whole-profit',\r\n          title: '各組毛利'\r\n        },\r\n        {\r\n          id: 'chart-whole-productivity',\r\n          title: '各組產量'\r\n        }\r\n      ],\r\n      dataWhole: {\r\n        totalProductivity: 0,\r\n      },\r\n      gameConfig: api.nowUser.getGameConfig(),\r\n      data: {}\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      return readable.toReadableTeamList(api.nowUser.getTeamNumber())\r\n    },\r\n    autoDraw () {\r\n      this.draw(this.selectedTeam)\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    load () {\r\n      dataApi.getData(api.nowUser.getGameId())\r\n        .then((function (res) {\r\n          Object.assign(this.data, res.data)\r\n          this.draw(this.selectedTeam)\r\n        }).bind(this))\r\n        .catch((err) => { console.error(err) })\r\n    },\r\n    draw (teamIndex) {\r\n      if (!this.data.gameId) {\r\n        this.load()\r\n        return\r\n      }\r\n\r\n      let teamNumber = api.nowUser.getGameConfig().teamNumber\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 30\r\n\r\n      let calculateAccount = (history, day, time) => {\r\n        let n = 0\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n            if (item.balance > g) {\r\n              n += item.balance - g\r\n            }\r\n            g = item.balance\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return [g, n]\r\n      }\r\n\r\n      let calculateProductivity = (history, day) => {\r\n        let n = 0 // accumulate\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n              n += item.amount - g\r\n            }\r\n            g = item.amount\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      // whole\r\n      this.dataWhole.totalProductivity = 0\r\n      for (let i = 1; i <= teamNumber; i++) {\r\n        this.dataWhole.totalProductivity += calculateProductivity(this.data.teamDataList[i - 1].FACTORY.storage, days + 1)\r\n      }\r\n      this.dataWhole.totalProductivity += '臺'\r\n\r\n      {\r\n        let header = ['時間']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let row = []\r\n            for (let t = 1; t <= teamNumber; t++) {\r\n              let result = calculateAccount(this.data.teamDataList[t - 1].account, d, i * interval)\r\n              row.push(result[0])\r\n            }\r\n            row.unshift(i === 0 ? d + '' : '')\r\n            dataTable.push(row)\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-whole-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let header = ['日子']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        let k = {}\r\n        for (let d = 1; d <= days; d++) {\r\n          let row = []\r\n          for (let t = 1; t <= teamNumber; t++) {\r\n            let result = calculateProductivity(this.data.teamDataList[t - 1].FACTORY.storage, d)\r\n            row.push(result - (k[t - 1] ? k[t - 1] : 0))\r\n            k[t - 1] = result\r\n          }\r\n          row.unshift(readable.toReadableDay(d))\r\n          dataTable.push(row)\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300,\r\n          isStacked: true\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-whole-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      // single\r\n\r\n      let teamData = this.data.teamDataList[teamIndex - 1]\r\n\r\n      let netIncome = teamData.account[teamData.account.length - 1].balance\r\n      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[0]\r\n      let deliverCount = teamData.FACTORY.deliver.length + teamData.WHOLESALER.deliver.length + teamData.RETAILER.deliver.length\r\n      this.dataTeam.netIncome = readable.toReadableDollar(netIncome)\r\n      this.dataTeam.grossProfit = readable.toReadableDollar(grossProfit)\r\n      this.dataTeam.totalProductivity = calculateProductivity(teamData.FACTORY.storage, days + 1) + '臺'\r\n      this.dataTeam.deliverCount = deliverCount + '次'\r\n      this.dataTeam.totalCost = readable.toReadableDollar(netIncome - grossProfit)\r\n      this.dataTeam.storageCost = readable.toReadableDollar(teamData.cost.storage)\r\n\r\n      {\r\n        let dataTable = [['時間', '毛利', '淨利']]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let result = calculateAccount(teamData.account, d, i * interval)\r\n            dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let dataTable = [['日子', '累積產量', '單日產量']]\r\n        let last = 0\r\n        for (let d = 1; d <= days; d++) {\r\n          let result = calculateProductivity(teamData.FACTORY.storage, d)\r\n          dataTable.push([readable.toReadableDay(d), result, result - last])\r\n          last = result\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n    },\r\n    toReadableDollar (val) {\r\n      return readable.toReadableDollar(val)\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n    this.load()\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n\r\nrect {\r\n  stroke-width: 100%;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?c07ecd54"],"names":[],"mappings":";AAmZA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"whole-charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataWhole.totalProductivity }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsWhole\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsWhole.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                item-value=\"index\"\r\n                single-line\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">{{ dataTeam.netIncome }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">{{ dataTeam.grossProfit }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataTeam.totalProductivity }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">{{ dataTeam.deliverCount }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsTeam\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsTeam.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"2\"\r\n          id=\"news\"\r\n        >\r\n          <news-list :list=\"data.news\"></news-list>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"3\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ autoDraw }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\nimport * as dataApi from '../../lib/api/data'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'whole-charts', title: '全部圖表' },\r\n        { index: 1, id: 'charts', title: '各組圖表' },\r\n        { index: 2, id: 'news', title: '新聞' },\r\n        { index: 3, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      chartsTeam: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      dataTeam: {\r\n        netIncome: 0,\r\n        grossProfit: 0,\r\n        totalProductivity: 0,\r\n        deliverCount: 0,\r\n        totalCost: 0,\r\n        storageCost: 0\r\n      },\r\n      chartsWhole: [\r\n        {\r\n          id: 'chart-whole-profit',\r\n          title: '各組毛利'\r\n        },\r\n        {\r\n          id: 'chart-whole-productivity',\r\n          title: '各組產量'\r\n        }\r\n      ],\r\n      dataWhole: {\r\n        totalProductivity: 0,\r\n      },\r\n      gameConfig: api.nowUser.getGameConfig(),\r\n      data: {},\r\n      stage: constant.GAME_STAGE.UNKNOWN,\r\n      timer: null\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      return readable.toReadableTeamList(api.nowUser.getTeamNumber())\r\n    },\r\n    autoDraw () {\r\n      this.draw(this.selectedTeam)\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    load () {\r\n      dataApi.getData(api.nowUser.getGameId())\r\n        .then((function (res) {\r\n          Object.assign(this.data, res.data)\r\n          this.stage = res.data.stage\r\n          this.draw(this.selectedTeam)\r\n        }).bind(this))\r\n        .catch((err) => { console.error(err) })\r\n    },\r\n    draw (teamIndex) {\r\n      if (!this.data.gameId) {\r\n        this.load()\r\n        return\r\n      }\r\n\r\n      let teamNumber = api.nowUser.getGameConfig().teamNumber\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 30\r\n\r\n      let calculateAccount = (history, day, time) => {\r\n        let n = 0\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n            if (item.balance > g) {\r\n              n += item.balance - g\r\n            }\r\n            g = item.balance\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return [g, n]\r\n      }\r\n\r\n      let calculateProductivity = (history, day) => {\r\n        let n = 0 // accumulate\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n              n += item.amount - g\r\n            }\r\n            g = item.amount\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      // whole\r\n      this.dataWhole.totalProductivity = 0\r\n      for (let i = 1; i <= teamNumber; i++) {\r\n        this.dataWhole.totalProductivity += calculateProductivity(this.data.teamDataList[i - 1].FACTORY.storage, days + 1)\r\n      }\r\n      this.dataWhole.totalProductivity += '臺'\r\n\r\n      {\r\n        let header = ['時間']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let row = []\r\n            for (let t = 1; t <= teamNumber; t++) {\r\n              let result = calculateAccount(this.data.teamDataList[t - 1].account, d, i * interval)\r\n              row.push(result[0])\r\n            }\r\n            row.unshift(i === 0 ? d + '' : '')\r\n            dataTable.push(row)\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-whole-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let header = ['日子']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        let k = {}\r\n        for (let d = 1; d <= days; d++) {\r\n          let row = []\r\n          for (let t = 1; t <= teamNumber; t++) {\r\n            let result = calculateProductivity(this.data.teamDataList[t - 1].FACTORY.storage, d)\r\n            row.push(result - (k[t - 1] ? k[t - 1] : 0))\r\n            k[t - 1] = result\r\n          }\r\n          row.unshift(readable.toReadableDay(d))\r\n          dataTable.push(row)\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300,\r\n          isStacked: true\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-whole-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      // single\r\n\r\n      let teamData = this.data.teamDataList[teamIndex - 1]\r\n\r\n      let netIncome = teamData.account[teamData.account.length - 1].balance\r\n      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[0]\r\n      let deliverCount = teamData.FACTORY.deliver.length + teamData.WHOLESALER.deliver.length + teamData.RETAILER.deliver.length\r\n      this.dataTeam.netIncome = readable.toReadableDollar(netIncome)\r\n      this.dataTeam.grossProfit = readable.toReadableDollar(grossProfit)\r\n      this.dataTeam.totalProductivity = calculateProductivity(teamData.FACTORY.storage, days + 1) + '臺'\r\n      this.dataTeam.deliverCount = deliverCount + '次'\r\n      this.dataTeam.totalCost = readable.toReadableDollar(netIncome - grossProfit)\r\n      this.dataTeam.storageCost = readable.toReadableDollar(teamData.cost.storage)\r\n\r\n      {\r\n        let dataTable = [['時間', '毛利', '淨利']]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let result = calculateAccount(teamData.account, d, i * interval)\r\n            dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let dataTable = [['日子', '累積產量', '單日產量']]\r\n        let last = 0\r\n        for (let d = 1; d <= days; d++) {\r\n          let result = calculateProductivity(teamData.FACTORY.storage, d)\r\n          dataTable.push([readable.toReadableDay(d), result, result - last])\r\n          last = result\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n    },\r\n    toReadableDollar (val) {\r\n      return readable.toReadableDollar(val)\r\n    },\r\n    update () {\r\n      switch (this.stage) {\r\n        case constant.GAME_STAGE.UNKNOWN:\r\n        case constant.GAME_STAGE.PREPARE:\r\n        case constant.GAME_STAGE.READY:\r\n        case constant.GAME_STAGE.START:\r\n        case constant.GAME_STAGE.FINAL:\r\n          this.load()\r\n          break\r\n        case constant.GAME_STAGE.END:\r\n          break\r\n      }\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n    this.timer = setInterval(this.update.bind(this), 1000)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 

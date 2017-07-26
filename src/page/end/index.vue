@@ -174,7 +174,9 @@ export default {
         totalProductivity: 0,
       },
       gameConfig: api.nowUser.getGameConfig(),
-      data: {}
+      data: {},
+      stage: constant.GAME_STAGE.UNKNOWN,
+      timer: null
     }
   },
   computed: {
@@ -194,6 +196,7 @@ export default {
       dataApi.getData(api.nowUser.getGameId())
         .then((function (res) {
           Object.assign(this.data, res.data)
+          this.stage = res.data.stage
           this.draw(this.selectedTeam)
         }).bind(this))
         .catch((err) => { console.error(err) })
@@ -374,12 +377,25 @@ export default {
     },
     toReadableDollar (val) {
       return readable.toReadableDollar(val)
+    },
+    update () {
+      switch (this.stage) {
+        case constant.GAME_STAGE.UNKNOWN:
+        case constant.GAME_STAGE.PREPARE:
+        case constant.GAME_STAGE.READY:
+        case constant.GAME_STAGE.START:
+        case constant.GAME_STAGE.FINAL:
+          this.load()
+          break
+        case constant.GAME_STAGE.END:
+          break
+      }
     }
   },
   mounted () {
     // this.loadChart()
     // google.charts.setOnLoadCallback(this.loadChart)
-    this.load()
+    this.timer = setInterval(this.update.bind(this), 1000)
   }
 }
 </script>
@@ -402,9 +418,5 @@ export default {
 
 .end .result {
   font-size: 20px;
-}
-
-rect {
-  stroke-width: 100%;
 }
 </style>
