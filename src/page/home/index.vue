@@ -19,8 +19,8 @@ import {router} from '../../router'
 export default {
   methods: {
     intoRegist () {
-      router.push('/regist')
-      // router.push('/choose')
+      // router.push('/regist')
+      router.push('/choose')
     }
   }
 }

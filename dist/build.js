@@ -3953,8 +3953,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     intoRegist: function intoRegist() {
-      __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/regist');
-      // router.push('/choose')
+      // router.push('/regist')
+      __WEBPACK_IMPORTED_MODULE_2__router__["a" /* router */].push('/choose');
     }
   }
 });
@@ -5352,7 +5352,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100vh !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?57253084"],"names":[],"mappings":";AA8BA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,yBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      router.push('/regist')\r\n      // router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100vh !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100vh !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?513575b8"],"names":[],"mappings":";AA8BA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,yBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      // router.push('/regist')\r\n      router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100vh !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
