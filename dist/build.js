@@ -474,14 +474,14 @@ function applyToTag (styleElement, obj) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(5);
 /* harmony export (immutable) */ __webpack_exports__["b"] = toReadableDay;
 /* harmony export (immutable) */ __webpack_exports__["l"] = toReadableTime;
-/* harmony export (immutable) */ __webpack_exports__["d"] = toReadableGameTime;
-/* harmony export (immutable) */ __webpack_exports__["e"] = toReadableTeam;
-/* harmony export (immutable) */ __webpack_exports__["f"] = toReadableDollar;
+/* harmony export (immutable) */ __webpack_exports__["e"] = toReadableGameTime;
+/* harmony export (immutable) */ __webpack_exports__["f"] = toReadableTeam;
+/* harmony export (immutable) */ __webpack_exports__["c"] = toReadableDollar;
 /* harmony export (immutable) */ __webpack_exports__["a"] = toReadableTeamList;
 /* harmony export (immutable) */ __webpack_exports__["i"] = toReadableTeamListWithStaff;
 /* harmony export (immutable) */ __webpack_exports__["h"] = readableJobList;
 /* harmony export (immutable) */ __webpack_exports__["g"] = readableStaffJobList;
-/* harmony export (immutable) */ __webpack_exports__["c"] = toReadableJob;
+/* harmony export (immutable) */ __webpack_exports__["d"] = toReadableJob;
 /* unused harmony export toReadablePosition */
 /* harmony export (immutable) */ __webpack_exports__["k"] = toReadableStorageList;
 /* unused harmony export toReadableProduct */
@@ -505,7 +505,7 @@ function toReadableTime(time) {
     return __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* READABLE_GAME_WORK */].OFF_WORK;
   }
   var t = parseInt(time / 1000);
-  var s = t % 60;
+  var s = t % 60 >= 0 ? t % 60 : 0;
   var m = (t - s) / 60;
   return (showWorking ? __WEBPACK_IMPORTED_MODULE_0__constant__["d" /* READABLE_GAME_WORK */].WORKING + ' ' : '') + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
 }
@@ -890,6 +890,7 @@ var User = function () {
           this.getState().isWorking = false;
           if (this.day === this.getGameConfig().days) {
             this.getState().state = __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* GAME_STAGE */].FINAL;
+            this.isWorking = false;
           }
         } else {
           this.getState().time = this.getTime();
@@ -1778,6 +1779,7 @@ function setOrder(gameId, teamIndex, job, product, amount) {
 /* harmony export (immutable) */ __webpack_exports__["a"] = getUpdate;
 /* harmony export (immutable) */ __webpack_exports__["b"] = getBalanceByGame;
 /* unused harmony export getMarketInfo */
+/* unused harmony export getData */
 function getUpdate(gameId, teamIndex, job) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/data/get_update', {
@@ -1811,6 +1813,20 @@ function getBalanceByGame(gameId) {
 function getMarketInfo(gameId) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/data/get_market_info', {
+      gameId: gameId
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+function getData(gameId) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/data/get_data', {
       gameId: gameId
     }).then(function (res) {
       if (res.data.err) {
@@ -3213,10 +3229,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         list.forEach(function (i, k) {
           result.push({
             teamIndex: k + 1,
-            readableTeam: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["e" /* toReadableTeam */](k + 1),
+            readableTeam: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["f" /* toReadableTeam */](k + 1),
             isTop: false,
             balance: i,
-            readableBalance: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["f" /* toReadableDollar */](i)
+            readableBalance: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["c" /* toReadableDollar */](i)
           });
         }.bind(this));
 
@@ -3448,10 +3464,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     readableTeam: function readableTeam() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam());
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam());
     },
     readableJob: function readableJob() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](this.job);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](this.job);
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
@@ -3471,7 +3487,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.dialog = true;
     },
     intoJob: function intoJob(job) {
-      console.log('User Job:', job, __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](job));
+      console.log('User Job:', job, __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](job));
       __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].setJob(job);
 
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/choose/ready');
@@ -3528,10 +3544,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     readableTeam: function readableTeam() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam());
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam());
     },
     readableJob: function readableJob() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob());
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob());
     },
     intoBelong: function intoBelong() {
       if (__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob() === __WEBPACK_IMPORTED_MODULE_1__lib_constant__["h" /* STAFF_JOBS */].CONSOLER) {
@@ -3735,6 +3751,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3760,7 +3782,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         id: 'chart-productivity',
         title: '產量'
       }],
-      gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig()
+      gameConfig: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameConfig(),
+      data: null
     };
   },
 
@@ -3875,44 +3898,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     backToHome: function backToHome() {
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/');
     },
-    drawStorageChart: function drawStorageChart(history) {
-      var calculate = function calculate(day) {
-        var n = 0; // accumulate
-        for (var key in history) {
-          var item = history[key];
-          if (item.day <= day) {
-            if (item.product === __WEBPACK_IMPORTED_MODULE_1__lib_constant__["b" /* PRODUCTS */].CAR && item.amount > n) {
-              n += item.amount;
-            }
-          } else {
-            break;
-          }
-        }
-        return n;
-      };
-
-      var dataTable = [['日子', '累積產量', '單日產量']];
-      var k = 0;
-      for (var d = 1; d <= days; d++) {
-        var result = calculate(d);
-        k = result - k;
-        dataTable.push([__WEBPACK_IMPORTED_MODULE_2__lib_readable__["b" /* toReadableDay */](d), result, k]);
+    load: function load() {
+      dataApi.getData(__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getGameId()).then(function (res) {
+        Object.assign(this.data, res.data);
+        this.draw();
+      }.bind(this)).catch(function (err) {
+        console.error(err);
+      });
+    },
+    draw: function draw() {
+      if (!this.data) {
+        this.load();
+        return;
       }
-      var data = google.visualization.arrayToDataTable(dataTable);
-
-      var options = {
-        chartArea: { left: '15%', width: '85%', height: '70%' },
-        legend: { position: 'bottom' },
-        height: 300
-      };
-
-      var chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'));
-      chart.draw(data, options);
+    },
+    toReadableDollar: function toReadableDollar(val) {
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableDollar */](val);
     }
   },
   mounted: function mounted() {
     // this.loadChart()
     // google.charts.setOnLoadCallback(this.loadChart)
+    this.load();
   }
 });
 
@@ -4348,7 +4355,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       tabs: [{ index: 0, id: 'online-status', title: '連線狀況' }, { index: 1, id: 'dynamic-log', title: '即時動態' }, { index: 2, id: 'game-info', title: '遊戲資訊' }],
       activeTab: null,
@@ -4362,7 +4369,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableGameTime */](this.state);
     }
   },
   methods: {
@@ -4451,7 +4458,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       secondary: true,
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
@@ -4561,7 +4568,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單', content: 'something2...' }, { index: 2, id: 'deliver-history', title: '物流紀錄', content: 'something3...' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
@@ -4573,7 +4580,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableDollar */](this.state.balance);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableDollar */](this.state.balance);
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
@@ -4638,7 +4645,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
@@ -4706,7 +4713,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       secondary: true,
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
@@ -4716,7 +4723,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableGameTime */](this.state);
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
@@ -4827,7 +4834,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'news-list', title: '市場新聞' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '物流紀錄' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
@@ -4839,7 +4846,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableDollar */](this.state.balance);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableDollar */](this.state.balance);
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
@@ -4903,7 +4910,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   data: function data() {
     return {
       secondary: true,
-      title: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getJob()),
       state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
       snackbar: false,
       snackbarText: '',
@@ -5022,7 +5029,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
+      title: __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableTeam */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getTeam()) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableJob */](__WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getJob()),
       tabs: [{ index: 0, id: 'storage', title: '庫存' }, { index: 1, id: 'received-order', title: '收到的訂單' }, { index: 2, id: 'order-history', title: '寄出的訂單' }, { index: 3, id: 'deliver-history', title: '物流紀錄' }],
       activeTab: null,
       state: __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].getState(),
@@ -5034,7 +5041,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
   computed: {
     toolbarInfo: function toolbarInfo() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["d" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["f" /* toReadableDollar */](this.state.balance);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["e" /* toReadableGameTime */](this.state) + ' ' + __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableDollar */](this.state.balance);
     },
     intoBelong: function intoBelong() {
       switch (this.state.stage) {
@@ -5079,7 +5086,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?632bcdb5"],"names":[],"mappings":";AA4RA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                single-line\r\n                item-value=\"index\"\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">10次，150臺</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">$10000</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in charts\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < charts.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ loadChart }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      teamNumber: 4,\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'charts', title: '圖表' },\r\n        { index: 1, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      charts: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      gameConfig: api.nowUser.getGameConfig()\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      let list = [{\r\n        index: 0,\r\n        text: '全部'\r\n      }]\r\n      return list.concat(readable.toReadableTeamList(api.nowUser.getTeamNumber()))\r\n    },\r\n    loadChart () {\r\n      if (this.selectedTeam === 0) {\r\n        return\r\n      }\r\n\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 10\r\n\r\n      accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          let calculate = (day, time) => {\r\n            let n = 0\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n                if (item.balance > g) {\r\n                  n += item.balance - g\r\n                }\r\n                g = item.balance\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return [g, n]\r\n          }\r\n\r\n          let dataTable = [['時間', '毛利', '淨利']]\r\n          for (let d = 1; d <= days; d++) {\r\n            for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n              let result = calculate(d, i * interval)\r\n              dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n            }\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          // material design charts\r\n          // remember to add 'line' package to 'google.charts.load' before using this\r\n          // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n          // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n          let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n      \r\n      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, constant.JOBS.FACTORY)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          // chart-productivity\r\n          let calculate = (day) => {\r\n            let n = 0 // accumulate\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day <= day) {\r\n                if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n                  n += item.amount - g\r\n                }\r\n                g = item.amount\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return n\r\n          }\r\n\r\n          let dataTable = [['日子', '累積產量', '單日產量']]\r\n          let k = 0\r\n          for (let d = 1; d <= days; d++) {\r\n            let result = calculate(d)\r\n            k = result - k\r\n            dataTable.push([readable.toReadableDay(d), result, k])\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    drawStorageChart (history) {\r\n      let calculate = (day) => {\r\n        let n = 0 // accumulate\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > n) {\r\n              n += item.amount\r\n            }\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      let dataTable = [['日子', '累積產量', '單日產量']]\r\n      let k = 0\r\n      for (let d = 1; d <= days; d++) {\r\n        let result = calculate(d)\r\n        k = result - k\r\n        dataTable.push([readable.toReadableDay(d), result, k])\r\n      }\r\n      let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n      let options = {\r\n        chartArea: {left: '15%', width: '85%', height: '70%'},\r\n        legend: { position: 'bottom' },\r\n        height: 300\r\n      }\r\n\r\n      let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n      chart.draw(data, options)\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?06d8e4e9"],"names":[],"mappings":";AAqRA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                item-value=\"index\"\r\n                single-line\r\n                bottom\r\n              ></v-select>\r\n\r\n              <div v-if=\"selectedTeam === 0\">\r\n\r\n              </div>\r\n\r\n              <div v-else>\r\n                <v-layout row wrap>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">毛利</p>\r\n                    <p class=\"result\">$10000</p>\r\n                  </v-flex>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">淨利</p>\r\n                    <p class=\"result\">$10000</p>\r\n                  </v-flex>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">總產量</p>\r\n                    <p class=\"result\">$10000</p>\r\n                  </v-flex>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">總成本</p>\r\n                    <p class=\"result\">$10000</p>\r\n                  </v-flex>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">運輸次數</p>\r\n                    <p class=\"result\">10次，150臺</p>\r\n                  </v-flex>\r\n                  <v-flex xs6>\r\n                    <p class=\"title\">囤貨成本</p>\r\n                    <p class=\"result\">$10000</p>\r\n                  </v-flex>\r\n                </v-layout>\r\n                <v-divider></v-divider>\r\n                <div\r\n                  v-for=\"(chart, key) in charts\"\r\n                  :key=\"key\"\r\n                >\r\n                  <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                  <div :id=\"chart.id\"></div>\r\n                  <v-divider v-if=\"key + 1 < charts.length\"></v-divider>\r\n                </div>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ loadChart }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      teamNumber: 4,\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'charts', title: '圖表' },\r\n        { index: 1, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      charts: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      gameConfig: api.nowUser.getGameConfig(),\r\n      data: null\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      let list = [{\r\n        index: 0,\r\n        text: '全部'\r\n      }]\r\n      return list.concat(readable.toReadableTeamList(api.nowUser.getTeamNumber()))\r\n    },\r\n    loadChart () {\r\n      if (this.selectedTeam === 0) {\r\n        return\r\n      }\r\n\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 10\r\n\r\n      accountApi.getHistory(api.nowUser.getGameId(), this.selectedTeam)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          let calculate = (day, time) => {\r\n            let n = 0\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n                if (item.balance > g) {\r\n                  n += item.balance - g\r\n                }\r\n                g = item.balance\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return [g, n]\r\n          }\r\n\r\n          let dataTable = [['時間', '毛利', '淨利']]\r\n          for (let d = 1; d <= days; d++) {\r\n            for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n              let result = calculate(d, i * interval)\r\n              dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n            }\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          // material design charts\r\n          // remember to add 'line' package to 'google.charts.load' before using this\r\n          // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n          // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n          let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n      \r\n      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, constant.JOBS.FACTORY)\r\n        .then((function (res) {\r\n          let history = res.data.list\r\n\r\n          // chart-productivity\r\n          let calculate = (day) => {\r\n            let n = 0 // accumulate\r\n            let g = 0\r\n            for (let key in history) {\r\n              let item = history[key]\r\n              if (item.day <= day) {\r\n                if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n                  n += item.amount - g\r\n                }\r\n                g = item.amount\r\n              } else {\r\n                break\r\n              }\r\n            }\r\n            return n\r\n          }\r\n\r\n          let dataTable = [['日子', '累積產量', '單日產量']]\r\n          let k = 0\r\n          for (let d = 1; d <= days; d++) {\r\n            let result = calculate(d)\r\n            k = result - k\r\n            dataTable.push([readable.toReadableDay(d), result, k])\r\n          }\r\n          let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n          let options = {\r\n            chartArea: {left: '15%', width: '85%', height: '70%'},\r\n            legend: { position: 'bottom' },\r\n            height: 300\r\n          }\r\n\r\n          let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n          chart.draw(data, options)\r\n        }).bind(this))\r\n        .catch((function (err) {\r\n          console.error(err)\r\n        }).bind(this))\r\n\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    load () {\r\n      dataApi.getData(api.nowUser.getGameId())\r\n        .then((function (res) {\r\n          Object.assign(this.data, res.data)\r\n          this.draw()\r\n        }).bind(this))\r\n        .catch((err) => { console.error(err) })\r\n    },\r\n    draw () {\r\n      if (!this.data) {\r\n        this.load()\r\n        return\r\n      }\r\n\r\n\r\n    },\r\n    toReadableDollar (val) {\r\n      return readable.toReadableDollar(val)\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n    this.load()\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -7097,8 +7104,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "items": _vm.itemTeam,
       "label": "選擇小隊",
-      "single-line": "",
       "item-value": "index",
+      "single-line": "",
       "bottom": ""
     },
     model: {
@@ -7108,7 +7115,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "selectedTeam"
     }
-  }), _vm._v(" "), _c('v-layout', {
+  }), _vm._v(" "), (_vm.selectedTeam === 0) ? _c('div') : _c('div', [_c('v-layout', {
     attrs: {
       "row": "",
       "wrap": ""
@@ -7171,7 +7178,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "id": chart.id
       }
     }), _vm._v(" "), (key + 1 < _vm.charts.length) ? _c('v-divider') : _vm._e()], 1)
-  })], 2)], 1)], 1), _vm._v(" "), _c('v-tabs-content', {
+  })], 2)], 1)], 1)], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 1,
     attrs: {
       "id": "game-info"

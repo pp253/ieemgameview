@@ -120,6 +120,7 @@ export class User {
           this.getState().isWorking = false
           if (this.day === this.getGameConfig().days) {
             this.getState().state = constant.GAME_STAGE.FINAL
+            this.isWorking = false
           }
         } else {
           this.getState().time = this.getTime()

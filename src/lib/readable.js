@@ -12,7 +12,7 @@ export function toReadableTime (time, isWorking = true, showWorking = true) {
     return constant.READABLE_GAME_WORK.OFF_WORK
   }
   let t = parseInt(time / 1000)
-  let s = t % 60
+  let s = t % 60 >= 0 ? t % 60 : 0
   let m = (t - s) / 60
   return (showWorking ? constant.READABLE_GAME_WORK.WORKING + ' ' : '') + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s
 }
