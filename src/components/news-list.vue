@@ -37,7 +37,7 @@ export default {
   computed: {
     newsList: function () {
       if (this.list) {
-        this.announce('市場新聞更新了！')
+        this.announce ? this.announce('市場新聞更新了！') : null
         return this.list
       } else {
         return []

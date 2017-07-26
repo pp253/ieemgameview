@@ -1,6 +1,6 @@
 <template>
   <div class="home choose">
-    <v-toolbar class="light-blue elevation-5">
+    <v-toolbar class="light-blue white--text elevation-5">
       <v-toolbar-title>準備開始</v-toolbar-title>
       <v-spacer></v-spacer>
       <span class="white--text"></span>
