@@ -22,6 +22,10 @@
               </v-card-actions>
             </v-card>
           </v-flex>
+          <div v-show="gameList.length === 0" style="text-align: center; width: 100%;">
+            <br /><br /><br /><br /><br /><br />
+            <p>尚無進行中的遊戲</p>
+          </div>
         </v-layout>
       </v-container>
     </main>
