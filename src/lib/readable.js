@@ -165,8 +165,9 @@ export function toReadableOrderList (list, getListType, getList) {
   }
 
   let realAmount = 0
+  let last = 0
   for (let item of list) {
-    realAmount = parseInt(item.amount) - realAmount
+    realAmount = parseInt(item.amount) - last
     let delivered = accumulateAmount > realAmount ? realAmount : accumulateAmount
     accumulateAmount = accumulateAmount > realAmount ? accumulateAmount - realAmount : 0
     result.push({
@@ -174,6 +175,7 @@ export function toReadableOrderList (list, getListType, getList) {
       amount: realAmount,
       delivered: accumulateAmount > realAmount ? realAmount : delivered
     })
+    last = item.amount
   }
   return result
 }

@@ -704,6 +704,7 @@ function toReadableOrderList(list, getListType, getList) {
   }
 
   var realAmount = 0;
+  var last = 0;
   var _iteratorNormalCompletion3 = true;
   var _didIteratorError3 = false;
   var _iteratorError3 = undefined;
@@ -712,7 +713,7 @@ function toReadableOrderList(list, getListType, getList) {
     for (var _iterator3 = list[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
       var item = _step3.value;
 
-      realAmount = parseInt(item.amount) - realAmount;
+      realAmount = parseInt(item.amount) - last;
       var delivered = accumulateAmount > realAmount ? realAmount : accumulateAmount;
       accumulateAmount = accumulateAmount > realAmount ? accumulateAmount - realAmount : 0;
       result.push({
@@ -720,6 +721,7 @@ function toReadableOrderList(list, getListType, getList) {
         amount: realAmount,
         delivered: accumulateAmount > realAmount ? realAmount : delivered
       });
+      last = item.amount;
     }
   } catch (err) {
     _didIteratorError3 = true;
