@@ -20,7 +20,7 @@ export default {
     'list': Array,
     'announce': Function
   },
-  data: function () {
+  data () {
     return {
       header: [
         {text: '產品', align: 'left', value: 'readableProduct'},
@@ -40,14 +40,12 @@ export default {
             if (n.product === i.product) {
               founded = true
               if (n.amount !== i.amount) {
-                console.log('1', n, i)
                 same = false
               }
               break
             }
           }
           if (!founded || !same) {
-                console.log('2', i)
             same = false
             break
           }

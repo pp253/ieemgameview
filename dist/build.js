@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "/dist/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 178);
+/******/ 	return __webpack_require__(__webpack_require__.s = 188);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -265,7 +265,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(177)
+var listToStyles = __webpack_require__(187)
 
 /*
 type StyleObject = {
@@ -473,7 +473,7 @@ function applyToTag (styleElement, obj) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(5);
 /* harmony export (immutable) */ __webpack_exports__["c"] = toReadableDay;
-/* harmony export (immutable) */ __webpack_exports__["l"] = toReadableTime;
+/* harmony export (immutable) */ __webpack_exports__["k"] = toReadableTime;
 /* harmony export (immutable) */ __webpack_exports__["f"] = toReadableGameTime;
 /* harmony export (immutable) */ __webpack_exports__["b"] = toReadableTeam;
 /* harmony export (immutable) */ __webpack_exports__["d"] = toReadableDollar;
@@ -483,11 +483,11 @@ function applyToTag (styleElement, obj) {
 /* harmony export (immutable) */ __webpack_exports__["g"] = readableStaffJobList;
 /* harmony export (immutable) */ __webpack_exports__["e"] = toReadableJob;
 /* unused harmony export toReadablePosition */
-/* harmony export (immutable) */ __webpack_exports__["k"] = toReadableStorageList;
+/* harmony export (immutable) */ __webpack_exports__["m"] = toReadableStorageList;
 /* unused harmony export toReadableProduct */
 /* harmony export (immutable) */ __webpack_exports__["n"] = toReadableDeliverList;
 /* harmony export (immutable) */ __webpack_exports__["j"] = readableProductList;
-/* harmony export (immutable) */ __webpack_exports__["m"] = toReadableOrderList;
+/* harmony export (immutable) */ __webpack_exports__["l"] = toReadableOrderList;
 
 
 function toReadableDay(day) {
@@ -602,6 +602,24 @@ function toReadablePosition(position) {
 // list as StorageList
 function toReadableStorageList(list) {
   var result = [];
+  for (var key in list) {
+    var item = list[key];
+    result.push({
+      readableProduct: toReadableProduct(item.product),
+      amount: item.amount
+    });
+  }
+  return result;
+}
+
+function toReadableProduct(product) {
+  return __WEBPACK_IMPORTED_MODULE_0__constant__["j" /* READABLE_PRODUCTS */][product];
+}
+
+function toReadableDeliverList(list) {
+  var result = [];
+  var realAmount = 0;
+  var lastAmount = 0;
   var _iteratorNormalCompletion = true;
   var _didIteratorError = false;
   var _iteratorError = undefined;
@@ -610,10 +628,12 @@ function toReadableStorageList(list) {
     for (var _iterator = list[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
       var item = _step.value;
 
+      realAmount = parseInt(item.amount) - lastAmount;
       result.push({
-        readableProduct: toReadableProduct(item.product),
-        amount: item.amount
+        readableGameTime: toReadableGameTime(item),
+        amount: realAmount
       });
+      lastAmount = parseInt(item.amount);
     }
   } catch (err) {
     _didIteratorError = true;
@@ -626,47 +646,6 @@ function toReadableStorageList(list) {
     } finally {
       if (_didIteratorError) {
         throw _iteratorError;
-      }
-    }
-  }
-
-  return result;
-}
-
-function toReadableProduct(product) {
-  return __WEBPACK_IMPORTED_MODULE_0__constant__["j" /* READABLE_PRODUCTS */][product];
-}
-
-function toReadableDeliverList(list) {
-  var result = [];
-  var realAmount = 0;
-  var lastAmount = 0;
-  var _iteratorNormalCompletion2 = true;
-  var _didIteratorError2 = false;
-  var _iteratorError2 = undefined;
-
-  try {
-    for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-      var item = _step2.value;
-
-      realAmount = parseInt(item.amount) - lastAmount;
-      result.push({
-        readableGameTime: toReadableGameTime(item),
-        amount: realAmount
-      });
-      lastAmount = parseInt(item.amount);
-    }
-  } catch (err) {
-    _didIteratorError2 = true;
-    _iteratorError2 = err;
-  } finally {
-    try {
-      if (!_iteratorNormalCompletion2 && _iterator2.return) {
-        _iterator2.return();
-      }
-    } finally {
-      if (_didIteratorError2) {
-        throw _iteratorError2;
       }
     }
   }
@@ -705,13 +684,13 @@ function toReadableOrderList(list, getListType, getList) {
 
   var realAmount = 0;
   var last = 0;
-  var _iteratorNormalCompletion3 = true;
-  var _didIteratorError3 = false;
-  var _iteratorError3 = undefined;
+  var _iteratorNormalCompletion2 = true;
+  var _didIteratorError2 = false;
+  var _iteratorError2 = undefined;
 
   try {
-    for (var _iterator3 = list[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-      var item = _step3.value;
+    for (var _iterator2 = list[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+      var item = _step2.value;
 
       realAmount = parseInt(item.amount) - last;
       var delivered = accumulateAmount > realAmount ? realAmount : accumulateAmount;
@@ -724,16 +703,16 @@ function toReadableOrderList(list, getListType, getList) {
       last = item.amount;
     }
   } catch (err) {
-    _didIteratorError3 = true;
-    _iteratorError3 = err;
+    _didIteratorError2 = true;
+    _iteratorError2 = err;
   } finally {
     try {
-      if (!_iteratorNormalCompletion3 && _iterator3.return) {
-        _iterator3.return();
+      if (!_iteratorNormalCompletion2 && _iterator2.return) {
+        _iterator2.return();
       }
     } finally {
-      if (_didIteratorError3) {
-        throw _iteratorError3;
+      if (_didIteratorError2) {
+        throw _iteratorError2;
       }
     }
   }
@@ -747,11 +726,11 @@ function toReadableOrderList(list, getListType, getList) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__constant__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__game__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__account__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__deliver__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__order__ = __webpack_require__(12);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__storage__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__storage__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__news__ = __webpack_require__(14);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__data__ = __webpack_require__(11);
 /* unused harmony export isStaffTeam */
@@ -765,6 +744,8 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 
 
 
@@ -775,6 +756,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 var DEFAULT_STATE = function DEFAULT_STATE() {
+  var _orderVsStorage, _teamStorageList;
+
   return {
     gameId: __WEBPACK_IMPORTED_MODULE_0__constant__["k" /* GAMES */].UNKNOWN,
     teamIndex: __WEBPACK_IMPORTED_MODULE_0__constant__["e" /* TEAMS */].UNKNOWN,
@@ -800,7 +783,9 @@ var DEFAULT_STATE = function DEFAULT_STATE() {
       storageAmount: 0,
       price: 0
     },
-    deliveredNumber: 0
+    deliveredNumber: 0,
+    orderVsStorage: (_orderVsStorage = {}, _defineProperty(_orderVsStorage, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].FACTORY, []), _defineProperty(_orderVsStorage, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].WHOLESALER, []), _defineProperty(_orderVsStorage, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].RETAILER, []), _orderVsStorage),
+    teamStorageList: (_teamStorageList = {}, _defineProperty(_teamStorageList, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].FACTORY, []), _defineProperty(_teamStorageList, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].WHOLESALER, []), _defineProperty(_teamStorageList, __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].RETAILER, []), _teamStorageList)
   };
 };
 
@@ -989,9 +974,32 @@ var User = function () {
             _this.getState().market.price = market.price;
           };
 
+          var updateOrderVsStorageFromRes = function updateOrderVsStorageFromRes(orderVsStorage) {
+            Object.assign(_this.state.orderVsStorage, orderVsStorage);
+          };
+
+          var updateTeamStorageListFromRes = function updateTeamStorageListFromRes(teamStorageList) {
+            Object.assign(_this.state.teamStorageList, teamStorageList);
+          };
+
           switch (this.getJob()) {
             case __WEBPACK_IMPORTED_MODULE_0__constant__["h" /* STAFF_JOBS */].CONSOLER:
               updateMarketFromRes(data.market);
+              updateOrderVsStorageFromRes(data.orderVsStorage);
+              updateTeamStorageListFromRes(data.teamStorageList);
+              break;
+
+            case __WEBPACK_IMPORTED_MODULE_0__constant__["h" /* STAFF_JOBS */].MARKET:
+              updateMarketFromRes(data.market);
+              updateOrderVsStorageFromRes(data.orderVsStorage);
+              break;
+
+            case __WEBPACK_IMPORTED_MODULE_0__constant__["h" /* STAFF_JOBS */].TRANSPORTER:
+              updateOrderVsStorageFromRes(data.orderVsStorage);
+              break;
+
+            case __WEBPACK_IMPORTED_MODULE_0__constant__["h" /* STAFF_JOBS */].EXCHANGER:
+              updateTeamStorageListFromRes(data.teamStorageList);
               break;
           }
         }
@@ -1328,43 +1336,43 @@ var READABLE_JOBS = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__ = __webpack_require__(101);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__ = __webpack_require__(107);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__page_home_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__page_home_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__ = __webpack_require__(94);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__ = __webpack_require__(100);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__page_admin_construct_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__ = __webpack_require__(95);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__page_boardcast_scoreboard_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__ = __webpack_require__(102);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__ = __webpack_require__(108);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__page_regist_new_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__ = __webpack_require__(103);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__ = __webpack_require__(109);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__page_regist_old_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__ = __webpack_require__(104);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__ = __webpack_require__(110);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__page_regist_player_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__ = __webpack_require__(96);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__ = __webpack_require__(102);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__page_choose_game_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__ = __webpack_require__(99);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__ = __webpack_require__(105);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__page_choose_team_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__ = __webpack_require__(97);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__ = __webpack_require__(103);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__page_choose_job_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__ = __webpack_require__(98);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__ = __webpack_require__(104);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_9__page_choose_ready_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__ = __webpack_require__(107);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__ = __webpack_require__(113);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__page_round_factory_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__ = __webpack_require__(110);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__ = __webpack_require__(116);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_11__page_round_retailer_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__ = __webpack_require__(112);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__ = __webpack_require__(118);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_12__page_round_wholesaler_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__ = __webpack_require__(108);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__ = __webpack_require__(114);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_13__page_round_guerrilla_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__ = __webpack_require__(106);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__ = __webpack_require__(112);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_14__page_round_exchanger_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__ = __webpack_require__(111);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__ = __webpack_require__(117);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_15__page_round_transporter_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__ = __webpack_require__(109);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__ = __webpack_require__(115);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_16__page_round_market_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__ = __webpack_require__(105);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__ = __webpack_require__(111);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_17__page_round_consoler_index_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__ = __webpack_require__(100);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__ = __webpack_require__(106);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_18__page_end_index_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_18__page_end_index_vue__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return router; });
 
@@ -1402,6 +1410,67 @@ var router = new VueRouter({
 
 /***/ }),
 /* 7 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["b"] = setStorage;
+/* harmony export (immutable) */ __webpack_exports__["a"] = getStorage;
+/* unused harmony export getHistory */
+function setStorage(gameId, teamIndex, job, product, amount) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/storage/set_storage', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job,
+      product: product,
+      amount: amount
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function getStorage(gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/storage/get_storage', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+function getHistory(gameId, teamIndex, job) {
+  return new Promise(function (resolve, reject) {
+    axios.post('/api/storage/get_history', {
+      gameId: gameId,
+      teamIndex: teamIndex,
+      job: job
+    }).then(function (res) {
+      if (res.data.err) {
+        reject(res);
+      }
+      resolve(res);
+    }).catch(function (err) {
+      reject(err);
+    });
+  });
+}
+
+/***/ }),
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1520,7 +1589,7 @@ function enroll(userId, gameId, teamIndex, job) {
 }
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1577,67 +1646,6 @@ function nextDay(gameId) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/game/set_game_next_day', {
       gameId: gameId
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-/***/ }),
-/* 9 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["b"] = setStorage;
-/* harmony export (immutable) */ __webpack_exports__["a"] = getStorage;
-/* harmony export (immutable) */ __webpack_exports__["c"] = getHistory;
-function setStorage(gameId, teamIndex, job, product, amount) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/storage/set_storage', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job,
-      product: product,
-      amount: amount
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-function getStorage(gameId, teamIndex, job) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/storage/get_storage', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job
-    }).then(function (res) {
-      if (res.data.err) {
-        reject(res);
-      }
-      resolve(res);
-    }).catch(function (err) {
-      reject(err);
-    });
-  });
-}
-
-function getHistory(gameId, teamIndex, job) {
-  return new Promise(function (resolve, reject) {
-    axios.post('/api/storage/get_history', {
-      gameId: gameId,
-      teamIndex: teamIndex,
-      job: job
     }).then(function (res) {
       if (res.data.err) {
         reject(res);
@@ -1945,20 +1953,22 @@ __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/');
 /* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
-Vue.component('deliver-history', __webpack_require__(83));
-Vue.component('storage-list', __webpack_require__(91));
-Vue.component('order-history', __webpack_require__(90));
-Vue.component('news-list', __webpack_require__(87));
-Vue.component('order-dialog', __webpack_require__(89));
-Vue.component('game-clock', __webpack_require__(84));
-Vue.component('team-storage-list', __webpack_require__(93));
-Vue.component('storage-register-dialog', __webpack_require__(92));
-Vue.component('deliver-dialog', __webpack_require__(82));
+Vue.component('deliver-history', __webpack_require__(87));
+Vue.component('storage-list', __webpack_require__(96));
+Vue.component('order-history', __webpack_require__(95));
+Vue.component('news-list', __webpack_require__(92));
+Vue.component('order-dialog', __webpack_require__(94));
+Vue.component('game-clock', __webpack_require__(88));
+Vue.component('storage-register-dialog', __webpack_require__(97));
+Vue.component('deliver-dialog', __webpack_require__(86));
+Vue.component('online-status', __webpack_require__(93));
+Vue.component('info-panel', __webpack_require__(89));
+Vue.component('account-dialog', __webpack_require__(85));
+Vue.component('msg-dialog', __webpack_require__(91));
+Vue.component('market-info', __webpack_require__(90));
+Vue.component('team-storage-list', __webpack_require__(99));
+Vue.component('team-deliver-avaliable-list', __webpack_require__(98));
 // Vue.component('news-publisher-dialog', require('./news-publisher-dialog.vue'))
-Vue.component('online-status', __webpack_require__(88));
-Vue.component('info-panel', __webpack_require__(85));
-Vue.component('account-dialog', __webpack_require__(81));
-Vue.component('msg-dialog', __webpack_require__(86));
 
 // Discarded:
 // Vue.component('received-order', require('./received-order.vue'))
@@ -2094,6 +2104,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_deliver__ = __webpack_require__(13);
+//
+//
 //
 //
 //
@@ -2314,7 +2326,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }
     },
     readableTime: function readableTime() {
-      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["l" /* toReadableTime */](this.state.time, this.state.isWorking, true);
+      return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["k" /* toReadableTime */](this.state.time, this.state.isWorking, true);
     },
     readableDay: function readableDay() {
       return __WEBPACK_IMPORTED_MODULE_2__lib_readable__["c" /* toReadableDay */](this.state.day);
@@ -2360,6 +2372,57 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 22 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    'market': Object
+  },
+  computed: {
+    readableMarketPrice: function readableMarketPrice() {
+      return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["d" /* toReadableDollar */](this.market.price);
+    }
+  }
+});
+
+/***/ }),
+/* 23 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2411,7 +2474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2465,7 +2528,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2534,7 +2597,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2542,6 +2605,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_order__ = __webpack_require__(12);
+//
+//
+//
+//
 //
 //
 //
@@ -2633,7 +2700,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2675,7 +2742,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     readableOrderList: function readableOrderList() {
       if (this.list) {
         this.announce ? this.announce() : null;
-        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableOrderList */](this.list, this.type, this.getList || this.getNumber);
+        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["l" /* toReadableOrderList */](this.list, this.type, this.getList || this.getNumber);
       } else {
         return [{ readableGameTime: 'A', amount: 123 }, { readableGameTime: 'B', amount: 456 }];
       }
@@ -2684,7 +2751,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2718,6 +2785,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       lastList: []
     };
   },
+
   computed: {
     readableStorageList: function readableStorageList() {
       if (this.list) {
@@ -2743,7 +2811,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 if (n.product === i.product) {
                   founded = true;
                   if (n.amount !== i.amount) {
-                    console.log('1', n, i);
                     same = false;
                   }
                   break;
@@ -2765,7 +2832,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (!founded || !same) {
-              console.log('2', i);
               same = false;
               break;
             }
@@ -2819,7 +2885,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         if (!same) {
           this.announce ? this.announce('庫存更新了！') : null;
         }
-        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["k" /* toReadableStorageList */](this.list);
+        return __WEBPACK_IMPORTED_MODULE_0__lib_readable__["m" /* toReadableStorageList */](this.list);
       } else {
         return [{ readableProduct: 'A', amount: 123 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }, { readableProduct: 'B', amount: 456 }];
       }
@@ -2828,7 +2894,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2836,7 +2902,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__ = __webpack_require__(7);
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2925,6 +2999,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return [];
       }
 
+      var colorList = {
+        'CAR': 'black'
+      };
+
       var list = [];
       if (this.selectedJob === 'FACTORY') {
         list = __WEBPACK_IMPORTED_MODULE_0__lib_readable__["j" /* readableProductList */]();
@@ -2967,7 +3045,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2975,7 +3053,112 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__ = __webpack_require__(7);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    'orderVsStorage': Object
+  },
+  data: function data() {
+    return {
+      header: [{ text: '組別', align: 'left', value: 'readableTeam' }, { text: '未運輸', value: 'notDeliveredAmount' }, { text: '囤貨', value: 'storageAmount' }, { text: '可運輸', value: 'avaliableForDeliveringAmount' }],
+      selectedJob: __WEBPACK_IMPORTED_MODULE_0__lib_constant__["g" /* JOBS */].FACTORY,
+      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState()
+    };
+  },
+  computed: {
+    jobList: function jobList() {
+      return __WEBPACK_IMPORTED_MODULE_1__lib_readable__["h" /* readableJobList */]();
+    },
+    readableOrderVsStorageList: function readableOrderVsStorageList() {
+      var list = [];
+      var data = this.orderVsStorage[this.selectedJob];
+
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var i = _step.value;
+
+          var notDeliveredAmount = parseInt(i.orderAmount) - parseInt(i.deliveredAmount);
+          var avaliableForDeliveringAmount = i.storageAmount > notDeliveredAmount ? notDeliveredAmount : i.storageAmount;
+          list.push({
+            readableTeam: __WEBPACK_IMPORTED_MODULE_1__lib_readable__["b" /* toReadableTeam */](i.teamIndex),
+            notDeliveredAmount: notDeliveredAmount,
+            storageAmount: i.storageAmount,
+            avaliableForDeliveringAmount: avaliableForDeliveringAmount
+          });
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      return list;
+    }
+  }
+});
+
+/***/ }),
+/* 31 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_constant__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__ = __webpack_require__(7);
+//
 //
 //
 //
@@ -3014,10 +3197,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       selectedTeam: 1,
       selectedJob: __WEBPACK_IMPORTED_MODULE_0__lib_constant__["g" /* JOBS */].FACTORY,
-      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState(),
-      storageList: []
+      state: __WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getState()
     };
   },
+
   computed: {
     teamList: function teamList() {
       return __WEBPACK_IMPORTED_MODULE_1__lib_readable__["a" /* toReadableTeamList */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getGameConfig().teamNumber);
@@ -3025,21 +3208,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     jobList: function jobList() {
       return __WEBPACK_IMPORTED_MODULE_1__lib_readable__["h" /* readableJobList */]();
     },
-    getStorageList: function getStorageList() {
-      __WEBPACK_IMPORTED_MODULE_3__lib_api_storage__["c" /* getHistory */](__WEBPACK_IMPORTED_MODULE_2__lib_api__["a" /* nowUser */].getGameId(), this.selectedTeam, this.selectedJob).then(function (res) {
-        console.log(res.data);
-        console.log(__WEBPACK_IMPORTED_MODULE_1__lib_readable__["k" /* toReadableStorageList */](res.data.list));
-        this.storageList = __WEBPACK_IMPORTED_MODULE_1__lib_readable__["k" /* toReadableStorageList */](res.data.list);
-      }.bind(this)).catch(function (err) {
-        console.error(err);
-      }.bind(this));
-      return '';
+    teamStorageList: function teamStorageList() {
+      return this.state.teamStorageList[this.selectedJob][this.selectedTeam - 1];
     }
   }
 });
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3048,7 +3224,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(8);
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
@@ -3168,7 +3344,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 });
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3177,8 +3353,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api_data__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_constant__ = __webpack_require__(5);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_enter__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__router__ = __webpack_require__(6);
+//
+//
+//
 //
 //
 //
@@ -3218,7 +3397,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       state: __WEBPACK_IMPORTED_MODULE_0__lib_api__["a" /* nowUser */].getState(),
       rankingList: [],
-      timer: null
+      timer: null,
+      lastIsWorking: false
     };
   },
 
@@ -3277,7 +3457,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       }.bind(this));
 
       if (this.state.stage === __WEBPACK_IMPORTED_MODULE_3__lib_constant__["a" /* GAME_STAGE */].END) {
-        __WEBPACK_IMPORTED_MODULE_5__router__["a" /* router */].push('/boardcast/endpage');
+        __WEBPACK_IMPORTED_MODULE_5__router__["a" /* router */].push('/end');
+      }
+    }
+  },
+  computed: {
+    autoPlay: function autoPlay() {
+      if (this.lastIsWorking !== this.state.isWorking) {
+        this.lastIsWorking = this.state.isWorking;
+        if (this.lastIsWorking) {
+          var audio = document.getElementById('sound-begin');
+          audio.play();
+        } else {
+          var audio = document.getElementById('sound-break');
+          audio.play();
+        }
       }
     }
   },
@@ -3287,13 +3481,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api_enter__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api_enter__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(6);
 //
 //
@@ -3390,7 +3584,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3502,7 +3696,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3511,7 +3705,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(9);
 //
 //
 //
@@ -3574,7 +3768,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3654,7 +3848,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3664,10 +3858,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_account__ = __webpack_require__(10);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_api_storage__ = __webpack_require__(9);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_api_game__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_api_storage__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__lib_api_game__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__lib_api_data__ = __webpack_require__(11);
-//
 //
 //
 //
@@ -4057,13 +4250,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api_enter__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_api_enter__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__router__ = __webpack_require__(6);
 //
 //
@@ -4093,7 +4286,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4155,7 +4348,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4245,7 +4438,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4339,7 +4532,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4348,26 +4541,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__lib_api_game__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lib_api_news__ = __webpack_require__(14);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -4506,6 +4681,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     }
   },
   methods: {
+    testSound: function testSound() {
+      var audio = document.getElementById('sound-begin');
+      audio.play();
+    },
     intoBoardcast: function intoBoardcast() {
       __WEBPACK_IMPORTED_MODULE_0__router__["a" /* router */].push('/boardcast');
     },
@@ -4529,7 +4708,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         console.error(err);
       });
     },
-    test: function test() {
+    testSpeed: function testSpeed() {
       __WEBPACK_IMPORTED_MODULE_3__lib_api__["a" /* nowUser */].test();
     },
     setNewsList: function setNewsList() {
@@ -4547,7 +4726,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4556,6 +4735,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
 //
 //
 //
@@ -4618,7 +4798,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4736,7 +4916,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4805,7 +4985,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4814,6 +4994,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_constant__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_api__ = __webpack_require__(4);
+//
+//
 //
 //
 //
@@ -4876,7 +5058,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -4999,7 +5181,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5008,6 +5190,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lib_readable__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lib_api__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__lib_constant__ = __webpack_require__(5);
+//
 //
 //
 //
@@ -5070,7 +5253,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -5197,34 +5380,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 49 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/wholesaler/index.vue?3e384f77"],"names":[],"mappings":";AA4HA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round wholesaler\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              class=\"white--text\"\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'received-order'\"\r\n          >\r\n            <order-history :list=\"state.receivedOrder\" type=\"list\" :get-list=\"state.deliverHistory\" :announce=\"announceReceivedOrder\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n\r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'received-order', title: '收到的訂單' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    },\r\n    announceReceivedOrder () {\r\n      this.announce('收到的訂單更新了！')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
-/* 50 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(0)(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\n}\n.end .result {\r\n  font-size: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?c07ecd54"],"names":[],"mappings":";AAmZA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA;AAEA;EACA,0BAAA;EACA,2BAAA;EACA,iBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"whole-charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataWhole.totalProductivity }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsWhole\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsWhole.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                item-value=\"index\"\r\n                single-line\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">{{ dataTeam.netIncome }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">{{ dataTeam.grossProfit }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataTeam.totalProductivity }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">{{ dataTeam.deliverCount }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsTeam\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsTeam.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"2\"\r\n          id=\"news\"\r\n        >\r\n          <news-list :list=\"data.news\"></news-list>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"3\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ autoDraw }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\nimport * as dataApi from '../../lib/api/data'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'whole-charts', title: '全部圖表' },\r\n        { index: 1, id: 'charts', title: '各組圖表' },\r\n        { index: 2, id: 'news', title: '新聞' },\r\n        { index: 3, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      chartsTeam: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      dataTeam: {\r\n        netIncome: 0,\r\n        grossProfit: 0,\r\n        totalProductivity: 0,\r\n        deliverCount: 0,\r\n        totalCost: 0,\r\n        storageCost: 0\r\n      },\r\n      chartsWhole: [\r\n        {\r\n          id: 'chart-whole-profit',\r\n          title: '各組毛利'\r\n        },\r\n        {\r\n          id: 'chart-whole-productivity',\r\n          title: '各組產量'\r\n        }\r\n      ],\r\n      dataWhole: {\r\n        totalProductivity: 0,\r\n      },\r\n      gameConfig: api.nowUser.getGameConfig(),\r\n      data: {},\r\n      stage: constant.GAME_STAGE.UNKNOWN,\r\n      timer: null\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      return readable.toReadableTeamList(api.nowUser.getTeamNumber())\r\n    },\r\n    autoDraw () {\r\n      this.draw(this.selectedTeam)\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    load () {\r\n      dataApi.getData(api.nowUser.getGameId())\r\n        .then((function (res) {\r\n          Object.assign(this.data, res.data)\r\n          this.stage = res.data.stage\r\n          this.draw(this.selectedTeam)\r\n        }).bind(this))\r\n        .catch((err) => { console.error(err) })\r\n    },\r\n    draw (teamIndex) {\r\n      if (!this.data.gameId) {\r\n        this.load()\r\n        return\r\n      }\r\n\r\n      let teamNumber = api.nowUser.getGameConfig().teamNumber\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 30\r\n\r\n      let calculateAccount = (history, day, time) => {\r\n        let n = 0\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n            if (item.balance > g) {\r\n              n += item.balance - g\r\n            }\r\n            g = item.balance\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return [g, n]\r\n      }\r\n\r\n      let calculateProductivity = (history, day) => {\r\n        let n = 0 // accumulate\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n              n += item.amount - g\r\n            }\r\n            g = item.amount\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      // whole\r\n      this.dataWhole.totalProductivity = 0\r\n      for (let i = 1; i <= teamNumber; i++) {\r\n        this.dataWhole.totalProductivity += calculateProductivity(this.data.teamDataList[i - 1].FACTORY.storage, days + 1)\r\n      }\r\n      this.dataWhole.totalProductivity += '臺'\r\n\r\n      {\r\n        let header = ['時間']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let row = []\r\n            for (let t = 1; t <= teamNumber; t++) {\r\n              let result = calculateAccount(this.data.teamDataList[t - 1].account, d, i * interval)\r\n              row.push(result[0])\r\n            }\r\n            row.unshift(i === 0 ? d + '' : '')\r\n            dataTable.push(row)\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-whole-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let header = ['日子']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        let k = {}\r\n        for (let d = 1; d <= days; d++) {\r\n          let row = []\r\n          for (let t = 1; t <= teamNumber; t++) {\r\n            let result = calculateProductivity(this.data.teamDataList[t - 1].FACTORY.storage, d)\r\n            row.push(result - (k[t - 1] ? k[t - 1] : 0))\r\n            k[t - 1] = result\r\n          }\r\n          row.unshift(readable.toReadableDay(d))\r\n          dataTable.push(row)\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300,\r\n          isStacked: true\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-whole-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      // single\r\n\r\n      let teamData = this.data.teamDataList[teamIndex - 1]\r\n\r\n      let netIncome = teamData.account[teamData.account.length - 1].balance\r\n      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[0]\r\n      let deliverCount = teamData.FACTORY.deliver.length + teamData.WHOLESALER.deliver.length + teamData.RETAILER.deliver.length\r\n      this.dataTeam.netIncome = readable.toReadableDollar(netIncome)\r\n      this.dataTeam.grossProfit = readable.toReadableDollar(grossProfit)\r\n      this.dataTeam.totalProductivity = calculateProductivity(teamData.FACTORY.storage, days + 1) + '臺'\r\n      this.dataTeam.deliverCount = deliverCount + '次'\r\n      this.dataTeam.totalCost = readable.toReadableDollar(netIncome - grossProfit)\r\n      this.dataTeam.storageCost = readable.toReadableDollar(teamData.cost.storage)\r\n\r\n      {\r\n        let dataTable = [['時間', '毛利', '淨利']]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let result = calculateAccount(teamData.account, d, i * interval)\r\n            dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let dataTable = [['日子', '累積產量', '單日產量']]\r\n        let last = 0\r\n        for (let d = 1; d <= days; d++) {\r\n          let result = calculateProductivity(teamData.FACTORY.storage, d)\r\n          dataTable.push([readable.toReadableDay(d), result, result - last])\r\n          last = result\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n    },\r\n    toReadableDollar (val) {\r\n      return readable.toReadableDollar(val)\r\n    },\r\n    update () {\r\n      switch (this.stage) {\r\n        case constant.GAME_STAGE.UNKNOWN:\r\n        case constant.GAME_STAGE.PREPARE:\r\n        case constant.GAME_STAGE.READY:\r\n        case constant.GAME_STAGE.START:\r\n        case constant.GAME_STAGE.FINAL:\r\n          this.load()\r\n          break\r\n        case constant.GAME_STAGE.END:\r\n          break\r\n      }\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n    this.timer = setInterval(this.update.bind(this), 1000)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .title {\r\n  color: rgba(0, 0, 0, 0.7);\r\n  font-size: 14px !important;\r\n  margin-bottom: 0;\r\n}\r\n\r\n.end .result {\r\n  font-size: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
-
-// exports
-
-
-/***/ }),
 /* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5233,7 +5388,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"team-deliver-avaliable-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5247,7 +5402,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/wholesaler/index.vue?3e384f77"],"names":[],"mappings":";AA4HA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round wholesaler\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              class=\"white--text\"\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'received-order'\"\r\n          >\r\n            <order-history :list=\"state.receivedOrder\" type=\"list\" :get-list=\"state.deliverHistory\" :announce=\"announceReceivedOrder\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n\r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'received-order', title: '收到的訂單' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    },\r\n    announceReceivedOrder () {\r\n      this.announce('收到的訂單更新了！')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.wholesaler .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.wholesaler .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5261,7 +5416,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/boardcast/scoreboard/index.vue?60448e47"],"names":[],"mappings":";AAwFA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,sBAAA;CACA;AAEA;EACA,mBAAA;EACA,gBAAA;EACA,0BAAA;CACA;AAEA;EACA,gBAAA;EACA,wBAAA;CACA","file":"index.vue","sourcesContent":["<template>\n  <div id=\"scoreboard\" class=\"scoreboard\">\n    <main>\n      <v-layout row-sm column child-flex-sm>\n        <v-card class=\"clock elevation-0\">\n          <v-card-text>\n            <game-clock></game-clock>\n          </v-card-text>\n        </v-card>\n        <v-card class=\"score elevation-0\">\n          <v-card-text>\n            <div class=\"ranking\">\n              <h5>排行榜</h5>\n              <div\n                v-for=\"t in rankingList\"\n              >\n                <div :class=\"t.isTop ? 'top-ranking primary--text' : ''\">{{ t.readableTeam }}　{{ t.readableBalance }}</div>\n              </div>\n            </div>\n          </v-card-text>\n        </v-card>\n      </v-layout>\n    </main>\n  </div>\n</template>\n\n<script>\nimport * as api from '../../../lib/api'\nimport * as readable from '../../../lib/readable'\nimport * as dataApi from '../../../lib/api/data'\nimport * as constant from '../../../lib/constant'\nimport * as enterApi from '../../../lib/api/enter'\nimport {router} from '../../../router'\n\nexport default {\n  data () {\n    return {\n      state: api.nowUser.getState(),\n      rankingList: [],\n      timer: null\n    }\n  },\n  methods: {\n    updateRanking () {\n      dataApi.getBalanceByGame(api.nowUser.getGameId())\n        .then((function (res) {\n          let list = res.data.list\n          let result = []\n\n          list.forEach((function (i, k) {\n            result.push({\n              teamIndex: k + 1,\n              readableTeam: readable.toReadableTeam(k + 1),\n              isTop: false,\n              balance: i,\n              readableBalance: readable.toReadableDollar(i),\n            })\n          }).bind(this))\n\n          result.sort((a, b) => {\n            return a.balance < b.balance\n          })\n\n          let m = result[0].balance\n          for (let i of result) {\n            if (i.balance === m) {\n              i.isTop = true\n            }\n          }\n\n          this.rankingList.splice(0, this.rankingList.length)\n          result.forEach((function (i) {\n            this.rankingList.push(i)\n          }).bind(this))\n        }).bind(this))\n\n      if (this.state.stage === constant.GAME_STAGE.END) {\n        router.push('/boardcast/endpage')\n      }\n    }\n  },\n  mounted () {\n    this.timer = setInterval(this.updateRanking.bind(this), 1000)\n  }\n}\n</script>\n\n<style>\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n</style>\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\n}\n.end .divider {\r\n  margin-top: 20px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/end/index.vue?3ae62448"],"names":[],"mappings":";AAkZA;EACA,iBAAA;EACA,iBAAA;CACA;AAEA;EACA,iBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"end\">\r\n    <main>\r\n      <v-tabs\r\n        v-model=\"activeTab\"\r\n        dark fixed centered\r\n      >\r\n        <v-toolbar dark class=\"light-blue elevation-0\">\r\n          <v-btn icon v-on:click.native=\"backToHome\">\r\n            <v-icon>arrow_back</v-icon>\r\n          </v-btn>\r\n          <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n        </v-toolbar>\r\n        <v-tabs-bar\r\n          slot=\"activators\"\r\n          class=\"light-blue\"\r\n        >\r\n          <v-tabs-item\r\n            v-for=\"tab in tabs\"\r\n            :key=\"tab.index\"\r\n            :href=\"'#' + tab.id\"\r\n          >\r\n            {{ tab.title }}\r\n          </v-tabs-item>\r\n          <v-tabs-slider class=\"yellow\"></v-tabs-slider>\r\n        </v-tabs-bar>\r\n        <v-tabs-content\r\n          :key=\"0\"\r\n          id=\"whole-charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-layout row wrap class=\"wrap-info\">\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataWhole.totalProductivity }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsWhole\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsWhole.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"1\"\r\n          id=\"charts\"\r\n        >\r\n          <v-card>\r\n            <v-card-text>\r\n              <v-select\r\n                v-bind:items=\"itemTeam\"\r\n                v-model=\"selectedTeam\"\r\n                label=\"選擇小隊\"\r\n                item-value=\"index\"\r\n                bottom\r\n              ></v-select>\r\n\r\n              <v-layout row wrap class=\"wrap-info\">\r\n                <v-flex xs6>\r\n                  <p class=\"title\">毛利</p>\r\n                  <p class=\"result\">{{ dataTeam.netIncome }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">淨利</p>\r\n                  <p class=\"result\">{{ dataTeam.grossProfit }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總產量</p>\r\n                  <p class=\"result\">{{ dataTeam.totalProductivity }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">總成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">運輸次數</p>\r\n                  <p class=\"result\">{{ dataTeam.deliverCount }}</p>\r\n                </v-flex>\r\n                <v-flex xs6>\r\n                  <p class=\"title\">囤貨成本</p>\r\n                  <p class=\"result\">{{ dataTeam.totalCost }}</p>\r\n                </v-flex>\r\n              </v-layout>\r\n              <v-divider></v-divider>\r\n              <div\r\n                v-for=\"(chart, key) in chartsTeam\"\r\n                :key=\"key\"\r\n              >\r\n                <h5 class=\"chart-title\">{{ chart.title }}</h5>\r\n                <div :id=\"chart.id\"></div>\r\n                <v-divider v-if=\"key + 1 < chartsTeam.length\"></v-divider>\r\n              </div>\r\n            </v-card-text>\r\n          </v-card>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"2\"\r\n          id=\"news\"\r\n        >\r\n          <news-list :list=\"data.news\"></news-list>\r\n        </v-tabs-content>\r\n        <v-tabs-content\r\n          :key=\"3\"\r\n          id=\"game-info\"\r\n        >\r\n          <info-panel :game-config=\"gameConfig\"></info-panel>\r\n        </v-tabs-content>\r\n      </v-tabs>\r\n    </main>\r\n    {{ autoDraw }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../router'\r\nimport * as constant from '../../lib/constant'\r\nimport * as readable from '../../lib/readable'\r\nimport * as api from '../../lib/api'\r\nimport * as accountApi from '../../lib/api/account'\r\nimport * as storageApi from '../../lib/api/storage'\r\nimport * as gameApi from '../../lib/api/game'\r\nimport * as dataApi from '../../lib/api/data'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: api.nowUser.getGameConfig().title + ' 結果',\r\n      dayTime: api.nowUser.getDayTime(),\r\n      tabs: [\r\n        { index: 0, id: 'whole-charts', title: '全部圖表' },\r\n        { index: 1, id: 'charts', title: '各組圖表' },\r\n        { index: 2, id: 'news', title: '新聞' },\r\n        { index: 3, id: 'game-info', title: '遊戲資訊' }\r\n      ],\r\n      activeTab: null,\r\n      selectedTeam: 1,\r\n      chartsTeam: [\r\n        {\r\n          id: 'chart-profit',\r\n          title: '淨利與毛利'\r\n        },\r\n        {\r\n          id: 'chart-productivity',\r\n          title: '產量'\r\n        }\r\n      ],\r\n      dataTeam: {\r\n        netIncome: 0,\r\n        grossProfit: 0,\r\n        totalProductivity: 0,\r\n        deliverCount: 0,\r\n        totalCost: 0,\r\n        storageCost: 0\r\n      },\r\n      chartsWhole: [\r\n        {\r\n          id: 'chart-whole-profit',\r\n          title: '各組毛利'\r\n        },\r\n        {\r\n          id: 'chart-whole-productivity',\r\n          title: '各組產量'\r\n        }\r\n      ],\r\n      dataWhole: {\r\n        totalProductivity: 0,\r\n      },\r\n      gameConfig: api.nowUser.getGameConfig(),\r\n      data: {},\r\n      stage: constant.GAME_STAGE.UNKNOWN,\r\n      timer: null\r\n    }\r\n  },\r\n  computed: {\r\n    itemTeam () {\r\n      return readable.toReadableTeamList(api.nowUser.getTeamNumber())\r\n    },\r\n    autoDraw () {\r\n      this.draw(this.selectedTeam)\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    backToHome () {\r\n      router.push('/')\r\n    },\r\n    load () {\r\n      dataApi.getData(api.nowUser.getGameId())\r\n        .then((function (res) {\r\n          Object.assign(this.data, res.data)\r\n          this.stage = res.data.stage\r\n          this.draw(this.selectedTeam)\r\n        }).bind(this))\r\n        .catch((err) => { console.error(err) })\r\n    },\r\n    draw (teamIndex) {\r\n      if (!this.data.gameId) {\r\n        this.load()\r\n        return\r\n      }\r\n\r\n      let teamNumber = api.nowUser.getGameConfig().teamNumber\r\n      let days = api.nowUser.getGameConfig().days\r\n      let dayLong = api.nowUser.getGameConfig().dayLong\r\n      let interval = 30\r\n\r\n      let calculateAccount = (history, day, time) => {\r\n        let n = 0\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day < day || (item.day === day && item.time <= time * 1000)) {\r\n            if (item.balance > g) {\r\n              n += item.balance - g\r\n            }\r\n            g = item.balance\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return [g, n]\r\n      }\r\n\r\n      let calculateProductivity = (history, day) => {\r\n        let n = 0 // accumulate\r\n        let g = 0\r\n        for (let key in history) {\r\n          let item = history[key]\r\n          if (item.day <= day) {\r\n            if (item.product === constant.PRODUCTS.CAR && item.amount > g) {\r\n              n += item.amount - g\r\n            }\r\n            g = item.amount\r\n          } else {\r\n            break\r\n          }\r\n        }\r\n        return n\r\n      }\r\n\r\n      // whole\r\n      this.dataWhole.totalProductivity = 0\r\n      for (let i = 1; i <= teamNumber; i++) {\r\n        this.dataWhole.totalProductivity += calculateProductivity(this.data.teamDataList[i - 1].FACTORY.storage, days + 1)\r\n      }\r\n      this.dataWhole.totalProductivity += '臺'\r\n\r\n      {\r\n        let header = ['時間']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let row = []\r\n            for (let t = 1; t <= teamNumber; t++) {\r\n              let result = calculateAccount(this.data.teamDataList[t - 1].account, d, i * interval)\r\n              row.push(result[0])\r\n            }\r\n            row.unshift(i === 0 ? d + '' : '')\r\n            dataTable.push(row)\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-whole-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let header = ['日子']\r\n        for (let i = 1; i <= teamNumber; i++) {\r\n          header.push(readable.toReadableTeam(i))\r\n        }\r\n        let dataTable = [header]\r\n        let k = {}\r\n        for (let d = 1; d <= days; d++) {\r\n          let row = []\r\n          for (let t = 1; t <= teamNumber; t++) {\r\n            let result = calculateProductivity(this.data.teamDataList[t - 1].FACTORY.storage, d)\r\n            row.push(result - (k[t - 1] ? k[t - 1] : 0))\r\n            k[t - 1] = result\r\n          }\r\n          row.unshift(readable.toReadableDay(d))\r\n          dataTable.push(row)\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300,\r\n          isStacked: true\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-whole-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      // single\r\n\r\n      let teamData = this.data.teamDataList[teamIndex - 1]\r\n\r\n      let netIncome = teamData.account[teamData.account.length - 1].balance\r\n      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[0]\r\n      let deliverCount = teamData.FACTORY.deliver.length + teamData.WHOLESALER.deliver.length + teamData.RETAILER.deliver.length\r\n      this.dataTeam.netIncome = readable.toReadableDollar(netIncome)\r\n      this.dataTeam.grossProfit = readable.toReadableDollar(grossProfit)\r\n      this.dataTeam.totalProductivity = calculateProductivity(teamData.FACTORY.storage, days + 1) + '臺'\r\n      this.dataTeam.deliverCount = deliverCount + '次'\r\n      this.dataTeam.totalCost = readable.toReadableDollar(netIncome - grossProfit)\r\n      this.dataTeam.storageCost = readable.toReadableDollar(teamData.cost.storage)\r\n\r\n      {\r\n        let dataTable = [['時間', '毛利', '淨利']]\r\n        for (let d = 1; d <= days; d++) {\r\n          for (let i = 0; i <= parseInt(dayLong / interval); i++) {\r\n            let result = calculateAccount(teamData.account, d, i * interval)\r\n            dataTable.push([i === 0 ? d + '' : '', result[0], result[1]])\r\n          }\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        // material design charts\r\n        // remember to add 'line' package to 'google.charts.load' before using this\r\n        // let chart = new google.charts.Line(document.getElementById('chart-profit'))\r\n        // chart.draw(data, google.charts.Line.convertOptions(options))\r\n\r\n        let chart = new google.visualization.LineChart(document.getElementById('chart-profit'))\r\n        chart.draw(data, options)\r\n      }\r\n\r\n      {\r\n        let dataTable = [['日子', '累積產量', '單日產量']]\r\n        let last = 0\r\n        for (let d = 1; d <= days; d++) {\r\n          let result = calculateProductivity(teamData.FACTORY.storage, d)\r\n          dataTable.push([readable.toReadableDay(d), result, result - last])\r\n          last = result\r\n        }\r\n        let data = google.visualization.arrayToDataTable(dataTable)\r\n\r\n        let options = {\r\n          chartArea: {left: '15%', width: '85%', height: '70%'},\r\n          legend: { position: 'bottom' },\r\n          height: 300\r\n        }\r\n\r\n        let chart = new google.visualization.ColumnChart(document.getElementById('chart-productivity'))\r\n        chart.draw(data, options)\r\n      }\r\n    },\r\n    toReadableDollar (val) {\r\n      return readable.toReadableDollar(val)\r\n    },\r\n    update () {\r\n      switch (this.stage) {\r\n        case constant.GAME_STAGE.UNKNOWN:\r\n        case constant.GAME_STAGE.PREPARE:\r\n        case constant.GAME_STAGE.READY:\r\n        case constant.GAME_STAGE.START:\r\n        case constant.GAME_STAGE.FINAL:\r\n          this.load()\r\n          break\r\n        case constant.GAME_STAGE.END:\r\n          break\r\n      }\r\n    }\r\n  },\r\n  mounted () {\r\n    // this.loadChart()\r\n    // google.charts.setOnLoadCallback(this.loadChart)\r\n    this.timer = setInterval(this.update.bind(this), 1000)\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.end .chart-title {\r\n  margin-bottom: 0;\r\n  margin-top: 20px;\r\n}\r\n\r\n.end .divider {\r\n  margin-top: 20px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5275,7 +5430,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\n}\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\n}\n.game-clock .more-info {\r\n  font-size: 20px;\n}\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/game-clock.vue?c2ccdc30"],"names":[],"mappings":";AA8CA;EACA,mBAAA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,gBAAA;EACA,kBAAA;CACA;AAEA;EACA,gBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"game-clock.vue","sourcesContent":["<template>\r\n  <div class=\"game-clock\">\r\n    <h5 class=\"more-info\">{{ readableDay }}</h5>\r\n    <v-progress-circular\r\n      :size=\"200\"\r\n      :width=\"15\"\r\n      :rotate=\"-90\"\r\n      :value=\"timeValue\"\r\n      class=\"primary--text\"\r\n    >\r\n      {{ readableTime }}\r\n    </v-progress-circular>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as constant from '../lib/constant'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      state: api.nowUser.getDayTime()\r\n    }\r\n  },\r\n  computed: {\r\n    timeValue () {\r\n      // full round is 100\r\n      if (this.state.isWorking) {\r\n        return 100 - (this.state.time / api.nowUser.getGameConfig().dayLong) / 10\r\n      } else {\r\n        return 0\r\n      }\r\n    },\r\n    readableTime () {\r\n      return readable.toReadableTime(this.state.time, this.state.isWorking, true)\r\n    },\r\n    readableDay () {\r\n      return readable.toReadableDay(this.state.day)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\r\n}\r\n\r\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\r\n}\r\n\r\n.game-clock .more-info {\r\n  font-size: 20px;\r\n}\r\n\r\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5289,7 +5444,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"team-storage-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5303,7 +5458,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n.scoreboard .audio {\n  display: none;\n}\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/boardcast/scoreboard/index.vue?9d9621b6"],"names":[],"mappings":";AA0GA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,kBAAA;EACA,yBAAA;CACA;AAEA;EACA,sBAAA;CACA;AAEA;EACA,mBAAA;EACA,gBAAA;EACA,0BAAA;CACA;AAEA;EACA,gBAAA;EACA,wBAAA;CACA;AAEA;EACA,cAAA;CACA","file":"index.vue","sourcesContent":["<template>\n  <div id=\"scoreboard\" class=\"scoreboard\">\n    <main>\n      <v-layout row-sm column child-flex-sm>\n        <v-card class=\"clock elevation-0\">\n          <v-card-text>\n            <game-clock></game-clock>\n          </v-card-text>\n        </v-card>\n        <v-card class=\"score elevation-0\">\n          <v-card-text>\n            <div class=\"ranking\">\n              <h5>排行榜</h5>\n              <div\n                v-for=\"t in rankingList\"\n              >\n                <div :class=\"t.isTop ? 'top-ranking primary--text' : ''\">{{ t.readableTeam }}　{{ t.readableBalance }}</div>\n              </div>\n            </div>\n          </v-card-text>\n        </v-card>\n      </v-layout>\n    </main>\n    <audio src=\"/sound/begin.mp3\" id=\"sound-begin\" class=\"audio\"></audio>\n    <audio src=\"/sound/break.mp3\" id=\"sound-break\" class=\"audio\"></audio>\n    {{ autoPlay }}\n  </div>\n</template>\n\n<script>\nimport * as api from '../../../lib/api'\nimport * as readable from '../../../lib/readable'\nimport * as dataApi from '../../../lib/api/data'\nimport * as constant from '../../../lib/constant'\nimport * as enterApi from '../../../lib/api/enter'\nimport {router} from '../../../router'\n\nexport default {\n  data () {\n    return {\n      state: api.nowUser.getState(),\n      rankingList: [],\n      timer: null,\n      lastIsWorking: false\n    }\n  },\n  methods: {\n    updateRanking () {\n      dataApi.getBalanceByGame(api.nowUser.getGameId())\n        .then((function (res) {\n          let list = res.data.list\n          let result = []\n\n          list.forEach((function (i, k) {\n            result.push({\n              teamIndex: k + 1,\n              readableTeam: readable.toReadableTeam(k + 1),\n              isTop: false,\n              balance: i,\n              readableBalance: readable.toReadableDollar(i),\n            })\n          }).bind(this))\n\n          result.sort((a, b) => {\n            return a.balance < b.balance\n          })\n\n          let m = result[0].balance\n          for (let i of result) {\n            if (i.balance === m) {\n              i.isTop = true\n            }\n          }\n\n          this.rankingList.splice(0, this.rankingList.length)\n          result.forEach((function (i) {\n            this.rankingList.push(i)\n          }).bind(this))\n        }).bind(this))\n      \n      if (this.state.stage === constant.GAME_STAGE.END) {\n        router.push('/end')\n      }\n    }\n  },\n  computed: {\n    autoPlay () {\n      if (this.lastIsWorking !== this.state.isWorking) {\n        this.lastIsWorking = this.state.isWorking\n        if (this.lastIsWorking) {\n          var audio = document.getElementById('sound-begin')\n          audio.play()\n        } else {\n          var audio = document.getElementById('sound-break')\n          audio.play()\n        }\n      }\n    }\n  },\n  mounted () {\n    this.timer = setInterval(this.updateRanking.bind(this), 1000)\n  }\n}\n</script>\n\n<style>\n.scoreboard .score {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .clock {\n  padding-top: 30vh;\n  height: 100vh !important;\n}\n\n.scoreboard .game-clock {\n  padding: 0 !important;\n}\n\n.scoreboard .ranking {\n  text-align: center;\n  font-size: 30px;\n  color: rgba(0, 0, 0, 0.6);\n}\n\n.scoreboard .ranking .top-ranking {\n  font-size: 40px;\n  color: rgba(0, 0, 0, 1);\n}\n\n.scoreboard .audio {\n  display: none;\n}\n</style>\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5317,7 +5472,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"storage-register-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\n}\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\n}\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/game-clock.vue?efd8b27a"],"names":[],"mappings":";AA8CA;EACA,mBAAA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,gBAAA;EACA,kBAAA;CACA;AAEA;EACA,gBAAA;CACA","file":"game-clock.vue","sourcesContent":["<template>\r\n  <div class=\"game-clock\">\r\n    <h5 class=\"more-info\">{{ readableDay }}</h5>\r\n    <v-progress-circular\r\n      :size=\"200\"\r\n      :width=\"15\"\r\n      :rotate=\"-90\"\r\n      :value=\"timeValue\"\r\n      class=\"primary--text\"\r\n    >\r\n      {{ readableTime }}\r\n    </v-progress-circular>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as constant from '../lib/constant'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      state: api.nowUser.getDayTime()\r\n    }\r\n  },\r\n  computed: {\r\n    timeValue () {\r\n      // full round is 100\r\n      if (this.state.isWorking) {\r\n        return 100 - (this.state.time / api.nowUser.getGameConfig().dayLong) / 10\r\n      } else {\r\n        return 0\r\n      }\r\n    },\r\n    readableTime () {\r\n      return readable.toReadableTime(this.state.time, this.state.isWorking, true)\r\n    },\r\n    readableDay () {\r\n      return readable.toReadableDay(this.state.day)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.game-clock {\r\n  text-align: center;\r\n  padding-top: 50px;\r\n  padding-bottom: 50px;\r\n}\r\n\r\n.game-clock .time {\r\n  font-size: 50px;\r\n  line-height: 50px;\r\n}\r\n\r\n.game-clock .progress-circular__info {\r\n  font-size: 30px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5331,7 +5486,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"team-storage-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5345,7 +5500,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5359,7 +5514,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.input-group.CAR label {\r\n  color: #22AC38 !important;\n}\n.input-group.CAR .input-group__details:before {\r\n  background-color: #22AC38 !important;\n}\n.input-group.WHEEL label {\r\n  color: #FF0000 !important;\n}\n.input-group.WHEEL .input-group__details:before {\r\n  background-color: #FF0000 !important;\n}\n.input-group.BODY label {\r\n  color: #0000FF !important;\n}\n.input-group.BODY .input-group__details:before {\r\n  background-color: #0000FF !important;\n}\n.input-group.ENGINE label {\r\n  color: #000 !important;\n}\n.input-group.ENGINE .input-group__details:before {\r\n  background-color: #000 !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/storage-register-dialog.vue?67598a74"],"names":[],"mappings":";AAgJA;EACA,0BAAA;CACA;AAEA;EACA,qCAAA;CACA;AAEA;EACA,0BAAA;CACA;AAEA;EACA,qCAAA;CACA;AAEA;EACA,0BAAA;CACA;AAEA;EACA,qCAAA;CACA;AAEA;EACA,uBAAA;CACA;AAEA;EACA,kCAAA;CACA","file":"storage-register-dialog.vue","sourcesContent":["<template>\r\n  <v-dialog\r\n    class=\"dialog\"\r\n    v-model=\"storageRegisterDialog\"\r\n    persistent\r\n    fullscreen\r\n  >\r\n    <v-btn\r\n      slot=\"activator\"\r\n      primary\r\n      fab\r\n      :class=\"btnClass\"\r\n      :small=\"secondary === true\"\r\n    >\r\n      <v-icon class=\"white--text\">widgets</v-icon>\r\n    </v-btn>\r\n    <v-card>\r\n      <v-card-title>登記囤貨</v-card-title>\r\n      <v-card-text>\r\n        <v-select\r\n          v-bind:items=\"teamList\"\r\n          v-model=\"selectedTeam\"\r\n          label=\"選擇組別\"\r\n          single-line\r\n          item-value=\"index\"\r\n          bottom\r\n        ></v-select>\r\n        <v-layout row wrap>\r\n          <v-flex\r\n            v-for=\"product in productList\"\r\n            :key=\"product.index\"\r\n            xs6\r\n          >\r\n            <v-text-field\r\n              v-model.number=\"amount[product.index]\"\r\n              :label=\"product.text\"\r\n              type=\"number\"\r\n              suffix=\"個\"\r\n              :class=\"product.index\"\r\n            ></v-text-field>\r\n          </v-flex>\r\n        </v-layout>\r\n      </v-card-text>\r\n      <v-card-actions>\r\n        <v-spacer></v-spacer>\r\n        <v-btn class=\"blue--text darken-1\" flat=\"flat\" @click.native=\"storageRegisterDialog = false\">取消</v-btn>\r\n        <v-btn\r\n          :disabled=\"!(selectedTeam && (amount.CAR || amount.BODY || amount.WHEEL || amount.ENGINE))\"\r\n          class=\"blue--text darken-1\"\r\n          flat=\"flat\"\r\n          @click.native=\"register\">登記</v-btn>\r\n      </v-card-actions>\r\n    </v-card>\r\n  </v-dialog>\r\n</template>\r\n\r\n<script>\r\nimport * as readable from '../lib/readable'\r\nimport * as constant from '../lib/constant'\r\nimport * as api from '../lib/api'\r\nimport * as storageApi from '../lib/api/storage'\r\n\r\nexport default {\r\n  props: {\r\n    'announce': Function,\r\n    'secondary': {\r\n      type: Boolean,\r\n      default () {\r\n        return false\r\n      }\r\n    }\r\n  },\r\n  data () {\r\n    return {\r\n      storageRegisterDialog: false,\r\n      jobList: readable.readableJobList(),\r\n      selectedJob: constant.JOBS.FACTORY,\r\n      selectedTeam: null,\r\n      amount: {\r\n        'CAR': 0,\r\n        'WHEEL': 0,\r\n        'BODY': 0,\r\n        'ENGINE': 0\r\n      }\r\n    }\r\n  },\r\n  computed: {\r\n    teamList () {\r\n      return readable.toReadableTeamList(api.nowUser.getTeamNumber())\r\n    },\r\n    productList () {\r\n      if (!this.selectedJob) {\r\n        return []\r\n      }\r\n\r\n      let colorList = {\r\n        'CAR': 'black'\r\n      }\r\n\r\n      let list = []\r\n      if (this.selectedJob === 'FACTORY') {\r\n        list = readable.readableProductList()\r\n      } else {\r\n        list = [{\r\n          index: 'CAR',\r\n          text: constant.READABLE_PRODUCTS.CAR\r\n        }]\r\n      }\r\n      return list\r\n    },\r\n    btnClass () {\r\n      return this.secondary ? 'floating-right-bottom-secondary' : 'floating-right-bottom'\r\n    }\r\n  },\r\n  methods: {\r\n    register () {\r\n      if (!this.selectedTeam) {\r\n        this.announce(`登記失敗！請選擇組別`)\r\n        return\r\n      }\r\n      this.storageRegisterDialog = false\r\n      let user = api.nowUser\r\n\r\n      for (let key in this.amount) {\r\n        if (!this.amount[key]) {\r\n          continue\r\n        }\r\n        storageApi.setStorage(user.getGameId(), this.selectedTeam, this.selectedJob, key, this.amount[key])\r\n          .then((function (res) {\r\n            let data = res.data\r\n            this.announce(`成功登記第${data.teamIndex}組${data.job}的${data.product}庫存`)\r\n          }).bind(this))\r\n          .catch((function (err) {\r\n            let data = err.data\r\n            this.announce(data.readableMsg || data.msg)\r\n          }).bind(this))\r\n        this.amount[key] = 0\r\n      }\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.input-group.CAR label {\r\n  color: #22AC38 !important;\r\n}\r\n\r\n.input-group.CAR .input-group__details:before {\r\n  background-color: #22AC38 !important;\r\n}\r\n\r\n.input-group.WHEEL label {\r\n  color: #FF0000 !important;\r\n}\r\n\r\n.input-group.WHEEL .input-group__details:before {\r\n  background-color: #FF0000 !important;\r\n}\r\n\r\n.input-group.BODY label {\r\n  color: #0000FF !important;\r\n}\r\n\r\n.input-group.BODY .input-group__details:before {\r\n  background-color: #0000FF !important;\r\n}\r\n\r\n.input-group.ENGINE label {\r\n  color: #000 !important;\r\n}\r\n\r\n.input-group.ENGINE .input-group__details:before {\r\n  background-color: #000 !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5373,7 +5528,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"news-list.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5387,7 +5542,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5401,7 +5556,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/new/index.vue?bc0b6be8"],"names":[],"mappings":";AAqDA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>這個認證碼代表著你的身分，如果之後想要重新進入遊戲的話，你必須輸入這個認證碼。</p>\r\n          <p><b>請將認證碼記錄下來</b>，以備等一下所需。</p>\r\n          <input :value=\"code\" class=\"code-text\" readonly></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-btn class=\"blue--text darken-1\" flat @click.native=\"intoRegistOld\">我已經有認證碼</v-btn>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native=\"intoRegistPlayer\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '認證碼',\r\n      code: '1234'\r\n    }\r\n  },\r\n  methods: {\r\n    intoRegistOld () {\r\n      router.push('/regist/old')\r\n    },\r\n    intoRegistPlayer () {\r\n      router.push('/regist/player')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5415,7 +5570,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"market-info.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5429,7 +5584,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"news-list.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5443,7 +5598,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5457,7 +5612,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/old/index.vue?35217dcd"],"names":[],"mappings":";AAiFA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-btn icon v-on:click.native=\"backToRegistNew\">\r\n        <v-icon>arrow_back</v-icon>\r\n      </v-btn>\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>請輸入你的認證碼。</p>\r\n          <input class=\"code-text\" v-model=\"code\"></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native.stop=\"setCode\" :disabled=\"btnDisabled\">確定</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n    <v-dialog v-model=\"errorDialog\">\r\n      <v-card>\r\n        <v-card-title class=\"headline\">錯誤</v-card-title>\r\n        <v-card-text>{{ errorDialogMsg }}</v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn class=\"green--text darken-1\" flat=\"flat\" @click.native=\"errorDialog = false\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n    </v-dialog>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '輸入認證碼',\r\n      code: null,\r\n      btnDisabled: true,\r\n      errorDialog: false,\r\n      errorDialogMsg: ''\r\n    }\r\n  },\r\n  watch: {\r\n    code () {\r\n      this.btnDisabled = !this.code\r\n    }\r\n  },\r\n  methods: {\r\n    backToRegistNew () {\r\n      router.push('/regist/new')\r\n    },\r\n    setCode () {\r\n      let code = parseInt(this.code)\r\n      if (code < 0 || code > 9999) {\r\n        this.errorDialogMsg = '你的認證碼不正確，應該是由四位數字組成。'\r\n        this.errorDialog = true\r\n      } else {\r\n        this.intoChoose()\r\n      }\r\n    },\r\n    intoChoose () {\r\n      router.push('/choose')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/new/index.vue?bc0b6be8"],"names":[],"mappings":";AAqDA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>這個認證碼代表著你的身分，如果之後想要重新進入遊戲的話，你必須輸入這個認證碼。</p>\r\n          <p><b>請將認證碼記錄下來</b>，以備等一下所需。</p>\r\n          <input :value=\"code\" class=\"code-text\" readonly></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-btn class=\"blue--text darken-1\" flat @click.native=\"intoRegistOld\">我已經有認證碼</v-btn>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native=\"intoRegistPlayer\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '認證碼',\r\n      code: '1234'\r\n    }\r\n  },\r\n  methods: {\r\n    intoRegistOld () {\r\n      router.push('/regist/old')\r\n    },\r\n    intoRegistPlayer () {\r\n      router.push('/regist/player')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5471,7 +5626,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5485,7 +5640,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100vh !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?513575b8"],"names":[],"mappings":";AA8BA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,yBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      // router.push('/regist')\r\n      router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100vh !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5499,7 +5654,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5513,7 +5668,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-history.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/regist/old/index.vue?35217dcd"],"names":[],"mappings":";AAiFA;EACA,YAAA;EACA,iBAAA;EACA,gBAAA;EACA,kBAAA;EACA,mBAAA;EACA,sCAAA;EACA,uBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"regist\">\r\n    <v-toolbar class=\"green\">\r\n      <v-btn icon v-on:click.native=\"backToRegistNew\">\r\n        <v-icon>arrow_back</v-icon>\r\n      </v-btn>\r\n      <v-toolbar-title class=\"white--text\">{{ title }}</v-toolbar-title>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-card>\r\n        <v-card-text>\r\n          <p>請輸入你的認證碼。</p>\r\n          <input class=\"code-text\" v-model=\"code\"></input>\r\n        </v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn primary @click.native.stop=\"setCode\" :disabled=\"btnDisabled\">確定</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n      <v-layout row>\r\n      </v-layout>\r\n    </main>\r\n    <v-dialog v-model=\"errorDialog\">\r\n      <v-card>\r\n        <v-card-title class=\"headline\">錯誤</v-card-title>\r\n        <v-card-text>{{ errorDialogMsg }}</v-card-text>\r\n        <v-card-actions>\r\n          <v-spacer></v-spacer>\r\n          <v-btn class=\"green--text darken-1\" flat=\"flat\" @click.native=\"errorDialog = false\">知道了</v-btn>\r\n        </v-card-actions>\r\n      </v-card>\r\n    </v-dialog>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: '輸入認證碼',\r\n      code: null,\r\n      btnDisabled: true,\r\n      errorDialog: false,\r\n      errorDialogMsg: ''\r\n    }\r\n  },\r\n  watch: {\r\n    code () {\r\n      this.btnDisabled = !this.code\r\n    }\r\n  },\r\n  methods: {\r\n    backToRegistNew () {\r\n      router.push('/regist/new')\r\n    },\r\n    setCode () {\r\n      let code = parseInt(this.code)\r\n      if (code < 0 || code > 9999) {\r\n        this.errorDialogMsg = '你的認證碼不正確，應該是由四位數字組成。'\r\n        this.errorDialog = true\r\n      } else {\r\n        this.intoChoose()\r\n      }\r\n    },\r\n    intoChoose () {\r\n      router.push('/choose')\r\n    },\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.regist .code-text {\r\n  width: 100%;\r\n  margin-top: 10px;\r\n  font-size: 50px;\r\n  line-height: 80px;\r\n  text-align: center;\r\n  background-color: rgba(0, 0, 0, 0.02);\r\n  border: 1px solid #ddd;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5527,7 +5682,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/retailer/index.vue?70ab7c64"],"names":[],"mappings":";AAwHA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round retailer\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'news-list'\"\r\n          >\r\n            <news-list :list=\"state.news\" :announce=\"announce\"></news-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n      \r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'news-list', title: '市場新聞' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5541,7 +5696,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\n}\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\n}\n.home .card {\r\n  height: 100vh !important;\n}\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/home/index.vue?513575b8"],"names":[],"mappings":";AA8BA;EACA,kBAAA;EACA,qBAAA;CACA;AAEA;EACA,mBAAA;EACA,oBAAA;CACA;AAEA;EACA,yBAAA;CACA;AAEA;EACA,iBAAA;EACA,gBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div id=\"home\" class=\"home\">\r\n    <v-card>\r\n      <v-card-text class=\"text-xs-center head\">\r\n        <div class=\"logo\"></div>\r\n        <!--<h3>REDRO產銷遊戲</h3>-->\r\n        <h5>2017 工工營 BETA</h5>\r\n        <v-btn primary v-on:click.native=\"intoRegist\">進入遊戲</v-btn>\r\n      </v-card-text>\r\n    </v-card>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../../lib/api'\r\nimport * as enterApi from '../../lib/api/enter'\r\nimport {router} from '../../router'\r\n\r\nexport default {\r\n  methods: {\r\n    intoRegist () {\r\n      // router.push('/regist')\r\n      router.push('/choose')\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n\r\n.home .head {\r\n  padding-top: 60px;\r\n  padding-bottom: 60px;\r\n}\r\n\r\n.home .layout {\r\n  padding-left: 14px;\r\n  padding-right: 14px;\r\n}\r\n\r\n.home .card {\r\n  height: 100vh !important;\r\n}\r\n\r\n.home .card__text {\r\n  padding-right: 0;\r\n  padding-left: 0;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5555,7 +5710,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5569,7 +5724,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"deliver-history.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5583,7 +5738,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"account-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\n}\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/page/round/retailer/index.vue?70ab7c64"],"names":[],"mappings":";AAwHA;EACA,wCAAA;CACA;AAEA;EACA,sCAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n  <div class=\"round retailer\">\r\n    <v-toolbar :class=\"color.primary + ' white--text'\">\r\n      <v-toolbar-title>{{ title }}</v-toolbar-title>\r\n      <v-spacer></v-spacer>\r\n      <span>{{ toolbarInfo }}</span>\r\n    </v-toolbar>\r\n    <main>\r\n      <v-layout row class=\"bg-box\">\r\n\r\n      </v-layout>\r\n      <v-layout row>\r\n        <v-tabs\r\n          id=\"mobile-tabs-1\"\r\n          grow\r\n          scroll-bars\r\n          v-model=\"activeTab\"\r\n        >\r\n          <v-tabs-bar\r\n            :class=\"color.primary\"\r\n            slot=\"activators\"\r\n          >\r\n            <v-tabs-item\r\n              v-for=\"tab in tabs\"\r\n              :key=\"tab.index\"\r\n              :href=\"'#' + tab.id\"\r\n              ripple\r\n            >\r\n              {{ tab.title }}\r\n            </v-tabs-item>\r\n            <v-tabs-slider :class=\"color.accent\"></v-tabs-slider>\r\n          </v-tabs-bar>\r\n          <v-tabs-content\r\n            :key=\"0\"\r\n            :id=\"'storage'\"\r\n          >\r\n            <storage-list :list=\"state.storage\" :announce=\"announce\"></storage-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"1\"\r\n            :id=\"'news-list'\"\r\n          >\r\n            <news-list :list=\"state.news\" :announce=\"announce\"></news-list>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"2\"\r\n            :id=\"'order-history'\"\r\n          >\r\n            <order-history :list=\"state.orderHistory\" type=\"number\" :get-number=\"state.deliveredNumber\"></order-history>\r\n          </v-tabs-content>\r\n          <v-tabs-content\r\n            :key=\"3\"\r\n            :id=\"'deliver-history'\"\r\n          >\r\n            <deliver-history :list=\"state.deliverHistory\" :announce=\"announce\"></deliver-history>\r\n          </v-tabs-content>\r\n        </v-tabs>\r\n      </v-layout>\r\n      \r\n      <order-dialog :announce=\"announce\" v-show=\"state.isWorking\"></order-dialog>\r\n    </main>\r\n    <v-snackbar\r\n      :timeout=\"6000\"\r\n      secondary\r\n      v-model=\"snackbar\"\r\n    >\r\n      {{ snackbarText }}\r\n      <v-btn dark flat @click.native=\"snackbar = false\">知道了</v-btn>\r\n    </v-snackbar>\r\n    {{ intoBelong }}\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport {router} from '../../../router'\r\nimport * as constant from '../../../lib/constant'\r\nimport * as readable from '../../../lib/readable'\r\nimport * as api from '../../../lib/api'\r\n\r\nexport default {\r\n  data () {\r\n    return {\r\n      title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),\r\n      tabs: [\r\n        { index: 0, id: 'storage', title: '庫存' },\r\n        { index: 1, id: 'news-list', title: '市場新聞' },\r\n        { index: 2, id: 'order-history', title: '寄出的訂單' },\r\n        { index: 3, id: 'deliver-history', title: '物流紀錄' }\r\n      ],\r\n      activeTab: null,\r\n      state: api.nowUser.getState(),\r\n      snackbar: false,\r\n      snackbarText: '',\r\n      color: api.nowUser.getColor()\r\n    }\r\n  },\r\n  computed: {\r\n    toolbarInfo: function () {\r\n      return readable.toReadableGameTime(this.state)\r\n        + ' ' + readable.toReadableDollar(this.state.balance)\r\n    },\r\n    intoBelong () {\r\n      switch (this.state.stage) {\r\n        case constant.GAME_STAGE.END:\r\n          router.push('/end')\r\n          break\r\n      }\r\n      return ''\r\n    }\r\n  },\r\n  methods: {\r\n    announce (msg) {\r\n      this.snackbarText = msg\r\n      this.snackbar = true\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.round.retailer .tabs__item {\r\n  color: rgba(255,255,255,0.7) !important;\r\n}\r\n\r\n.round.retailer .tabs__item--active {\r\n  color: rgba(255,255,255,1) !important;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -5597,7 +5752,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\n}\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/online-status.vue?1a4daff2"],"names":[],"mappings":";AAgEA;EACA,YAAA;EACA,mBAAA;EACA,gBAAA;EACA,gBAAA;CACA;AAEA;EACA,qBAAA;CACA","file":"online-status.vue","sourcesContent":["<template>\r\n  <div class=\"online-status\">\r\n    <v-expansion-panel expand>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">小隊員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap v-for=\"team in teamList\" :key=\"team.index\">\r\n            <v-flex xs3>\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ team.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n            <v-flex xs3 v-for=\"job in jobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">工作人員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap>\r\n            <v-flex xs3 v-for=\"job in staffJobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n    </v-expansion-panel>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  props: [\r\n    'list'\r\n  ],\r\n  data () {\r\n    return {\r\n      teamNumber: 4\r\n    }\r\n  },\r\n  computed: {\r\n    jobList () {\r\n      return readable.readableJobList()\r\n    },\r\n    staffJobList () {\r\n      return readable.readableStaffJobList()\r\n    },\r\n    teamList () {\r\n      return readable.toReadableTeamList(this.teamNumber)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\r\n}\r\n\r\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"order-history.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5611,7 +5766,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"info-panel.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5625,7 +5780,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5639,7 +5794,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"msg-dialog.vue","sourceRoot":""}]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"account-dialog.vue","sourceRoot":""}]);
 
 // exports
 
@@ -5648,16 +5803,72 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 /* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\n}\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\n}\r\n", "", {"version":3,"sources":["d:/Coding/ieemgameview/src/components/online-status.vue?1a4daff2"],"names":[],"mappings":";AAgEA;EACA,YAAA;EACA,mBAAA;EACA,gBAAA;EACA,gBAAA;CACA;AAEA;EACA,qBAAA;CACA","file":"online-status.vue","sourcesContent":["<template>\r\n  <div class=\"online-status\">\r\n    <v-expansion-panel expand>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">小隊員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap v-for=\"team in teamList\" :key=\"team.index\">\r\n            <v-flex xs3>\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ team.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n            <v-flex xs3 v-for=\"job in jobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n      <v-expansion-panel-content>\r\n        <div slot=\"header\">工作人員</div>\r\n        <v-card class=\"status-card\">\r\n          <v-layout row wrap>\r\n            <v-flex xs3 v-for=\"job in staffJobList\" :key=\"job.index\">\r\n              <v-card dark class=\"secondary\">\r\n                <v-card-text>{{ job.text }}</v-card-text>\r\n              </v-card>\r\n            </v-flex>\r\n          </v-layout>\r\n        </v-card>\r\n      </v-expansion-panel-content>\r\n    </v-expansion-panel>\r\n  </div>\r\n</template>\r\n\r\n<script>\r\nimport * as api from '../lib/api'\r\nimport * as readable from '../lib/readable'\r\n\r\nexport default {\r\n  props: [\r\n    'list'\r\n  ],\r\n  data () {\r\n    return {\r\n      teamNumber: 4\r\n    }\r\n  },\r\n  computed: {\r\n    jobList () {\r\n      return readable.readableJobList()\r\n    },\r\n    staffJobList () {\r\n      return readable.readableStaffJobList()\r\n    },\r\n    teamList () {\r\n      return readable.toReadableTeamList(this.teamNumber)\r\n    }\r\n  }\r\n}\r\n</script>\r\n\r\n<style>\r\n.online-status .status-card {\r\n  color: #fff;\r\n  text-align: center;\r\n  font-size: 24px;\r\n  padding: 0 14px;\r\n}\r\n\r\n.online-status .status-card .flex {\r\n  padding-bottom: 16px;\r\n}\r\n</style>\r\n"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"info-panel.vue","sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"index.vue","sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "", {"version":3,"sources":[],"names":[],"mappings":"","file":"msg-dialog.vue","sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(172)
+  __webpack_require__(182)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(17),
   /* template */
-  __webpack_require__(140),
+  __webpack_require__(148),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5689,19 +5900,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 82 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(152)
+  __webpack_require__(161)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(18),
   /* template */
-  __webpack_require__(120),
+  __webpack_require__(127),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5733,19 +5944,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 83 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(167)
+  __webpack_require__(177)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(19),
   /* template */
-  __webpack_require__(135),
+  __webpack_require__(143),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5777,19 +5988,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 84 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(150)
+  __webpack_require__(159)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(20),
   /* template */
-  __webpack_require__(118),
+  __webpack_require__(125),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5821,19 +6032,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 85 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(174)
+  __webpack_require__(184)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(21),
   /* template */
-  __webpack_require__(142),
+  __webpack_require__(150),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5865,19 +6076,63 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 86 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(176)
+  __webpack_require__(166)
 }
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(22),
   /* template */
-  __webpack_require__(144),
+  __webpack_require__(132),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "d:\\Coding\\ieemgameview\\src\\components\\market-info.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] market-info.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-564f6f47", Component.options)
+  } else {
+    hotAPI.reload("data-v-564f6f47", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(186)
+}
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(23),
+  /* template */
+  __webpack_require__(152),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5909,19 +6164,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 87 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(157)
+  __webpack_require__(167)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(23),
+  __webpack_require__(24),
   /* template */
-  __webpack_require__(125),
+  __webpack_require__(133),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5953,19 +6208,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 88 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(173)
+  __webpack_require__(183)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(24),
+  __webpack_require__(25),
   /* template */
-  __webpack_require__(141),
+  __webpack_require__(149),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -5997,19 +6252,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 89 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(162)
+  __webpack_require__(172)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(25),
+  __webpack_require__(26),
   /* template */
-  __webpack_require__(130),
+  __webpack_require__(138),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6041,19 +6296,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 90 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(169)
+  __webpack_require__(179)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(26),
+  __webpack_require__(27),
   /* template */
-  __webpack_require__(137),
+  __webpack_require__(145),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6085,19 +6340,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 91 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(147)
+  __webpack_require__(156)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(27),
+  __webpack_require__(28),
   /* template */
-  __webpack_require__(115),
+  __webpack_require__(122),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6129,19 +6384,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 92 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(153)
+  __webpack_require__(162)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(28),
+  __webpack_require__(29),
   /* template */
-  __webpack_require__(121),
+  __webpack_require__(128),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6173,19 +6428,63 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 93 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(151)
+  __webpack_require__(153)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(29),
+  __webpack_require__(30),
   /* template */
   __webpack_require__(119),
+  /* styles */
+  injectStyle,
+  /* scopeId */
+  null,
+  /* moduleIdentifier (server only) */
+  null
+)
+Component.options.__file = "d:\\Coding\\ieemgameview\\src\\components\\team-deliver-avaliable-list.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] team-deliver-avaliable-list.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0f1ebc48", Component.options)
+  } else {
+    hotAPI.reload("data-v-0f1ebc48", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 99 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(160)
+}
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(31),
+  /* template */
+  __webpack_require__(126),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6217,19 +6516,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 94 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(166)
+  __webpack_require__(176)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(30),
+  __webpack_require__(32),
   /* template */
-  __webpack_require__(134),
+  __webpack_require__(142),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6261,19 +6560,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 95 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(149)
+  __webpack_require__(158)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(31),
+  __webpack_require__(33),
   /* template */
-  __webpack_require__(117),
+  __webpack_require__(124),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6305,19 +6604,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 96 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(160)
+  __webpack_require__(170)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(32),
+  __webpack_require__(34),
   /* template */
-  __webpack_require__(128),
+  __webpack_require__(136),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6349,19 +6648,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 97 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(156)
+  __webpack_require__(165)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(33),
+  __webpack_require__(35),
   /* template */
-  __webpack_require__(124),
+  __webpack_require__(131),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6393,19 +6692,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 98 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(148)
+  __webpack_require__(157)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(34),
+  __webpack_require__(36),
   /* template */
-  __webpack_require__(116),
+  __webpack_require__(123),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6437,19 +6736,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 99 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(154)
+  __webpack_require__(163)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(35),
+  __webpack_require__(37),
   /* template */
-  __webpack_require__(122),
+  __webpack_require__(129),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6481,19 +6780,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 100 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(146)
+  __webpack_require__(155)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(114),
+  __webpack_require__(121),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6525,19 +6824,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 101 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(165)
+  __webpack_require__(175)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(39),
   /* template */
-  __webpack_require__(133),
+  __webpack_require__(141),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6569,19 +6868,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 102 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(159)
+  __webpack_require__(169)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(38),
+  __webpack_require__(40),
   /* template */
-  __webpack_require__(127),
+  __webpack_require__(135),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6613,19 +6912,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 103 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(163)
+  __webpack_require__(173)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(131),
+  __webpack_require__(139),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6657,19 +6956,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 104 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(161)
+  __webpack_require__(171)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(40),
+  __webpack_require__(42),
   /* template */
-  __webpack_require__(129),
+  __webpack_require__(137),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6701,19 +7000,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 105 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(170)
+  __webpack_require__(180)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(41),
+  __webpack_require__(43),
   /* template */
-  __webpack_require__(138),
+  __webpack_require__(146),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6745,19 +7044,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 106 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(175)
+  __webpack_require__(185)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(44),
   /* template */
-  __webpack_require__(143),
+  __webpack_require__(151),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6789,19 +7088,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 107 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(171)
+  __webpack_require__(181)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(43),
+  __webpack_require__(45),
   /* template */
-  __webpack_require__(139),
+  __webpack_require__(147),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6833,19 +7132,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 108 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(155)
+  __webpack_require__(164)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(44),
+  __webpack_require__(46),
   /* template */
-  __webpack_require__(123),
+  __webpack_require__(130),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6877,19 +7176,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 109 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(158)
+  __webpack_require__(168)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(45),
+  __webpack_require__(47),
   /* template */
-  __webpack_require__(126),
+  __webpack_require__(134),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6921,19 +7220,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 110 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(168)
+  __webpack_require__(178)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(46),
+  __webpack_require__(48),
   /* template */
-  __webpack_require__(136),
+  __webpack_require__(144),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -6965,19 +7264,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 111 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(164)
+  __webpack_require__(174)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(47),
+  __webpack_require__(49),
   /* template */
-  __webpack_require__(132),
+  __webpack_require__(140),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -7009,19 +7308,19 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 112 */
+/* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(145)
+  __webpack_require__(154)
 }
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(48),
+  __webpack_require__(50),
   /* template */
-  __webpack_require__(113),
+  __webpack_require__(120),
   /* styles */
   injectStyle,
   /* scopeId */
@@ -7053,7 +7352,58 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 113 */
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "team-storage-list"
+  }, [_c('v-card', [_c('v-card-text', [_c('v-select', {
+    attrs: {
+      "items": _vm.jobList,
+      "item-value": "index",
+      "label": "選擇工作",
+      "single-line": "",
+      "bottom": ""
+    },
+    model: {
+      value: (_vm.selectedJob),
+      callback: function($$v) {
+        _vm.selectedJob = $$v
+      },
+      expression: "selectedJob"
+    }
+  })], 1), _vm._v(" "), _c('v-data-table', {
+    attrs: {
+      "headers": _vm.header,
+      "items": _vm.readableOrderVsStorageList,
+      "hide-actions": "",
+      "no-data-text": "尚未載入"
+    },
+    scopedSlots: _vm._u([{
+      key: "items",
+      fn: function(props) {
+        return [_c('td', [_vm._v(_vm._s(props.item.readableTeam))]), _vm._v(" "), _c('td', {
+          staticClass: "text-xs-right"
+        }, [_vm._v(_vm._s(props.item.notDeliveredAmount))]), _vm._v(" "), _c('td', {
+          staticClass: "text-xs-right"
+        }, [_vm._v(_vm._s(props.item.storageAmount))]), _vm._v(" "), _c('td', {
+          staticClass: "text-xs-right"
+        }, [_vm._v(_vm._s(props.item.avaliableForDeliveringAmount))])]
+      }
+    }])
+  }), _vm._v(" "), _c('v-card-actions')], 1), _vm._v("\n  " + _vm._s(_vm.getStorageList) + "\n")], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-0f1ebc48", module.exports)
+  }
+}
+
+/***/ }),
+/* 120 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7183,7 +7533,7 @@ if (false) {
 }
 
 /***/ }),
-/* 114 */
+/* 121 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7234,6 +7584,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "whole-charts"
     }
   }, [_c('v-card', [_c('v-card-text', [_c('v-layout', {
+    staticClass: "wrap-info",
     attrs: {
       "row": "",
       "wrap": ""
@@ -7266,7 +7617,6 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "items": _vm.itemTeam,
       "label": "選擇小隊",
       "item-value": "index",
-      "single-line": "",
       "bottom": ""
     },
     model: {
@@ -7277,6 +7627,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       expression: "selectedTeam"
     }
   }), _vm._v(" "), _c('v-layout', {
+    staticClass: "wrap-info",
     attrs: {
       "row": "",
       "wrap": ""
@@ -7368,7 +7719,7 @@ if (false) {
 }
 
 /***/ }),
-/* 115 */
+/* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7398,7 +7749,7 @@ if (false) {
 }
 
 /***/ }),
-/* 116 */
+/* 123 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7435,7 +7786,7 @@ if (false) {
 }
 
 /***/ }),
-/* 117 */
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7460,7 +7811,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     return _c('div', [_c('div', {
       class: t.isTop ? 'top-ranking primary--text' : ''
     }, [_vm._v(_vm._s(t.readableTeam) + "　" + _vm._s(t.readableBalance))])])
-  })], 2)])], 1)], 1)], 1)])
+  })], 2)])], 1)], 1)], 1), _vm._v(" "), _c('audio', {
+    staticClass: "audio",
+    attrs: {
+      "src": "/sound/begin.mp3",
+      "id": "sound-begin"
+    }
+  }), _vm._v(" "), _c('audio', {
+    staticClass: "audio",
+    attrs: {
+      "src": "/sound/break.mp3",
+      "id": "sound-break"
+    }
+  }), _vm._v("\n  " + _vm._s(_vm.autoPlay) + "\n")])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -7471,7 +7834,7 @@ if (false) {
 }
 
 /***/ }),
-/* 118 */
+/* 125 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7498,30 +7861,13 @@ if (false) {
 }
 
 /***/ }),
-/* 119 */
+/* 126 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "team-storage-list"
-  }, [_c('v-card', {
-    staticClass: "elevation-0"
-  }, [_c('v-card-text', [_c('v-select', {
-    attrs: {
-      "items": _vm.teamList,
-      "item-value": "index",
-      "label": "選擇組別",
-      "single-line": "",
-      "bottom": ""
-    },
-    model: {
-      value: (_vm.selectedTeam),
-      callback: function($$v) {
-        _vm.selectedTeam = $$v
-      },
-      expression: "selectedTeam"
-    }
-  }), _vm._v(" "), _c('v-select', {
+  }, [_c('v-card', [_c('v-card-title', [_vm._v("各組囤貨")]), _vm._v(" "), _c('v-card-text', [_c('v-select', {
     attrs: {
       "items": _vm.jobList,
       "item-value": "index",
@@ -7536,11 +7882,26 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "selectedJob"
     }
-  }), _vm._v(" "), _c('storage-list', {
+  }), _vm._v(" "), _c('v-select', {
     attrs: {
-      "list": "storageList"
+      "items": _vm.teamList,
+      "item-value": "index",
+      "label": "選擇組別",
+      "single-line": "",
+      "bottom": ""
+    },
+    model: {
+      value: (_vm.selectedTeam),
+      callback: function($$v) {
+        _vm.selectedTeam = $$v
+      },
+      expression: "selectedTeam"
     }
-  })], 1)], 1), _vm._v("\n  " + _vm._s(_vm.getStorageList) + "\n")], 1)
+  })], 1), _vm._v(" "), _c('storage-list', {
+    attrs: {
+      "list": _vm.teamStorageList
+    }
+  }), _vm._v(" "), _c('v-card-actions')], 1)], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -7551,11 +7912,11 @@ if (false) {
 }
 
 /***/ }),
-/* 120 */
+/* 127 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', [_c('div', {
+  return _c('div', [_c('div', [_c('div', {
     staticClass: "dialog"
   }, [_c('v-btn', {
     class: _vm.btnClass,
@@ -7572,7 +7933,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   }, [_c('v-icon', {
     staticClass: "white--text"
-  }, [_vm._v("local_shipping")])], 1), _vm._v(" "), _c('v-dialog', {
+  }, [_vm._v("local_shipping")])], 1)], 1), _vm._v(" "), _c('v-dialog', {
     attrs: {
       "persistent": ""
     },
@@ -7668,7 +8029,7 @@ if (false) {
 }
 
 /***/ }),
-/* 121 */
+/* 128 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7710,9 +8071,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       expression: "selectedTeam"
     }
-  }), _vm._v(" "), _vm._l((_vm.productList), function(product) {
-    return _c('div', [_c('v-text-field', {
+  }), _vm._v(" "), _c('v-layout', {
+    attrs: {
+      "row": "",
+      "wrap": ""
+    }
+  }, _vm._l((_vm.productList), function(product) {
+    return _c('v-flex', {
       key: product.index,
+      attrs: {
+        "xs6": ""
+      }
+    }, [_c('v-text-field', {
+      class: product.index,
       attrs: {
         "label": product.text,
         "type": "number",
@@ -7726,7 +8097,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         expression: "amount[product.index]"
       }
     })], 1)
-  })], 2), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+  }))], 1), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     staticClass: "blue--text darken-1",
     attrs: {
       "flat": "flat"
@@ -7739,6 +8110,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("取消")]), _vm._v(" "), _c('v-btn', {
     staticClass: "blue--text darken-1",
     attrs: {
+      "disabled": !(_vm.selectedTeam && (_vm.amount.CAR || _vm.amount.BODY || _vm.amount.WHEEL || _vm.amount.ENGINE)),
       "flat": "flat"
     },
     nativeOn: {
@@ -7757,7 +8129,7 @@ if (false) {
 }
 
 /***/ }),
-/* 122 */
+/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7806,7 +8178,7 @@ if (false) {
 }
 
 /***/ }),
-/* 123 */
+/* 130 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7849,7 +8221,7 @@ if (false) {
 }
 
 /***/ }),
-/* 124 */
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7934,7 +8306,66 @@ if (false) {
 }
 
 /***/ }),
-/* 125 */
+/* 132 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "info-panel"
+  }, [_c('v-card', [_c('v-card-title', {
+    attrs: {
+      "primary-title": ""
+    }
+  }, [_vm._v("市場資訊")]), _vm._v(" "), _c('v-card-text', [_c('v-layout', {
+    staticClass: "wrap-info",
+    attrs: {
+      "row": "",
+      "wrap": ""
+    }
+  }, [_c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("市場需求量")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v(_vm._s(_vm.market.orderAmount) + "臺")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("市場供應量")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v(_vm._s(_vm.market.storageAmount) + "臺")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("剩餘需求量")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v(_vm._s(parseInt(_vm.market.orderAmount) - parseInt(_vm.market.storageAmount)) + "臺")])]), _vm._v(" "), _c('v-flex', {
+    attrs: {
+      "xs6": ""
+    }
+  }, [_c('p', {
+    staticClass: "title"
+  }, [_vm._v("市場價格")]), _vm._v(" "), _c('p', {
+    staticClass: "result"
+  }, [_vm._v(_vm._s(_vm.readableMarketPrice))])])], 1)], 1)], 1)], 1)
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-564f6f47", module.exports)
+  }
+}
+
+/***/ }),
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7980,7 +8411,7 @@ if (false) {
 }
 
 /***/ }),
-/* 126 */
+/* 134 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -7990,7 +8421,17 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('deliver-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))]), _vm._v(" "), _c('v-spacer'), _vm._v(" "), _c('span', {
+    staticClass: "white--text"
+  }, [_vm._v(_vm._s(_vm.toolbarInfo))])], 1), _vm._v(" "), _c('main', [_c('market-info', {
+    attrs: {
+      "market": _vm.state.market
+    }
+  }), _vm._v(" "), _c('team-deliver-avaliable-list', {
+    attrs: {
+      "order-vs-storage": _vm.state.orderVsStorage
+    }
+  }), _vm._v(" "), _c('deliver-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -8027,7 +8468,7 @@ if (false) {
 }
 
 /***/ }),
-/* 127 */
+/* 135 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8079,7 +8520,7 @@ if (false) {
 }
 
 /***/ }),
-/* 128 */
+/* 136 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8150,7 +8591,7 @@ if (false) {
 }
 
 /***/ }),
-/* 129 */
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8234,7 +8675,7 @@ if (false) {
 }
 
 /***/ }),
-/* 130 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8283,6 +8724,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("取消")]), _vm._v(" "), _c('v-btn', {
     class: _vm.color.primary + '--text',
     attrs: {
+      "disabled": !_vm.amount,
       "flat": ""
     },
     nativeOn: {
@@ -8307,7 +8749,7 @@ if (false) {
 }
 
 /***/ }),
-/* 131 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8389,7 +8831,7 @@ if (false) {
 }
 
 /***/ }),
-/* 132 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8399,7 +8841,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-content', [_c('game-clock')], 1)], 1), _vm._v(" "), _c('deliver-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-content', [_c('game-clock'), _vm._v(" "), _c('team-deliver-avaliable-list', {
+    attrs: {
+      "order-vs-storage": _vm.state.orderVsStorage
+    }
+  })], 1)], 1), _vm._v(" "), _c('deliver-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -8436,7 +8882,7 @@ if (false) {
 }
 
 /***/ }),
-/* 133 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8469,7 +8915,7 @@ if (false) {
 }
 
 /***/ }),
-/* 134 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8537,7 +8983,7 @@ if (false) {
 }
 
 /***/ }),
-/* 135 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8567,7 +9013,7 @@ if (false) {
 }
 
 /***/ }),
-/* 136 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8694,7 +9140,7 @@ if (false) {
 }
 
 /***/ }),
-/* 137 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8726,7 +9172,7 @@ if (false) {
 }
 
 /***/ }),
-/* 138 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8770,7 +9216,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "id": "dynamic-log"
     }
-  }, [_c('v-card', [_c('v-card-title', [_vm._v("階段管理")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("確定list")])])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+  }, [_c('v-card', [_c('v-card-title', [_vm._v("階段管理")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     attrs: {
       "primary": ""
     },
@@ -8779,7 +9225,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.nextGameStage($event)
       }
     }
-  }, [_vm._v("下一階段")])], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("下一天")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("確定list")])])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+  }, [_vm._v("下一階段")])], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("下一天")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("製造部已登記各組囤貨。")])])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     attrs: {
       "primary": ""
     },
@@ -8801,16 +9247,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "announce": _vm.announce
     }
-  })], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("處理速度測試")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("確定list")])])]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
+  })], 1)], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("測試")]), _vm._v(" "), _c('v-card-actions', [_c('v-spacer'), _vm._v(" "), _c('v-btn', {
     attrs: {
       "primary": ""
     },
     nativeOn: {
       "click": function($event) {
-        _vm.test($event)
+        _vm.testSpeed($event)
       }
     }
-  }, [_vm._v("測試")])], 1)], 1)], 1), _vm._v(" "), _c('v-tabs-content', {
+  }, [_vm._v("處理速度測試")]), _vm._v(" "), _c('v-btn', {
+    attrs: {
+      "primary": ""
+    },
+    nativeOn: {
+      "click": function($event) {
+        _vm.testSound($event)
+      }
+    }
+  }, [_vm._v("測試鐘聲")])], 1)], 1)], 1), _vm._v(" "), _c('v-tabs-content', {
     key: 2,
     attrs: {
       "id": "game-info"
@@ -8819,7 +9274,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "game-config": _vm.gameConfig
     }
-  }), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("\n            市場資訊\n          ")]), _vm._v(" "), _c('v-card-text', [_c('ul', [_c('li', [_vm._v("市場需求量：" + _vm._s(_vm.state.market.orderAmount))]), _vm._v(" "), _c('li', [_vm._v("市場供應量：" + _vm._s(_vm.state.market.storageAmount))]), _vm._v(" "), _c('li', [_vm._v("市場價格：" + _vm._s(_vm.state.market.price))])])])], 1), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("\n            設定新聞\n          ")]), _vm._v(" "), _c('v-card-text', [_c('v-text-field', {
+  }), _vm._v(" "), _c('market-info', {
+    attrs: {
+      "market": _vm.state.market
+    }
+  }), _vm._v(" "), _c('team-storage-list'), _vm._v(" "), _c('v-card', [_c('v-card-title', [_vm._v("\n            設定新聞\n          ")]), _vm._v(" "), _c('v-card-text', [_c('v-text-field', {
     attrs: {
       "label": "新聞",
       "multi-line": ""
@@ -8863,7 +9322,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.snackbar = false
       }
     }
-  }, [_vm._v("知道了")])], 1)], 1)
+  }, [_vm._v("知道了")])], 1), _vm._v(" "), _c('audio', {
+    staticClass: "audio",
+    attrs: {
+      "src": "/sound/begin.mp3",
+      "id": "sound-begin"
+    }
+  })], 1)
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -8874,7 +9339,7 @@ if (false) {
 }
 
 /***/ }),
-/* 139 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -8982,7 +9447,7 @@ if (false) {
 }
 
 /***/ }),
-/* 140 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9078,7 +9543,7 @@ if (false) {
 }
 
 /***/ }),
-/* 141 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9153,7 +9618,7 @@ if (false) {
 }
 
 /***/ }),
-/* 142 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9174,7 +9639,7 @@ if (false) {
 }
 
 /***/ }),
-/* 143 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9184,7 +9649,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     class: _vm.color.primary
   }, [_c('v-toolbar-title', {
     staticClass: "white--text"
-  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-content', [_c('game-clock')], 1)], 1), _vm._v(" "), _c('storage-register-dialog', {
+  }, [_vm._v(_vm._s(_vm.title))])], 1), _vm._v(" "), _c('main', [_c('v-card', [_c('v-card-text', [_c('game-clock')], 1)], 1), _vm._v(" "), _c('team-storage-list'), _vm._v(" "), _c('storage-register-dialog', {
     attrs: {
       "announce": _vm.announce
     }
@@ -9222,7 +9687,7 @@ if (false) {
 }
 
 /***/ }),
-/* 144 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -9271,13 +9736,39 @@ if (false) {
 }
 
 /***/ }),
-/* 145 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(49);
+var content = __webpack_require__(51);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("faebb34a", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0f1ebc48\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./team-deliver-avaliable-list.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0f1ebc48\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./team-deliver-avaliable-list.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 154 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9297,13 +9788,13 @@ if(false) {
 }
 
 /***/ }),
-/* 146 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(50);
+var content = __webpack_require__(53);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9323,13 +9814,13 @@ if(false) {
 }
 
 /***/ }),
-/* 147 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9349,13 +9840,13 @@ if(false) {
 }
 
 /***/ }),
-/* 148 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(52);
+var content = __webpack_require__(55);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9375,13 +9866,13 @@ if(false) {
 }
 
 /***/ }),
-/* 149 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(53);
+var content = __webpack_require__(56);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9401,13 +9892,13 @@ if(false) {
 }
 
 /***/ }),
-/* 150 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(54);
+var content = __webpack_require__(57);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9427,13 +9918,13 @@ if(false) {
 }
 
 /***/ }),
-/* 151 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(55);
+var content = __webpack_require__(58);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9453,13 +9944,13 @@ if(false) {
 }
 
 /***/ }),
-/* 152 */
+/* 161 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(56);
+var content = __webpack_require__(59);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9479,13 +9970,13 @@ if(false) {
 }
 
 /***/ }),
-/* 153 */
+/* 162 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(57);
+var content = __webpack_require__(60);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9505,13 +9996,13 @@ if(false) {
 }
 
 /***/ }),
-/* 154 */
+/* 163 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(58);
+var content = __webpack_require__(61);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9531,13 +10022,13 @@ if(false) {
 }
 
 /***/ }),
-/* 155 */
+/* 164 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(59);
+var content = __webpack_require__(62);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9557,13 +10048,13 @@ if(false) {
 }
 
 /***/ }),
-/* 156 */
+/* 165 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(60);
+var content = __webpack_require__(63);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9583,13 +10074,39 @@ if(false) {
 }
 
 /***/ }),
-/* 157 */
+/* 166 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(61);
+var content = __webpack_require__(64);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(2)("f4f0ff1a", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-564f6f47\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./market-info.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js?sourceMap!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-564f6f47\",\"scoped\":false,\"hasInlineConfig\":false}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./market-info.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 167 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(65);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9609,13 +10126,13 @@ if(false) {
 }
 
 /***/ }),
-/* 158 */
+/* 168 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(62);
+var content = __webpack_require__(66);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9635,13 +10152,13 @@ if(false) {
 }
 
 /***/ }),
-/* 159 */
+/* 169 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(63);
+var content = __webpack_require__(67);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9661,13 +10178,13 @@ if(false) {
 }
 
 /***/ }),
-/* 160 */
+/* 170 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(64);
+var content = __webpack_require__(68);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9687,13 +10204,13 @@ if(false) {
 }
 
 /***/ }),
-/* 161 */
+/* 171 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(65);
+var content = __webpack_require__(69);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9713,13 +10230,13 @@ if(false) {
 }
 
 /***/ }),
-/* 162 */
+/* 172 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(66);
+var content = __webpack_require__(70);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9739,13 +10256,13 @@ if(false) {
 }
 
 /***/ }),
-/* 163 */
+/* 173 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(67);
+var content = __webpack_require__(71);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9765,13 +10282,13 @@ if(false) {
 }
 
 /***/ }),
-/* 164 */
+/* 174 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(68);
+var content = __webpack_require__(72);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9791,13 +10308,13 @@ if(false) {
 }
 
 /***/ }),
-/* 165 */
+/* 175 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(69);
+var content = __webpack_require__(73);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9817,13 +10334,13 @@ if(false) {
 }
 
 /***/ }),
-/* 166 */
+/* 176 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(70);
+var content = __webpack_require__(74);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9843,13 +10360,13 @@ if(false) {
 }
 
 /***/ }),
-/* 167 */
+/* 177 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(71);
+var content = __webpack_require__(75);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9869,13 +10386,13 @@ if(false) {
 }
 
 /***/ }),
-/* 168 */
+/* 178 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(72);
+var content = __webpack_require__(76);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9895,13 +10412,13 @@ if(false) {
 }
 
 /***/ }),
-/* 169 */
+/* 179 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(73);
+var content = __webpack_require__(77);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9921,13 +10438,13 @@ if(false) {
 }
 
 /***/ }),
-/* 170 */
+/* 180 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(74);
+var content = __webpack_require__(78);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9947,13 +10464,13 @@ if(false) {
 }
 
 /***/ }),
-/* 171 */
+/* 181 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(75);
+var content = __webpack_require__(79);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9973,13 +10490,13 @@ if(false) {
 }
 
 /***/ }),
-/* 172 */
+/* 182 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(76);
+var content = __webpack_require__(80);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -9999,13 +10516,13 @@ if(false) {
 }
 
 /***/ }),
-/* 173 */
+/* 183 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(77);
+var content = __webpack_require__(81);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10025,13 +10542,13 @@ if(false) {
 }
 
 /***/ }),
-/* 174 */
+/* 184 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(78);
+var content = __webpack_require__(82);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10051,13 +10568,13 @@ if(false) {
 }
 
 /***/ }),
-/* 175 */
+/* 185 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(79);
+var content = __webpack_require__(83);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10077,13 +10594,13 @@ if(false) {
 }
 
 /***/ }),
-/* 176 */
+/* 186 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(80);
+var content = __webpack_require__(84);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -10103,7 +10620,7 @@ if(false) {
 }
 
 /***/ }),
-/* 177 */
+/* 187 */
 /***/ (function(module, exports) {
 
 /**
@@ -10136,7 +10653,7 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 178 */
+/* 188 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(15);

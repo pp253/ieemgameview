@@ -23,7 +23,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn :class="color.primary + '--text'" flat @click.native="orderDialog = false">取消</v-btn>
-          <v-btn :class="color.primary + '--text'" flat @click.native="order">訂購</v-btn>
+          <v-btn
+            :disabled="!amount"
+            :class="color.primary + '--text'"
+            flat
+            @click.native="order">訂購</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

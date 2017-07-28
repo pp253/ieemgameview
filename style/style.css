@@ -62,7 +62,7 @@
   margin-right: 0;
 }
 
-.dialog button.btn--floating {
+.dialog .btn--floating {
   position: fixed !important;
 }
 
@@ -84,4 +84,14 @@
 
 label {
   left: 0 !important;
+}
+
+.wrap-info .title {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 14px !important;
+  margin-bottom: 0;
+}
+
+.wrap-info .result {
+  font-size: 20px;
 }

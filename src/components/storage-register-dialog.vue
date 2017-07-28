@@ -25,22 +25,30 @@
           item-value="index"
           bottom
         ></v-select>
-        <div
-          v-for="product in productList"
-        >
-          <v-text-field
+        <v-layout row wrap>
+          <v-flex
+            v-for="product in productList"
             :key="product.index"
-            v-model.number="amount[product.index]"
-            :label="product.text"
-            type="number"
-            suffix="個"
-          ></v-text-field>
-        </div>
+            xs6
+          >
+            <v-text-field
+              v-model.number="amount[product.index]"
+              :label="product.text"
+              type="number"
+              suffix="個"
+              :class="product.index"
+            ></v-text-field>
+          </v-flex>
+        </v-layout>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn class="blue--text darken-1" flat="flat" @click.native="storageRegisterDialog = false">取消</v-btn>
-        <v-btn class="blue--text darken-1" flat="flat" @click.native="register">登記</v-btn>
+        <v-btn
+          :disabled="!(selectedTeam && (amount.CAR || amount.BODY || amount.WHEEL || amount.ENGINE))"
+          class="blue--text darken-1"
+          flat="flat"
+          @click.native="register">登記</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -83,6 +91,10 @@ export default {
     productList () {
       if (!this.selectedJob) {
         return []
+      }
+
+      let colorList = {
+        'CAR': 'black'
       }
 
       let list = []
@@ -130,4 +142,35 @@ export default {
 </script>
 
 <style>
+.input-group.CAR label {
+  color: #22AC38 !important;
+}
+
+.input-group.CAR .input-group__details:before {
+  background-color: #22AC38 !important;
+}
+
+.input-group.WHEEL label {
+  color: #FF0000 !important;
+}
+
+.input-group.WHEEL .input-group__details:before {
+  background-color: #FF0000 !important;
+}
+
+.input-group.BODY label {
+  color: #0000FF !important;
+}
+
+.input-group.BODY .input-group__details:before {
+  background-color: #0000FF !important;
+}
+
+.input-group.ENGINE label {
+  color: #000 !important;
+}
+
+.input-group.ENGINE .input-group__details:before {
+  background-color: #000 !important;
+}
 </style>

@@ -21,6 +21,9 @@
         </v-card>
       </v-layout>
     </main>
+    <audio src="/sound/begin.mp3" id="sound-begin" class="audio"></audio>
+    <audio src="/sound/break.mp3" id="sound-break" class="audio"></audio>
+    {{ autoPlay }}
   </div>
 </template>
 
@@ -37,7 +40,8 @@ export default {
     return {
       state: api.nowUser.getState(),
       rankingList: [],
-      timer: null
+      timer: null,
+      lastIsWorking: false
     }
   },
   methods: {
@@ -73,9 +77,23 @@ export default {
             this.rankingList.push(i)
           }).bind(this))
         }).bind(this))
-
+      
       if (this.state.stage === constant.GAME_STAGE.END) {
-        router.push('/boardcast/endpage')
+        router.push('/end')
+      }
+    }
+  },
+  computed: {
+    autoPlay () {
+      if (this.lastIsWorking !== this.state.isWorking) {
+        this.lastIsWorking = this.state.isWorking
+        if (this.lastIsWorking) {
+          var audio = document.getElementById('sound-begin')
+          audio.play()
+        } else {
+          var audio = document.getElementById('sound-break')
+          audio.play()
+        }
       }
     }
   },
@@ -109,5 +127,9 @@ export default {
 .scoreboard .ranking .top-ranking {
   font-size: 40px;
   color: rgba(0, 0, 0, 1);
+}
+
+.scoreboard .audio {
+  display: none;
 }
 </style>

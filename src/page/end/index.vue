@@ -30,7 +30,7 @@
         >
           <v-card>
             <v-card-text>
-              <v-layout row wrap>
+              <v-layout row wrap class="wrap-info">
                 <v-flex xs6>
                   <p class="title">總產量</p>
                   <p class="result">{{ dataWhole.totalProductivity }}</p>
@@ -59,11 +59,10 @@
                 v-model="selectedTeam"
                 label="選擇小隊"
                 item-value="index"
-                single-line
                 bottom
               ></v-select>
 
-              <v-layout row wrap>
+              <v-layout row wrap class="wrap-info">
                 <v-flex xs6>
                   <p class="title">毛利</p>
                   <p class="result">{{ dataTeam.netIncome }}</p>
@@ -408,15 +407,5 @@ export default {
 
 .end .divider {
   margin-top: 20px;
-}
-
-.end .title {
-  color: rgba(0, 0, 0, 0.7);
-  font-size: 14px !important;
-  margin-bottom: 0;
-}
-
-.end .result {
-  font-size: 20px;
 }
 </style>

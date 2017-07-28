@@ -1,15 +1,8 @@
 <template>
   <div class="team-storage-list">
-    <v-card class="elevation-0">
+    <v-card>
+      <v-card-title>各組囤貨</v-card-title>
       <v-card-text>
-          <v-select
-            v-bind:items="teamList"
-            v-model="selectedTeam"
-            item-value="index"
-            label="選擇組別"
-            single-line
-            bottom
-          ></v-select>
           <v-select
             v-bind:items="jobList"
             v-model="selectedJob"
@@ -18,10 +11,18 @@
             single-line
             bottom
           ></v-select>
-          <storage-list list="storageList"></storage-list>
+          <v-select
+            v-bind:items="teamList"
+            v-model="selectedTeam"
+            item-value="index"
+            label="選擇組別"
+            single-line
+            bottom
+          ></v-select>
       </v-card-text>
+      <storage-list :list="teamStorageList"></storage-list>
+      <v-card-actions></v-card-actions>
     </v-card>
-    {{ getStorageList }}
   </div>
 </template>
 
@@ -32,12 +33,11 @@ import * as api from '../lib/api'
 import * as storageApi from '../lib/api/storage'
 
 export default {
-  data: function () {
+  data () {
     return {
       selectedTeam: 1,
       selectedJob: constant.JOBS.FACTORY,
-      state: api.nowUser.getState(),
-      storageList: []
+      state: api.nowUser.getState()
     }
   },
   computed: {
@@ -47,17 +47,8 @@ export default {
     jobList () {
       return readable.readableJobList()
     },
-    getStorageList () {
-      storageApi.getHistory(api.nowUser.getGameId(), this.selectedTeam, this.selectedJob)
-        .then((function (res) {
-          console.log(res.data)
-          console.log(readable.toReadableStorageList(res.data.list))
-          this.storageList = readable.toReadableStorageList(res.data.list)
-        }).bind(this))
-        .catch((function (err) {
-          console.error(err)
-        }).bind(this))
-      return ''
+    teamStorageList () {
+      return this.state.teamStorageList[this.selectedJob][this.selectedTeam - 1]
     }
   }
 }

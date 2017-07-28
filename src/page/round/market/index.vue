@@ -3,9 +3,11 @@
     <v-toolbar :class="color.primary">
       <v-toolbar-title class="white--text">{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
-      <span>{{ toolbarInfo }}</span>
+      <span class="white--text">{{ toolbarInfo }}</span>
     </v-toolbar>
     <main>
+      <market-info :market="state.market"></market-info>
+      <team-deliver-avaliable-list :order-vs-storage="state.orderVsStorage"></team-deliver-avaliable-list>
       <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar

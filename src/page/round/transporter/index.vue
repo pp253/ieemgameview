@@ -7,6 +7,7 @@
       <v-card>
         <v-card-content>
           <game-clock></game-clock>
+          <team-deliver-avaliable-list :order-vs-storage="state.orderVsStorage"></team-deliver-avaliable-list>
         </v-card-content>
       </v-card>
       <deliver-dialog :announce="announce"></deliver-dialog>

@@ -35,11 +35,6 @@
         >
           <v-card>
             <v-card-title>階段管理</v-card-title>
-            <v-card-text>
-              <ul>
-                <li>確定list</li>
-              </ul>
-            </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn primary v-on:click.native="nextGameStage">下一階段</v-btn>
@@ -49,7 +44,7 @@
             <v-card-title>下一天</v-card-title>
             <v-card-text>
               <ul>
-                <li>確定list</li>
+                <li>製造部已登記各組囤貨。</li>
               </ul>
             </v-card-text>
             <v-card-actions>
@@ -66,15 +61,11 @@
             </v-card-actions>
           </v-card>
           <v-card>
-            <v-card-title>處理速度測試</v-card-title>
-            <v-card-text>
-              <ul>
-                <li>確定list</li>
-              </ul>
-            </v-card-text>
+            <v-card-title>測試</v-card-title>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn primary v-on:click.native="test">測試</v-btn>
+              <v-btn primary v-on:click.native="testSpeed">處理速度測試</v-btn>
+              <v-btn primary v-on:click.native="testSound">測試鐘聲</v-btn>
             </v-card-actions>
           </v-card>
         </v-tabs-content>
@@ -83,18 +74,8 @@
           id="game-info"
         >
           <info-panel :game-config="gameConfig"></info-panel>
-          <v-card>
-            <v-card-title>
-              市場資訊
-            </v-card-title>
-            <v-card-text>
-              <ul>
-                <li>市場需求量：{{ state.market.orderAmount }}</li>
-                <li>市場供應量：{{ state.market.storageAmount }}</li>
-                <li>市場價格：{{ state.market.price }}</li>
-              </ul>
-            </v-card-text>
-          </v-card>
+          <market-info :market="state.market"></market-info>
+          <team-storage-list></team-storage-list>
           <v-card>
             <v-card-title>
               設定新聞
@@ -122,6 +103,7 @@
       {{ snackbarText }}
       <v-btn dark flat @click.native="snackbar = false">知道了</v-btn>
     </v-snackbar>
+    <audio src="/sound/begin.mp3" id="sound-begin" class="audio"></audio>
   </div>
 </template>
 
@@ -157,6 +139,10 @@ export default {
     }
   },
   methods: {
+    testSound () {
+      var audio = document.getElementById('sound-begin')
+      audio.play()
+    },
     intoBoardcast () {
       router.push('/boardcast')
     },
@@ -184,7 +170,7 @@ export default {
           console.error(err)
         })
     },
-    test () {
+    testSpeed () {
       api.nowUser.test()
     },
     setNewsList () {

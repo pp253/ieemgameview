@@ -5,10 +5,11 @@
     </v-toolbar>
     <main>
       <v-card>
-        <v-card-content>
+        <v-card-text>
           <game-clock></game-clock>
-        </v-card-content>
+        </v-card-text>
       </v-card>
+      <team-storage-list></team-storage-list>
       <storage-register-dialog :announce="announce"></storage-register-dialog>
     </main>
     <v-snackbar

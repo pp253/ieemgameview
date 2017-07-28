@@ -107,7 +107,8 @@ export function toReadablePosition (position) {
 // list as StorageList
 export function toReadableStorageList (list) {
   let result = []
-  for (let item of list) {
+  for (let key in list) {
+    let item = list[key]
     result.push({
       readableProduct: toReadableProduct(item.product),
       amount: item.amount

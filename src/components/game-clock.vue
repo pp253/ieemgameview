@@ -55,10 +55,6 @@ export default {
   line-height: 50px;
 }
 
-.game-clock .more-info {
-  font-size: 20px;
-}
-
 .game-clock .progress-circular__info {
   font-size: 30px;
 }

@@ -33,7 +33,17 @@ export const DEFAULT_STATE = () => {
       storageAmount: 0,
       price: 0
     },
-    deliveredNumber: 0
+    deliveredNumber: 0,
+    orderVsStorage: {
+      [constant.JOBS.FACTORY]: [],
+      [constant.JOBS.WHOLESALER]: [],
+      [constant.JOBS.RETAILER]: []
+    },
+    teamStorageList: {
+      [constant.JOBS.FACTORY]: [],
+      [constant.JOBS.WHOLESALER]: [],
+      [constant.JOBS.RETAILER]: []
+    }
   }
 }
 
@@ -217,9 +227,32 @@ export class User {
             this.getState().market.price = market.price
           }
 
+          let updateOrderVsStorageFromRes = (orderVsStorage) => {
+            Object.assign(this.state.orderVsStorage, orderVsStorage)
+          }
+
+          let updateTeamStorageListFromRes = (teamStorageList) => {
+            Object.assign(this.state.teamStorageList, teamStorageList)
+          }
+
           switch (this.getJob()) {
             case constant.STAFF_JOBS.CONSOLER:
               updateMarketFromRes(data.market)
+              updateOrderVsStorageFromRes(data.orderVsStorage)
+              updateTeamStorageListFromRes(data.teamStorageList)
+              break
+            
+            case constant.STAFF_JOBS.MARKET:
+              updateMarketFromRes(data.market)
+              updateOrderVsStorageFromRes(data.orderVsStorage)
+              break
+            
+            case constant.STAFF_JOBS.TRANSPORTER:
+              updateOrderVsStorageFromRes(data.orderVsStorage)
+              break
+            
+            case constant.STAFF_JOBS.EXCHANGER:
+              updateTeamStorageListFromRes(data.teamStorageList)
               break
           }
         }

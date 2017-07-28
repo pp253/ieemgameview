@@ -1,15 +1,17 @@
 <template>
   <div>
-    <div class="dialog">
-      <v-btn
-        primary
-        fab
-        :class="btnClass"
-        :small="secondary"
-        @click.native.stop="deliverDialog = true"
-      >
-        <v-icon class="white--text">local_shipping</v-icon>
-      </v-btn>
+    <div>
+      <div class="dialog">
+        <v-btn
+          primary
+          fab
+          :class="btnClass"
+          :small="secondary"
+          @click.native.stop="deliverDialog = true"
+        >
+          <v-icon class="white--text">local_shipping</v-icon>
+        </v-btn>
+      </div>
       <v-dialog
         v-model="deliverDialog"
         persistent
