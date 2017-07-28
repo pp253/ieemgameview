@@ -296,8 +296,8 @@ export class User {
         this.getColor().themeColor = '#ffc107'
         break
     }
-    let metaThemeColor = document.querySelector('meta[name=theme-color]')
-    metaThemeColor.setAttribute('content', this.getColor().themeColor)
+    // let metaThemeColor = document.querySelector('meta[name=theme-color]')
+    // metaThemeColor.setAttribute('content', this.getColor().themeColor)
     return this
   }
 
