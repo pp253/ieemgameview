@@ -26,7 +26,8 @@ export const DEFAULT_STATE = () => {
     news: [],
     color: {
       primary: 'light-blue',
-      accent: 'yellow'
+      accent: 'yellow',
+      themeColor: '#03a9f4'
     },
     market: {
       orderAmount: 0,
@@ -282,16 +283,21 @@ export class User {
       case constant.JOBS.RETAILER:
         this.getColor().primary = 'blue-grey'
         this.getColor().accent = 'light-blue'
+        this.getColor().themeColor = '#607d8b'
         break
       case constant.JOBS.WHOLESALER:
         this.getColor().primary = 'teal'
         this.getColor().accent = 'lime'
+        this.getColor().themeColor = '#009688'
         break
       case constant.JOBS.FACTORY:
         this.getColor().primary = 'amber'
         this.getColor().accent = 'indigo'
+        this.getColor().themeColor = '#ffc107'
         break
     }
+    let metaThemeColor = document.querySelector("meta[name=theme-color]");
+    metaThemeColor.setAttribute("content", this.getColor().themeColor);
     return this
   }
 

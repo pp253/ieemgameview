@@ -776,7 +776,8 @@ var DEFAULT_STATE = function DEFAULT_STATE() {
     news: [],
     color: {
       primary: 'light-blue',
-      accent: 'yellow'
+      accent: 'yellow',
+      themeColor: '#03a9f4'
     },
     market: {
       orderAmount: 0,
@@ -1032,16 +1033,21 @@ var User = function () {
         case __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].RETAILER:
           this.getColor().primary = 'blue-grey';
           this.getColor().accent = 'light-blue';
+          this.getColor().themeColor = '#607d8b';
           break;
         case __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].WHOLESALER:
           this.getColor().primary = 'teal';
           this.getColor().accent = 'lime';
+          this.getColor().themeColor = '#009688';
           break;
         case __WEBPACK_IMPORTED_MODULE_0__constant__["g" /* JOBS */].FACTORY:
           this.getColor().primary = 'amber';
           this.getColor().accent = 'indigo';
+          this.getColor().themeColor = '#ffc107';
           break;
       }
+      var metaThemeColor = document.querySelector("meta[name=theme-color]");
+      metaThemeColor.setAttribute("content", this.getColor().primary);
       return this;
     }
   }, {
