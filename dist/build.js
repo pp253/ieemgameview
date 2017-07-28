@@ -1046,8 +1046,8 @@ var User = function () {
           this.getColor().themeColor = '#ffc107';
           break;
       }
-      var metaThemeColor = document.querySelector("meta[name=theme-color]");
-      metaThemeColor.setAttribute("content", this.getColor().primary);
+      var metaThemeColor = document.querySelector('meta[name=theme-color]');
+      metaThemeColor.setAttribute('content', this.getColor().themeColor);
       return this;
     }
   }, {
