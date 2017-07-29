@@ -18,6 +18,8 @@
             label="訂購數量"
             id="order-number"
             type="number"
+            suffix="臺"
+            min="0"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>

@@ -37,6 +37,7 @@
               type="number"
               suffix="個"
               :class="product.index"
+              min="0"
             ></v-text-field>
           </v-flex>
         </v-layout>

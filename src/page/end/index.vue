@@ -30,6 +30,7 @@
         >
           <v-card>
             <v-card-text>
+              <!--
               <v-layout row wrap class="wrap-info">
                 <v-flex xs6>
                   <p class="title">總產量</p>
@@ -37,6 +38,7 @@
                 </v-flex>
               </v-layout>
               <v-divider></v-divider>
+              -->
               <div
                 v-for="(chart, key) in chartsWhole"
                 :key="key"
@@ -64,13 +66,18 @@
 
               <v-layout row wrap class="wrap-info">
                 <v-flex xs6>
-                  <p class="title">毛利</p>
+                  <p class="title">淨利</p>
                   <p class="result">{{ dataTeam.netIncome }}</p>
                 </v-flex>
                 <v-flex xs6>
-                  <p class="title">淨利</p>
+                  <p class="title">毛利</p>
                   <p class="result">{{ dataTeam.grossProfit }}</p>
                 </v-flex>
+                <v-flex xs6>
+                  <p class="title">運輸次數</p>
+                  <p class="result">{{ dataTeam.deliverCount }}</p>
+                </v-flex>
+                <!--
                 <v-flex xs6>
                   <p class="title">總產量</p>
                   <p class="result">{{ dataTeam.totalProductivity }}</p>
@@ -80,13 +87,10 @@
                   <p class="result">{{ dataTeam.totalCost }}</p>
                 </v-flex>
                 <v-flex xs6>
-                  <p class="title">運輸次數</p>
-                  <p class="result">{{ dataTeam.deliverCount }}</p>
-                </v-flex>
-                <v-flex xs6>
                   <p class="title">囤貨成本</p>
-                  <p class="result">{{ dataTeam.totalCost }}</p>
+                  <p class="result">{{ dataTeam.storageCost }}</p>
                 </v-flex>
+                -->
               </v-layout>
               <v-divider></v-divider>
               <div
@@ -320,17 +324,18 @@ export default {
       let teamData = this.data.teamDataList[teamIndex - 1]
 
       let netIncome = teamData.account[teamData.account.length - 1].balance
-      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[0]
+      let grossProfit = calculateAccount(teamData.account, days + 1, dayLong)[1]
       let deliverCount = teamData.FACTORY.deliver.length + teamData.WHOLESALER.deliver.length + teamData.RETAILER.deliver.length
+
       this.dataTeam.netIncome = readable.toReadableDollar(netIncome)
       this.dataTeam.grossProfit = readable.toReadableDollar(grossProfit)
       this.dataTeam.totalProductivity = calculateProductivity(teamData.FACTORY.storage, days + 1) + '臺'
       this.dataTeam.deliverCount = deliverCount + '次'
-      this.dataTeam.totalCost = readable.toReadableDollar(netIncome - grossProfit)
+      this.dataTeam.totalCost = readable.toReadableDollar(grossProfit - netIncome)
       this.dataTeam.storageCost = readable.toReadableDollar(teamData.cost.storage)
 
       {
-        let dataTable = [['時間', '毛利', '淨利']]
+        let dataTable = [['時間', '淨利', '毛利']]
         for (let d = 1; d <= days; d++) {
           for (let i = 0; i <= parseInt(dayLong / interval); i++) {
             let result = calculateAccount(teamData.account, d, i * interval)

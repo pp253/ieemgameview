@@ -19,28 +19,45 @@
   <script src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
     google.charts.load('current', { 'packages': ['corechart'] });
-</script>
-<script type="text/javascript">
-function getRandomRGBValue() {
-    return Math.min(Math.floor(Math.random() * 255 + 1), 255);
-}
+  </script>
+  <script type="text/javascript">
+    // https://gordonlesti.com/change-theme-color-via-javascript/
+    function changeThemeColor(color) {
+      var metaThemeColor = document.querySelector('meta[name=theme-color]')
+      metaThemeColor.setAttribute('content', color);
+    }
 
-function getRandomColor() {
-    var r = getRandomRGBValue(),
-        g = getRandomRGBValue(),
-        b = getRandomRGBValue();
-    return "#" + (((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1));
-}
+    // https://jsbin.com/ziwod/2/edit?html,js,output
+    // request permission on page load
+    document.addEventListener('DOMContentLoaded', function () {
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission()
+      }
+    })
 
-function changeThemeColor() {
-    var metaThemeColor = document.querySelector("meta[name=theme-color]");
-    metaThemeColor.setAttribute("content", getRandomColor());
-    setTimeout(function() {
-        changeThemeColor();
-    }, 3000);
-}
+    function notify (title, msg) {
+      if (!Notification) {
+        return
+      }
+      
+      // skip if has focus
+      if (document.hasFocus()) {
+        return
+      }
 
-changeThemeColor();
+      if (Notification.permission !== 'granted') {
+        Notification.requestPermission()
+      } else {
+        var notification = new Notification(title, {
+          icon: '/image/logo.png',
+          body: msg,
+        })
+
+        notification.onclick = function () {     
+        }
+      }
+    }
+
 </script>
 </head>
 <body>

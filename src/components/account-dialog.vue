@@ -35,6 +35,7 @@
           label="金額"
           type="number"
           suffix="元"
+          min="0"
         ></v-text-field>
       </v-card-text>
       <v-card-actions>

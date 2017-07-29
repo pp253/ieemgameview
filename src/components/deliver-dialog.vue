@@ -42,6 +42,7 @@
               label="車子"
               type="number"
               suffix="臺"
+              min="0"
             ></v-text-field>
           </v-card-text>
           <v-card-actions>
