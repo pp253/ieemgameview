@@ -43,13 +43,12 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
 export default {
-  data () {
+  data() {
     return {
       dialog: false,
       job: '',
@@ -57,44 +56,44 @@ export default {
     }
   },
   computed: {
-    showSubTitle () {
+    showSubTitle() {
       return !api.nowUser.isStaffTeam()
     },
-    itemJob () {
+    itemJob() {
       if (api.nowUser.getTeam() === constant.TEAMS.STAFF) {
         return readable.readableStaffJobList()
       } else {
         return readable.readableJobList()
       }
     },
-    readableTeam () {
+    readableTeam() {
       return readable.toReadableTeam(api.nowUser.getTeam())
     },
-    readableJob () {
+    readableJob() {
       return readable.toReadableJob(this.job)
     },
-    intoBelong () {
+    intoBelong() {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:
-          router.push('/end')
+          this.$router.push('/end')
           break
       }
       return ''
     }
   },
   methods: {
-    backToChooseTeam () {
-      router.push('/choose/team')
+    backToChooseTeam() {
+      this.$router.push('/choose/team')
     },
-    previewJob (job) {
+    previewJob(job) {
       this.job = job
       this.dialog = true
     },
-    intoJob (job) {
+    intoJob(job) {
       console.log('User Job:', job, readable.toReadableJob(job))
       api.nowUser.setJob(job)
 
-      router.push('/choose/ready')
+      this.$router.push('/choose/ready')
     }
   }
 }

@@ -2,55 +2,44 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
-    <title>2017 工工營 REDRO</title>
+  <meta charset="utf-8" />
+  <title>2017 工工營 REDRO</title>
 
-    <!-- <meta name="mobile-web-app-capable" content="yes">
+  <!-- <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes"> -->
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
-    <meta name="theme-color" content="#03a9f4">
-    <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
-    <link href="https://unpkg.com/vuetify/dist/vuetify.min.css" rel="stylesheet" type="text/css">
-    <link href="./style/style.css" rel="stylesheet" type="text/css">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,minimal-ui">
+  <meta name="theme-color" content="#03a9f4">
+  <link href='https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons' rel="stylesheet" type="text/css">
+  <!--
+  <script type="text/javascript">
+    // https://gordonlesti.com/change-theme-color-via-javascript/
+    function getRandomRGBValue() {
+      return Math.min(Math.floor(Math.random() * 255 + 1), 255);
+    }
 
-    <script src="https://unpkg.com/vue/dist/vue.min.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script src="https://unpkg.com/vuetify@0.14/dist/vuetify.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
-        google.charts.load('current', { 'packages': ['corechart'] });
-    </script>
-    <script type="text/javascript">
-        // https://gordonlesti.com/change-theme-color-via-javascript/
-        function getRandomRGBValue() {
-            return Math.min(Math.floor(Math.random() * 255 + 1), 255);
-        }
+    function getRandomColor() {
+      var r = getRandomRGBValue(),
+        g = getRandomRGBValue(),
+        b = getRandomRGBValue();
+      return "#" + (((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1));
+    }
 
-        function getRandomColor() {
-            var r = getRandomRGBValue(),
-                g = getRandomRGBValue(),
-                b = getRandomRGBValue();
-            return "#" + (((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1));
-        }
-
-        function changeThemeColor() {
-            var metaThemeColor = document.querySelector("meta[name=theme-color]");
-            metaThemeColor.setAttribute("content", getRandomColor());
-            setTimeout(function () {
-                changeThemeColor();
-            }, 3000);
-        }
-
+    function changeThemeColor() {
+      var metaThemeColor = document.querySelector("meta[name=theme-color]");
+      metaThemeColor.setAttribute("content", getRandomColor());
+      setTimeout(function () {
         changeThemeColor();
-    </script>
+      }, 3000);
+    }
+
+    changeThemeColor();
+  </script>
+  -->
 </head>
 
 <body>
-    <v-app id="main-frame">
-        <router-view></router-view>
-    </v-app>
-    <script src="./dist/build.min.js"></script>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
 </body>
 
 </html>

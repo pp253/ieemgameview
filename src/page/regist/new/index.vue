@@ -23,26 +23,25 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
 export default {
-  data () {
+  data() {
     return {
       title: '認證碼',
       code: '1234'
     }
   },
   methods: {
-    intoRegistOld () {
-      router.push('/regist/old')
+    intoRegistOld() {
+      this.$router.push('/regist/old')
     },
-    intoRegistPlayer () {
-      router.push('/regist/player')
+    intoRegistPlayer() {
+      this.$router.push('/regist/player')
     },
-    announce (msg) {
+    announce(msg) {
       this.snackbarText = msg
       this.snackbar = true
     }

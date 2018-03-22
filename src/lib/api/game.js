@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export function nextGameStage (gameId) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/game/next_game_stage', {

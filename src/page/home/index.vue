@@ -4,30 +4,18 @@
       <v-card-text class="text-xs-center head">
         <div class="logo"></div>
         <!--<h3>REDRO產銷遊戲</h3>-->
-        <h5>2017 工工營 BETA</h5>
-        <v-btn primary v-on:click.native="intoRegist">進入遊戲</v-btn>
+        <h5>2018 工工營 BETA</h5>
+        <v-btn @click="$router.push('/choose')">進入遊戲</v-btn>
       </v-card-text>
     </v-card>
   </div>
 </template>
 
 <script>
-import * as api from '../../lib/api'
-import * as enterApi from '../../lib/api/enter'
-import {router} from '../../router'
-
-export default {
-  methods: {
-    intoRegist () {
-      // router.push('/regist')
-      router.push('/choose')
-    }
-  }
-}
+export default {}
 </script>
 
 <style>
-
 .home .head {
   padding-top: 60px;
   padding-bottom: 60px;

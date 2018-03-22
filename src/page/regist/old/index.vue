@@ -34,7 +34,6 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
@@ -56,7 +55,7 @@ export default {
   },
   methods: {
     backToRegistNew () {
-      router.push('/regist/new')
+      this.$router.push('/regist/new')
     },
     setCode () {
       let code = parseInt(this.code)
@@ -68,7 +67,7 @@ export default {
       }
     },
     intoChoose () {
-      router.push('/choose')
+      this.$router.push('/choose')
     },
     announce (msg) {
       this.snackbarText = msg

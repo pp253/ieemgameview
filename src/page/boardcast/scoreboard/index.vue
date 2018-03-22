@@ -33,10 +33,9 @@ import * as readable from '../../../lib/readable'
 import * as dataApi from '../../../lib/api/data'
 import * as constant from '../../../lib/constant'
 import * as enterApi from '../../../lib/api/enter'
-import {router} from '../../../router'
 
 export default {
-  data () {
+  data() {
     return {
       state: api.nowUser.getState(),
       rankingList: [],
@@ -45,21 +44,23 @@ export default {
     }
   },
   methods: {
-    updateRanking () {
-      dataApi.getBalanceByGame(api.nowUser.getGameId())
-        .then((function (res) {
+    updateRanking() {
+      dataApi.getBalanceByGame(api.nowUser.getGameId()).then(
+        function(res) {
           let list = res.data.list
           let result = []
 
-          list.forEach((function (i, k) {
-            result.push({
-              teamIndex: k + 1,
-              readableTeam: readable.toReadableTeam(k + 1),
-              isTop: false,
-              balance: i,
-              readableBalance: readable.toReadableDollar(i),
-            })
-          }).bind(this))
+          list.forEach(
+            function(i, k) {
+              result.push({
+                teamIndex: k + 1,
+                readableTeam: readable.toReadableTeam(k + 1),
+                isTop: false,
+                balance: i,
+                readableBalance: readable.toReadableDollar(i)
+              })
+            }.bind(this)
+          )
 
           result.sort((a, b) => {
             return a.balance < b.balance
@@ -73,18 +74,21 @@ export default {
           }
 
           this.rankingList.splice(0, this.rankingList.length)
-          result.forEach((function (i) {
-            this.rankingList.push(i)
-          }).bind(this))
-        }).bind(this))
-      
+          result.forEach(
+            function(i) {
+              this.rankingList.push(i)
+            }.bind(this)
+          )
+        }.bind(this)
+      )
+
       if (this.state.stage === constant.GAME_STAGE.END) {
-        router.push('/end')
+        this.$router.push('/end')
       }
     }
   },
   computed: {
-    autoPlay () {
+    autoPlay() {
       if (this.lastIsWorking !== this.state.isWorking) {
         this.lastIsWorking = this.state.isWorking
         if (this.lastIsWorking) {
@@ -97,7 +101,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.timer = setInterval(this.updateRanking.bind(this), 1000)
   }
 }

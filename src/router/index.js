@@ -1,3 +1,5 @@
+import Vue from 'vue'
+import Router from 'vue-router'
 import home from '../page/home/index.vue'
 import adminConstruct from '../page/admin/construct/index.vue'
 import boardcastScoreboard from '../page/boardcast/scoreboard/index.vue'
@@ -19,39 +21,45 @@ import roundConsoler from '../page/round/consoler/index.vue'
 import end from '../page/end/index.vue'
 //import gameend from '../page/gameend'
 
-const routes = [
-  { path: '', component: home },
-  { path: '/', component: home },
-  { path: '/home', component: home },
-  { path: '/admin', component: adminConstruct },
-  { path: '/admin/construct', component: adminConstruct },
-  { path: '/boardcast', component: boardcastScoreboard }, // this should be fixed
-  { path: '/boardcast/scoreboard', component: boardcastScoreboard },
-  { path: '/regist', component: registNew },
-  { path: '/regist/new', component: registNew },
-  { path: '/regist/old', component: registOld },
-  { path: '/regist/player', component: registPlayer },
-  { path: '/choose', component: chooseGame },
-  { path: '/choose/game', component: chooseGame },
-  { path: '/choose/team', component: chooseTeam },
-  { path: '/choose/job', component: chooseJob },
-  { path: '/choose/ready', component: chooseReady },
-  { path: '/round/factory', component: roundFactory },
-  { path: '/round/retailer', component: roundRetailer },
-  { path: '/round/wholesaler', component: roundWholesaler },
-  { path: '/round/guerrilla', component: roundGuerrilla },
-  { path: '/round/keeper', component: roundGuerrilla },
-  { path: '/round/exchanger', component: roundExchanger },
-  { path: '/round/transporter', component: roundTransporter },
-  { path: '/round/market', component: roundMarket },
-  { path: '/round/consoler', component: roundConsoler },
-  { path: '/end', component: end }/*,
+Vue.use(Router)
+
+export default new Router({
+  routes: [
+    { path: '', component: home },
+    { path: '/', component: home },
+    { path: '/home', component: home },
+    { path: '/admin', component: adminConstruct },
+    { path: '/admin/construct', component: adminConstruct },
+    { path: '/boardcast', component: boardcastScoreboard }, // this should be fixed
+    {
+      path: '/boardcast/scoreboard',
+      component: boardcastScoreboard
+    },
+    { path: '/regist', component: registNew },
+    { path: '/regist/new', component: registNew },
+    { path: '/regist/old', component: registOld },
+    { path: '/regist/player', component: registPlayer },
+    { path: '/choose', component: chooseGame },
+    { path: '/choose/game', component: chooseGame },
+    { path: '/choose/team', component: chooseTeam },
+    { path: '/choose/job', component: chooseJob },
+    { path: '/choose/ready', component: chooseReady },
+    { path: '/round/factory', component: roundFactory },
+    { path: '/round/retailer', component: roundRetailer },
+    { path: '/round/wholesaler', component: roundWholesaler },
+    { path: '/round/guerrilla', component: roundGuerrilla },
+    { path: '/round/keeper', component: roundGuerrilla },
+    { path: '/round/exchanger', component: roundExchanger },
+    { path: '/round/transporter', component: roundTransporter },
+    { path: '/round/market', component: roundMarket },
+    { path: '/round/consoler', component: roundConsoler },
+    {
+      path: '/end',
+      component: end
+    } /*,
   { path: '/gameend', component: gameend },
   { path: '/round/exchange', component: roundExchange },
   { path: '/round/market', component: roundMarket },
   { path: '/round/teamleader', component: roundTeamleader }*/
-]
-
-export const router = new VueRouter({
-  routes: routes
+  ]
 })

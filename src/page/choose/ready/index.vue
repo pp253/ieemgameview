@@ -20,37 +20,36 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 import * as gameApi from '../../../lib/api/game'
 
 export default {
-  data () {
+  data() {
     return {
-      timer: null ,
+      timer: null,
       state: api.nowUser.getState()
     }
   },
   computed: {
-    readableTeam () {
+    readableTeam() {
       return readable.toReadableTeam(api.nowUser.getTeam())
     },
-    readableJob () {
+    readableJob() {
       return readable.toReadableJob(api.nowUser.getJob())
     },
-    intoBelong () {
+    intoBelong() {
       if (api.nowUser.getJob() === constant.STAFF_JOBS.CONSOLER) {
-        router.push('/round/' + api.nowUser.getJob().toLowerCase())
+        this.$router.push('/round/' + api.nowUser.getJob().toLowerCase())
       }
       switch (this.state.stage) {
         case constant.GAME_STAGE.START:
         case constant.GAME_STAGE.FINAL:
-          router.push('/round/' + api.nowUser.getJob().toLowerCase())
+          this.$router.push('/round/' + api.nowUser.getJob().toLowerCase())
           break
         case constant.GAME_STAGE.END:
-          router.push('/end')
+          this.$router.push('/end')
           break
       }
       return ''

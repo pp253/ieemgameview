@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export function getGameIdList () {
   return new Promise(function (resolve, reject) {
     axios.post('/api/enter/get_game_list')

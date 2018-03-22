@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export function getUpdate (gameId, teamIndex, job) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/data/get_update', {

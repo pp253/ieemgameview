@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
@@ -55,7 +54,7 @@ export default {
           api.nowUser.setGameConfig(data.gameConfig)
           api.nowUser.setTeam(constant.TEAMS.STAFF)
           api.nowUser.setJob(constant.STAFF_JOBS.CONSOLER)
-          router.push('/round/consoler')
+          this.$router.push('/round/consoler')
         }).bind(this))
         .catch(function (err) {
           console.error(err)

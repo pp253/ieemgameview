@@ -28,13 +28,12 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 
 export default {
-  data () {
+  data() {
     return {
       stepCount: 0,
       teamNumber: api.nowUser.getTeamNumber(),
@@ -42,26 +41,26 @@ export default {
     }
   },
   computed: {
-    itemTeam () {
+    itemTeam() {
       return readable.toReadableTeamListWithStaff(this.teamNumber)
     },
-    intoBelong () {
+    intoBelong() {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:
-          router.push('/end')
+          this.$router.push('/end')
           break
       }
       return ''
     }
   },
   methods: {
-    backToChoose () {
-      router.push('/choose')
+    backToChoose() {
+      this.$router.push('/choose')
     },
-    intoTeam: function (team) {
+    intoTeam: function(team) {
       console.log('User Team:', team)
       api.nowUser.setTeam(team)
-      router.push('/choose/job')
+      this.$router.push('/choose/job')
     }
   }
 }

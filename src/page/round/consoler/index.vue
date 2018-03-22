@@ -108,7 +108,6 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
@@ -116,7 +115,7 @@ import * as gameApi from '../../../lib/api/game'
 import * as newsApi from '../../../lib/api/news'
 
 export default {
-  data () {
+  data() {
     return {
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
@@ -134,55 +133,64 @@ export default {
     }
   },
   computed: {
-    toolbarInfo () {
+    toolbarInfo() {
       return readable.toReadableGameTime(this.state)
     }
   },
   methods: {
-    testSound () {
+    testSound() {
       var audio = document.getElementById('sound-begin')
       audio.play()
     },
-    intoBoardcast () {
-      router.push('/boardcast')
+    intoBoardcast() {
+      this.$router.push('/boardcast')
     },
-    nextGameStage () {
-      gameApi.nextGameStage(api.nowUser.getGameId())
-        .then((function (res) {
-          let data = res.data
-          let gameId = data.gameId
-          let stage = data.stage
-          this.announce(`GameId='${gameId}' Stage has been set to ${stage}`)
-        }).bind(this))
-        .catch(function (err) {
+    nextGameStage() {
+      gameApi
+        .nextGameStage(api.nowUser.getGameId())
+        .then(
+          function(res) {
+            let data = res.data
+            let gameId = data.gameId
+            let stage = data.stage
+            this.announce(`GameId='${gameId}' Stage has been set to ${stage}`)
+          }.bind(this)
+        )
+        .catch(function(err) {
           console.error(err)
         })
     },
-    nextDay () {
-      gameApi.nextDay(api.nowUser.getGameId())
-        .then((function (res) {
-          let data = res.data
-          let gameId = data.gameId
-          let day = data.day
-          this.announce(`GameId='${gameId}' Stage has been set to day ${day}`)
-        }).bind(this))
-        .catch(function (err) {
+    nextDay() {
+      gameApi
+        .nextDay(api.nowUser.getGameId())
+        .then(
+          function(res) {
+            let data = res.data
+            let gameId = data.gameId
+            let day = data.day
+            this.announce(`GameId='${gameId}' Stage has been set to day ${day}`)
+          }.bind(this)
+        )
+        .catch(function(err) {
           console.error(err)
         })
     },
-    testSpeed () {
+    testSpeed() {
       api.nowUser.test()
     },
-    setNewsList () {
-      newsApi.setNewsList(api.nowUser.getGameId(), JSON.parse(this.newsList))
-        .then((function (res) {
-          this.announce('新聞設定成功！')
-        }).bind(this))
-        .catch(function (err) {
+    setNewsList() {
+      newsApi
+        .setNewsList(api.nowUser.getGameId(), JSON.parse(this.newsList))
+        .then(
+          function(res) {
+            this.announce('新聞設定成功！')
+          }.bind(this)
+        )
+        .catch(function(err) {
           this.announce('新聞設定失敗！')
         })
     },
-    announce (msg) {
+    announce(msg) {
       this.snackbarText = msg
       this.snackbar = true
     }

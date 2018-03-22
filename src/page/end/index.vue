@@ -123,7 +123,6 @@
 </template>
 
 <script>
-import {router} from '../../router'
 import * as constant from '../../lib/constant'
 import * as readable from '../../lib/readable'
 import * as api from '../../lib/api'
@@ -193,7 +192,7 @@ export default {
   },
   methods: {
     backToHome () {
-      router.push('/')
+      this.$router.push('/')
     },
     load () {
       dataApi.getData(api.nowUser.getGameId())

@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
 import * as constant from '../../../lib/constant'
@@ -45,7 +44,7 @@ export default {
     intoBelong () {
       switch (this.state.stage) {
         case constant.GAME_STAGE.END:
-          router.push('/end')
+          this.$router.push('/end')
           break
       }
       return ''

@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export function getHistory (gameId, teamIndex, job) {
   return new Promise(function (resolve, reject) {
     axios.post('/api/deliver/get_history', {

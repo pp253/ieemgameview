@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import {router} from '../../../router'
 import * as constant from '../../../lib/constant'
 import * as readable from '../../../lib/readable'
 import * as api from '../../../lib/api'
@@ -55,7 +54,7 @@ export default {
   },
   methods: {
     backToRegistNew () {
-      router.push('/regist/new')
+      this.$router.push('/regist/new')
     },
     setName () {
       if (this.nickname.length > 10) {
@@ -69,10 +68,10 @@ export default {
       }
     },
     intoChooseGame () {
-      router.push('/choose/game')
+      this.$router.push('/choose/game')
     },
     intoRegistStaff () {
-      router.push('/regist/staff')
+      this.$router.push('/regist/staff')
     },
     announce (msg) {
       this.snackbarText = msg

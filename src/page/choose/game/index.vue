@@ -33,40 +33,42 @@
 </template>
 
 <script>
-import * as api from '../../../lib/api'
-import * as enterApi from '../../../lib/api/enter'
-import {router} from '../../../router'
+import * as api from '@/lib/api'
+import * as enterApi from '@/lib/api/enter'
 
 export default {
-  data () {
+  data() {
     return {
       title: '選擇遊戲',
       gameList: []
     }
   },
   methods: {
-    intoGame (gameId, gameConfig) {
+    intoGame(gameId, gameConfig) {
       console.log('User Game:', gameId)
       api.nowUser.setGameId(gameId)
       api.nowUser.setGameConfig(gameConfig)
-      router.push('/choose/team')
+      this.$router.push('/choose/team')
     }
   },
-  created () {
+  created() {
     // load gameList and use promise to change the gameList
     api.nowUser.resetState()
-    enterApi.getGameIdList()
-      .then((function (res) {
-        for (let game of res.data.gameList) {
-          this.gameList.unshift({
-            index: game.gameId,
-            text: game.gameConfig.title,
-            describe: game.gameConfig.describe,
-            gameConfig: game.gameConfig
-          })
-        }
-      }).bind(this))
-      .catch(function (err) {
+    enterApi
+      .getGameIdList()
+      .then(
+        function(res) {
+          for (let game of res.data.gameList) {
+            this.gameList.unshift({
+              index: game.gameId,
+              text: game.gameConfig.title,
+              describe: game.gameConfig.describe,
+              gameConfig: game.gameConfig
+            })
+          }
+        }.bind(this)
+      )
+      .catch(function(err) {
         console.error(err)
       })
   }

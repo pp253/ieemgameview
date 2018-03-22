@@ -1,3 +1,4 @@
+import axios from 'axios'
 import * as constant from '../constant'
 import * as gameApi from './game'
 import * as accountApi from './account'
@@ -48,16 +49,16 @@ export const DEFAULT_STATE = () => {
   }
 }
 
-export function isStaffTeam (team) {
+export function isStaffTeam(team) {
   return team === 0
 }
 
-export function isStaffJob (job) {
+export function isStaffJob(job) {
   return Object.keys(constant.STAFF_JOBS).indexOf(job) !== -1
 }
 
 export class User {
-  constructor () {
+  constructor() {
     // these are made for auto-updating time
     this.state = DEFAULT_STATE()
 
@@ -66,218 +67,244 @@ export class User {
     return this
   }
 
-  resetState () {
+  resetState() {
     this.state = Object.assign(this.getState(), DEFAULT_STATE())
   }
 
-  getState () {
+  getState() {
     return this.state
   }
 
-  getAccount () {
+  getAccount() {
     return this.getState()
   }
 
-  getDayTime () {
+  getDayTime() {
     return this.getState()
   }
 
-  getColor () {
+  getColor() {
     return this.getState().color
   }
 
-  _update () {
-    if (this.getGameId() === constant.GAMES.UNKNOWN || this.getGameStage() === constant.GAME_STAGE.END) {
+  _update() {
+    if (
+      this.getGameId() === constant.GAMES.UNKNOWN ||
+      this.getGameStage() === constant.GAME_STAGE.END
+    ) {
       return
     }
 
-    if (this.getTeam() === constant.TEAMS.UNKNOWN ||
+    if (
+      this.getTeam() === constant.TEAMS.UNKNOWN ||
       this.getJob() === constant.JOBS.UNKNOWN ||
       this.getGameStage() === constant.GAME_STAGE.PREPARE ||
-      this.getGameStage() === constant.GAME_STAGE.READY) {
-      gameApi.getGameStage(this.getGameId())
-        .then((function (res) {
-          let data = res.data
-          if (this.getGameStage() !== data.stage) {
-            this.getState().stage = data.stage
-            console.log('Game Stage has been set to', data.stage)
-          }
-        }).bind(this))
-        .catch(function (err) {
+      this.getGameStage() === constant.GAME_STAGE.READY
+    ) {
+      gameApi
+        .getGameStage(this.getGameId())
+        .then(
+          function(res) {
+            let data = res.data
+            if (this.getGameStage() !== data.stage) {
+              this.getState().stage = data.stage
+              console.log('Game Stage has been set to', data.stage)
+            }
+          }.bind(this)
+        )
+        .catch(function(err) {
           console.error(err)
         })
       return
     }
 
-    dataApi.getUpdate(this.getGameId(), this.getTeam(), this.getJob())
-      .then((function (res) {
-        let data = res.data
+    dataApi
+      .getUpdate(this.getGameId(), this.getTeam(), this.getJob())
+      .then(
+        function(res) {
+          let data = res.data
 
-        // update stage
-        if (this.getGameStage() !== data.stage) {
-          this.getState().stage = data.stage
-          console.log('Game Stage has been set to', data.stage)
-        }
-
-        // update time
-        if (this.getDay() !== data.day) {
-          this.getState().day = parseInt(data.day)
-          this.getState().dayStartTime = parseInt(data.dayStartTime)
-          console.log('Game Day has been set to', data.day)
-        }
-        if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
-          this.getState().time = this.getGameConfig().dayLong * 1000
-          this.dayStartTime = constant.UNKNOWN_TIME
-          this.getState().isWorking = false
-          if (this.day === this.getGameConfig().days) {
-            this.getState().state = constant.GAME_STAGE.FINAL
-            this.isWorking = false
-          }
-        } else {
-          this.getState().time = this.getTime()
-          this.getState().isWorking = true
-        }
-                
-        // update state
-        if ((this.getJob() !== constant.JOBS.UNKNOWN) && !this.isStaffTeam()) {
-          // update account
-          if (this.getState().balance !== data.balance) {
-            this.getState().balance = data.balance
-            console.log('Balance has been set to', data.balance)
-          }
-          
-          // update storage
-          this.getState().storage.splice(0,this.getState().storage.length)
-          for (let key in data.storage) {
-            this.getState().storage.push(data.storage[key])
+          // update stage
+          if (this.getGameStage() !== data.stage) {
+            this.getState().stage = data.stage
+            console.log('Game Stage has been set to', data.stage)
           }
 
-          let updateDeliverHistoryFromRes = (deliverHistory) => {
-            if (this.getState().deliverHistory.length !== deliverHistory.length) {
-              this.getState().deliverHistory.splice(0, this.getState().deliverHistory.length)
-              for (let key in deliverHistory) {
-                this.getState().deliverHistory.push(deliverHistory[key])
+          // update time
+          if (this.getDay() !== data.day) {
+            this.getState().day = parseInt(data.day)
+            this.getState().dayStartTime = parseInt(data.dayStartTime)
+            console.log('Game Day has been set to', data.day)
+          }
+          if (this.getTime() >= this.getGameConfig().dayLong * 1000) {
+            this.getState().time = this.getGameConfig().dayLong * 1000
+            this.dayStartTime = constant.UNKNOWN_TIME
+            this.getState().isWorking = false
+            if (this.day === this.getGameConfig().days) {
+              this.getState().state = constant.GAME_STAGE.FINAL
+              this.isWorking = false
+            }
+          } else {
+            this.getState().time = this.getTime()
+            this.getState().isWorking = true
+          }
+
+          // update state
+          if (this.getJob() !== constant.JOBS.UNKNOWN && !this.isStaffTeam()) {
+            // update account
+            if (this.getState().balance !== data.balance) {
+              this.getState().balance = data.balance
+              console.log('Balance has been set to', data.balance)
+            }
+
+            // update storage
+            this.getState().storage.splice(0, this.getState().storage.length)
+            for (let key in data.storage) {
+              this.getState().storage.push(data.storage[key])
+            }
+
+            let updateDeliverHistoryFromRes = deliverHistory => {
+              if (
+                this.getState().deliverHistory.length !== deliverHistory.length
+              ) {
+                this.getState().deliverHistory.splice(
+                  0,
+                  this.getState().deliverHistory.length
+                )
+                for (let key in deliverHistory) {
+                  this.getState().deliverHistory.push(deliverHistory[key])
+                }
+                console.log('Deliver History has been set to', deliverHistory)
               }
-              console.log('Deliver History has been set to', deliverHistory)
             }
-          }
 
-          let updateReceivedOrderFromRes = (receivedOrder) => {
-            if (this.getState().receivedOrder.length !== receivedOrder.length) {
-              this.getState().receivedOrder.splice(0, this.getState().receivedOrder.length)
-              for (let key in receivedOrder) {
-                this.getState().receivedOrder.push(receivedOrder[key])
+            let updateReceivedOrderFromRes = receivedOrder => {
+              if (
+                this.getState().receivedOrder.length !== receivedOrder.length
+              ) {
+                this.getState().receivedOrder.splice(
+                  0,
+                  this.getState().receivedOrder.length
+                )
+                for (let key in receivedOrder) {
+                  this.getState().receivedOrder.push(receivedOrder[key])
+                }
+                console.log('Received Order has been set to', receivedOrder)
               }
-              console.log('Received Order has been set to', receivedOrder)
             }
-          }
 
-          let updateOrderHistoryFromRes = (orderHistory) => {
-            if (this.getState().orderHistory.length !== orderHistory.length) {
-              this.getState().orderHistory.splice(0, this.getState().orderHistory.length)
-              for (let key in orderHistory) {
-                this.getState().orderHistory.push(orderHistory[key])
+            let updateOrderHistoryFromRes = orderHistory => {
+              if (this.getState().orderHistory.length !== orderHistory.length) {
+                this.getState().orderHistory.splice(
+                  0,
+                  this.getState().orderHistory.length
+                )
+                for (let key in orderHistory) {
+                  this.getState().orderHistory.push(orderHistory[key])
+                }
+                console.log('Received Order has been set to', orderHistory)
               }
-              console.log('Received Order has been set to', orderHistory)
             }
-          }
 
-          let updateNewsFromRes = (news) => {
-            if (this.getState().news.length !== news.length) {
-              this.getState().news.splice(0, this.getState().news.length)
-              for (let key in news) {
-                this.getState().news.unshift(news[key])
+            let updateNewsFromRes = news => {
+              if (this.getState().news.length !== news.length) {
+                this.getState().news.splice(0, this.getState().news.length)
+                for (let key in news) {
+                  this.getState().news.unshift(news[key])
+                }
+                console.log('News has been set to', news)
               }
-              console.log('News has been set to', news)
+            }
+
+            let updateDeliveredNumberFromRes = deliveredNumber => {
+              if (this.getState().deliveredNumber !== deliveredNumber) {
+                this.getState().deliveredNumber = deliveredNumber
+                console.log('DeliveredNumber has been set to', deliveredNumber)
+              }
+            }
+
+            switch (this.getJob()) {
+              case constant.JOBS.FACTORY:
+                // update deliver history
+                updateDeliverHistoryFromRes(data.deliverHistory)
+                updateReceivedOrderFromRes(data.receivedOrder)
+                break
+
+              case constant.JOBS.WHOLESALER:
+                updateDeliverHistoryFromRes(data.deliverHistory)
+                updateReceivedOrderFromRes(data.receivedOrder)
+                updateOrderHistoryFromRes(data.orderHistory)
+                updateDeliveredNumberFromRes(data.deliveredNumber)
+                break
+
+              case constant.JOBS.RETAILER:
+                updateDeliverHistoryFromRes(data.deliverHistory)
+                updateReceivedOrderFromRes(data.receivedOrder)
+                updateOrderHistoryFromRes(data.orderHistory)
+                updateNewsFromRes(data.news)
+                updateDeliveredNumberFromRes(data.deliveredNumber)
+                break
+            }
+          } else if (this.isStaffTeam()) {
+            let updateMarketFromRes = market => {
+              this.getState().market.orderAmount = market.orderAmount
+              this.getState().market.storageAmount = market.storageAmount
+              this.getState().market.price = market.price
+            }
+
+            let updateOrderVsStorageFromRes = orderVsStorage => {
+              Object.assign(this.state.orderVsStorage, orderVsStorage)
+            }
+
+            let updateTeamStorageListFromRes = teamStorageList => {
+              Object.assign(this.state.teamStorageList, teamStorageList)
+            }
+
+            switch (this.getJob()) {
+              case constant.STAFF_JOBS.CONSOLER:
+                updateMarketFromRes(data.market)
+                updateOrderVsStorageFromRes(data.orderVsStorage)
+                updateTeamStorageListFromRes(data.teamStorageList)
+                break
+
+              case constant.STAFF_JOBS.MARKET:
+                updateMarketFromRes(data.market)
+                updateOrderVsStorageFromRes(data.orderVsStorage)
+                break
+
+              case constant.STAFF_JOBS.TRANSPORTER:
+                updateOrderVsStorageFromRes(data.orderVsStorage)
+                break
+
+              case constant.STAFF_JOBS.EXCHANGER:
+                updateTeamStorageListFromRes(data.teamStorageList)
+                break
             }
           }
-
-          let updateDeliveredNumberFromRes = (deliveredNumber) => {
-            if (this.getState().deliveredNumber !== deliveredNumber) {
-              this.getState().deliveredNumber = deliveredNumber
-              console.log('DeliveredNumber has been set to', deliveredNumber)
-            }
-          }
-
-          switch (this.getJob()) {
-            case constant.JOBS.FACTORY:
-              // update deliver history
-              updateDeliverHistoryFromRes(data.deliverHistory)
-              updateReceivedOrderFromRes(data.receivedOrder)
-              break
-
-            case constant.JOBS.WHOLESALER:
-              updateDeliverHistoryFromRes(data.deliverHistory)
-              updateReceivedOrderFromRes(data.receivedOrder)
-              updateOrderHistoryFromRes(data.orderHistory)
-              updateDeliveredNumberFromRes(data.deliveredNumber)
-              break
-
-            case constant.JOBS.RETAILER:
-              updateDeliverHistoryFromRes(data.deliverHistory)
-              updateReceivedOrderFromRes(data.receivedOrder)
-              updateOrderHistoryFromRes(data.orderHistory)
-              updateNewsFromRes(data.news)
-              updateDeliveredNumberFromRes(data.deliveredNumber)
-              break
-          }
-        } else if (this.isStaffTeam()) {
-          let updateMarketFromRes = (market) => {
-            this.getState().market.orderAmount = market.orderAmount
-            this.getState().market.storageAmount = market.storageAmount
-            this.getState().market.price = market.price
-          }
-
-          let updateOrderVsStorageFromRes = (orderVsStorage) => {
-            Object.assign(this.state.orderVsStorage, orderVsStorage)
-          }
-
-          let updateTeamStorageListFromRes = (teamStorageList) => {
-            Object.assign(this.state.teamStorageList, teamStorageList)
-          }
-
-          switch (this.getJob()) {
-            case constant.STAFF_JOBS.CONSOLER:
-              updateMarketFromRes(data.market)
-              updateOrderVsStorageFromRes(data.orderVsStorage)
-              updateTeamStorageListFromRes(data.teamStorageList)
-              break
-            
-            case constant.STAFF_JOBS.MARKET:
-              updateMarketFromRes(data.market)
-              updateOrderVsStorageFromRes(data.orderVsStorage)
-              break
-            
-            case constant.STAFF_JOBS.TRANSPORTER:
-              updateOrderVsStorageFromRes(data.orderVsStorage)
-              break
-            
-            case constant.STAFF_JOBS.EXCHANGER:
-              updateTeamStorageListFromRes(data.teamStorageList)
-              break
-          }
-        }
-      }).bind(this))
-      .catch((function (err) {
-        console.error(err)
-      }).bind(this))
+        }.bind(this)
+      )
+      .catch(
+        function(err) {
+          console.error(err)
+        }.bind(this)
+      )
   }
 
-  setGameId (gameId) {
+  setGameId(gameId) {
     this.getState().gameId = gameId
     return this
   }
 
-  setGameConfig (config) {
+  setGameConfig(config) {
     this.getState().gameConfig = Object.assign(this.getGameConfig(), config)
   }
 
-  setTeam (team) {
+  setTeam(team) {
     this.getState().teamIndex = team
     return this
   }
 
-  setJob (job) {
+  setJob(job) {
     this.getState().job = job
     switch (job) {
       case constant.JOBS.RETAILER:
@@ -301,51 +328,53 @@ export class User {
     return this
   }
 
-  getGameId () {
+  getGameId() {
     return this.getState().gameId
   }
 
-  getGameConfig () {
+  getGameConfig() {
     return this.getState().gameConfig
   }
 
-  getTeamNumber () {
+  getTeamNumber() {
     return this.getGameConfig().teamNumber
   }
 
-  getTeam () {
+  getTeam() {
     return this.getState().teamIndex
   }
 
-  getJob () {
+  getJob() {
     return this.getState().job
   }
 
-  isStaffTeam () {
+  isStaffTeam() {
     return isStaffTeam(this.getTeam())
   }
 
-  getGameStage () {
+  getGameStage() {
     return this.getState().stage
   }
 
-  getDayStartTime () {
+  getDayStartTime() {
     return this.getState().dayStartTime
   }
 
-  isWorking () {
+  isWorking() {
     return this.getState().isWorking
   }
 
-  isOffWork () {
-    return (this.getGameStage() === constant.GAME_STAGE.START) && !this.isWorking()
+  isOffWork() {
+    return (
+      this.getGameStage() === constant.GAME_STAGE.START && !this.isWorking()
+    )
   }
 
-  getDay () {
+  getDay() {
     return this.getState().day
   }
 
-  getTime () {
+  getTime() {
     if (this.getGameStage() !== constant.GAME_STAGE.START) {
       return constant.UNKNOWN_TIME
     } else if (this.getDayStartTime() === constant.UNKNOWN_TIME) {
@@ -355,92 +384,111 @@ export class User {
     }
   }
 
-  updateTime () {
-    gameApi.getGameIdTime(this.getGameId())
-      .then((function (res) {
+  updateTime() {
+    gameApi.getGameIdTime(this.getGameId()).then(
+      function(res) {
         let data = res.data
         this.getState().day = parseInt(data.day)
         this.getState().dayStartTime = parseInt(data.dayStartTime)
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateAccount () {
-    accountApi.getBalance(this.getGameId(), this.getTeam())
-      .then((function (res) {
+  updateAccount() {
+    accountApi.getBalance(this.getGameId(), this.getTeam()).then(
+      function(res) {
         let data = res.data
         this.getAccount().balance = data.balance
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateStorage () {
-    storageApi.getStorage(this.getGameId(), this.getTeam(), this.getJob())
-      .then((function (res) {
-        this.getState().storage.splice(0,this.getState().storage.length)
+  updateStorage() {
+    storageApi.getStorage(this.getGameId(), this.getTeam(), this.getJob()).then(
+      function(res) {
+        this.getState().storage.splice(0, this.getState().storage.length)
         let list = res.data.list
         for (let key in list) {
           this.getState().storage.push(list[key])
         }
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateReceivedOrder () {
-    orderApi.getReceived(this.getGameId(), this.getTeam(), this.getJob())
-      .then((function (res) {
-        this.getState().receivedOrder.splice(0,this.getState().receivedOrder.length)
+  updateReceivedOrder() {
+    orderApi.getReceived(this.getGameId(), this.getTeam(), this.getJob()).then(
+      function(res) {
+        this.getState().receivedOrder.splice(
+          0,
+          this.getState().receivedOrder.length
+        )
         let list = res.data.list
         for (let key in list) {
           this.getState().receivedOrder.push(list[key])
         }
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateOrderHistory () {
-    orderApi.getHistory(this.getGameId(), this.getTeam(), this.getJob())
-      .then((function (res) {
-        this.getState().orderHistory.splice(0,this.getState().orderHistory.length)
+  updateOrderHistory() {
+    orderApi.getHistory(this.getGameId(), this.getTeam(), this.getJob()).then(
+      function(res) {
+        this.getState().orderHistory.splice(
+          0,
+          this.getState().orderHistory.length
+        )
         let list = res.data.list
         for (let key in list) {
           this.getState().orderHistory.push(list[key])
         }
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateDeliverHistory () {
-    deliverApi.getHistory(this.getGameId(), this.getTeam(), this.getJob())
-      .then((function (res) {
-        this.getState().deliverHistory.splice(0,this.getState().deliverHistory.length)
+  updateDeliverHistory() {
+    deliverApi.getHistory(this.getGameId(), this.getTeam(), this.getJob()).then(
+      function(res) {
+        this.getState().deliverHistory.splice(
+          0,
+          this.getState().deliverHistory.length
+        )
         let list = res.data.list
         for (let key in list) {
           this.getState().deliverHistory.push(list[key])
         }
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  updateNews () {
-    newsApi.getNews(this.getGameId())
-      .then((function (res) {
-        this.getState().news.splice(0,this.getState().news.length)
+  updateNews() {
+    newsApi.getNews(this.getGameId()).then(
+      function(res) {
+        this.getState().news.splice(0, this.getState().news.length)
         let list = res.data.list
         for (let key in list) {
           this.getState().news.unshift(list[key])
         }
-      }).bind(this))
+      }.bind(this)
+    )
   }
 
-  test () {
+  test() {
     this.setTeam(1)
     this.setJob(constant.JOBS.RETAILER)
     let interval = 10
     let times = 1000
     let t = 0
-    let a = setInterval((function () {
-      console.log('test', t)
-      this._update()
-      if (t++ === times) {
-        console.log('done')
-        clearInterval(a)
-      }
-    }).bind(this), interval)
+    let a = setInterval(
+      function() {
+        console.log('test', t)
+        this._update()
+        if (t++ === times) {
+          console.log('done')
+          clearInterval(a)
+        }
+      }.bind(this),
+      interval
+    )
   }
 }
 
