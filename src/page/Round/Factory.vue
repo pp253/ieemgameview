@@ -64,9 +64,9 @@
 </template>
 
 <script>
-import * as constant from '../../../lib/constant'
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
 
 export default {
   data () {

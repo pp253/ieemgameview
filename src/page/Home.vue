@@ -1,5 +1,5 @@
 <template>
-  <div id="home" class="home">
+  <div class="home">
     <v-card>
       <v-card-text class="text-xs-center head">
         <div class="logo"></div>

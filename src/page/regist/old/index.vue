@@ -34,12 +34,12 @@
 </template>
 
 <script>
-import * as constant from '../../../lib/constant'
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
 
 export default {
-  data () {
+  data() {
     return {
       title: '輸入認證碼',
       code: null,
@@ -49,15 +49,15 @@ export default {
     }
   },
   watch: {
-    code () {
+    code() {
       this.btnDisabled = !this.code
     }
   },
   methods: {
-    backToRegistNew () {
+    backToRegistNew() {
       this.$router.push('/regist/new')
     },
-    setCode () {
+    setCode() {
       let code = parseInt(this.code)
       if (code < 0 || code > 9999) {
         this.errorDialogMsg = '你的認證碼不正確，應該是由四位數字組成。'
@@ -66,10 +66,10 @@ export default {
         this.intoChoose()
       }
     },
-    intoChoose () {
+    intoChoose() {
       this.$router.push('/choose')
     },
-    announce (msg) {
+    announce(msg) {
       this.snackbarText = msg
       this.snackbar = true
     }

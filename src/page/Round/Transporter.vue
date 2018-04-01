@@ -5,12 +5,12 @@
     </v-toolbar>
     <main>
       <v-card>
-        <v-card-text>
+        <v-card-content>
           <game-clock></game-clock>
-        </v-card-text>
+          <team-deliver-avaliable-list :order-vs-storage="state.orderVsStorage"></team-deliver-avaliable-list>
+        </v-card-content>
       </v-card>
-      <team-storage-list></team-storage-list>
-      <storage-register-dialog :announce="announce"></storage-register-dialog>
+      <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar
       :timeout="6000"
@@ -18,16 +18,16 @@
       v-model="snackbar"
     >
       {{ snackbarText }}
-      <v-btn :class="color.accent" dark flat @click.native="snackbar = false">知道了</v-btn>
+      <v-btn dark flat @click.native="snackbar = false">知道了</v-btn>
     </v-snackbar>
     {{ intoBelong }}
   </div>
 </template>
 
 <script>
-import * as constant from '../../../lib/constant'
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
+import * as constant from '@/lib/constant'
 
 export default {
   data () {

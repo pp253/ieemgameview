@@ -1,5 +1,5 @@
 <template>
-  <div class="round wholesaler">
+  <div class="round retailer">
     <v-toolbar :class="color.primary + ' white--text'">
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer></v-spacer>
@@ -21,7 +21,6 @@
             slot="activators"
           >
             <v-tabs-item
-              class="white--text"
               v-for="tab in tabs"
               :key="tab.index"
               :href="'#' + tab.id"
@@ -39,9 +38,9 @@
           </v-tabs-content>
           <v-tabs-content
             :key="1"
-            :id="'received-order'"
+            :id="'news-list'"
           >
-            <order-history :list="state.receivedOrder" type="list" :get-list="state.deliverHistory" :announce="announceReceivedOrder"></order-history>
+            <news-list :list="state.news" :announce="announce"></news-list>
           </v-tabs-content>
           <v-tabs-content
             :key="2"
@@ -57,7 +56,7 @@
           </v-tabs-content>
         </v-tabs>
       </v-layout>
-
+      
       <order-dialog :announce="announce" v-show="state.isWorking"></order-dialog>
     </main>
     <v-snackbar
@@ -73,9 +72,9 @@
 </template>
 
 <script>
-import * as constant from '../../../lib/constant'
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
 
 export default {
   data () {
@@ -83,7 +82,7 @@ export default {
       title: readable.toReadableTeam(api.nowUser.getTeam()) + ' ' + readable.toReadableJob(api.nowUser.getJob()),
       tabs: [
         { index: 0, id: 'storage', title: '庫存' },
-        { index: 1, id: 'received-order', title: '收到的訂單' },
+        { index: 1, id: 'news-list', title: '市場新聞' },
         { index: 2, id: 'order-history', title: '寄出的訂單' },
         { index: 3, id: 'deliver-history', title: '物流紀錄' }
       ],
@@ -112,20 +111,17 @@ export default {
     announce (msg) {
       this.snackbarText = msg
       this.snackbar = true
-    },
-    announceReceivedOrder () {
-      this.announce('收到的訂單更新了！')
     }
   }
 }
 </script>
 
 <style>
-.round.wholesaler .tabs__item {
+.round.retailer .tabs__item {
   color: rgba(255,255,255,0.7) !important;
 }
 
-.round.wholesaler .tabs__item--active {
+.round.retailer .tabs__item--active {
   color: rgba(255,255,255,1) !important;
 }
 </style>

@@ -1,21 +1,22 @@
 import axios from 'axios'
 import store from '@/store'
 import { htmlEncode } from '@/lib/utils'
+import * as enter from './enter'
 
-const SERVER_BASE = 'https://nthu-course.ddns.net/' // 'http://localhost/'
-const ERR_MSG = {
+export const SERVER_BASE = 'http://localhost' // 'http://localhost/'
+export const ERR_MSG = {
   20: {
     title: 'entry.UserInfoNotCorrectTitle',
     text: 'entry.UserInfoNotCorrectText'
   }
 }
 
-function legalRequest(apiPath, data) {
+export function legalRequest(apiPath, data) {
   return new Promise((resolve, reject) => {
     axios
       .post(SERVER_BASE + apiPath, data)
       .then(res => {
-        if (res.data.error) {
+        if (res.data.error || res.data.err) {
           let err = res.data
           if (err.id) {
             store.commit('ui/OPEN_DIALOG', {
@@ -45,4 +46,8 @@ function legalRequest(apiPath, data) {
         reject(err)
       })
   })
+}
+
+export default {
+  enter
 }

@@ -20,10 +20,10 @@
 </template>
 
 <script>
-import * as constant from '../../../lib/constant'
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
-import * as gameApi from '../../../lib/api/game'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
+import * as gameApi from '@/lib/api/game'
 
 export default {
   data() {

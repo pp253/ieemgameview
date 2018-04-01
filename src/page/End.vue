@@ -123,13 +123,13 @@
 </template>
 
 <script>
-import * as constant from '../../lib/constant'
-import * as readable from '../../lib/readable'
-import * as api from '../../lib/api'
-import * as accountApi from '../../lib/api/account'
-import * as storageApi from '../../lib/api/storage'
-import * as gameApi from '../../lib/api/game'
-import * as dataApi from '../../lib/api/data'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
+import * as accountApi from '@/lib/api/account'
+import * as storageApi from '@/lib/api/storage'
+import * as gameApi from '@/lib/api/game'
+import * as dataApi from '@/lib/api/data'
 
 export default {
   data () {

@@ -5,12 +5,10 @@
     </v-toolbar>
     <main>
       <v-card>
-        <v-card-content>
+        <v-card-text>
           <game-clock></game-clock>
-          <team-deliver-avaliable-list :order-vs-storage="state.orderVsStorage"></team-deliver-avaliable-list>
-        </v-card-content>
+        </v-card-text>
       </v-card>
-      <deliver-dialog :announce="announce"></deliver-dialog>
     </main>
     <v-snackbar
       :timeout="6000"
@@ -25,14 +23,13 @@
 </template>
 
 <script>
-import * as readable from '../../../lib/readable'
-import * as api from '../../../lib/api'
-import * as constant from '../../../lib/constant'
+import * as constant from '@/lib/constant'
+import * as readable from '@/lib/readable'
+import * as api from '@/lib/api'
 
 export default {
   data () {
     return {
-      secondary: true,
       title: readable.toReadableJob(api.nowUser.getJob()),
       state: api.nowUser.getState(),
       snackbar: false,

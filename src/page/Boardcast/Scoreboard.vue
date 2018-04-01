@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import * as api from '../../../lib/api'
-import * as readable from '../../../lib/readable'
-import * as dataApi from '../../../lib/api/data'
-import * as constant from '../../../lib/constant'
-import * as enterApi from '../../../lib/api/enter'
+import * as api from '@/lib/api'
+import * as readable from '@/lib/readable'
+import * as dataApi from '@/lib/api/data'
+import * as constant from '@/lib/constant'
+import * as enterApi from '@/lib/api/enter'
 
 export default {
   data() {

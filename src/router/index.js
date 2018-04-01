@@ -1,65 +1,84 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import home from '../page/home/index.vue'
-import adminConstruct from '../page/admin/construct/index.vue'
-import boardcastScoreboard from '../page/boardcast/scoreboard/index.vue'
-import registNew from '../page/regist/new/index.vue'
-import registOld from '../page/regist/old/index.vue'
-import registPlayer from '../page/regist/player/index.vue'
-import chooseGame from '../page/choose/game/index.vue'
-import chooseTeam from '../page/choose/team/index.vue'
-import chooseJob from '../page/choose/job/index.vue'
-import chooseReady from '../page/choose/ready/index.vue'
-import roundFactory from '../page/round/factory/index.vue'
-import roundRetailer from '../page/round/retailer/index.vue'
-import roundWholesaler from '../page/round/wholesaler/index.vue'
-import roundGuerrilla from '../page/round/guerrilla/index.vue'
-import roundExchanger from '../page/round/exchanger/index.vue'
-import roundTransporter from '../page/round/transporter/index.vue'
-import roundMarket from '../page/round/market/index.vue'
-import roundConsoler from '../page/round/consoler/index.vue'
-import end from '../page/end/index.vue'
-//import gameend from '../page/gameend'
+
+import Home from '@/page/Home'
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    { path: '', component: home },
-    { path: '/', component: home },
-    { path: '/home', component: home },
-    { path: '/admin', component: adminConstruct },
-    { path: '/admin/construct', component: adminConstruct },
-    { path: '/boardcast', component: boardcastScoreboard }, // this should be fixed
+    { path: '/', component: Home, alias: ['/home'] },
+
+    {
+      path: '/admin/construct',
+      component: () => import('@/page/Admin/Construct'),
+      alias: ['/admin']
+    },
+
     {
       path: '/boardcast/scoreboard',
-      component: boardcastScoreboard
+      component: () => import('@/page/Boardcast/Scoreboard'),
+      alias: ['/boardcast']
     },
-    { path: '/regist', component: registNew },
-    { path: '/regist/new', component: registNew },
-    { path: '/regist/old', component: registOld },
-    { path: '/regist/player', component: registPlayer },
-    { path: '/choose', component: chooseGame },
-    { path: '/choose/game', component: chooseGame },
-    { path: '/choose/team', component: chooseTeam },
-    { path: '/choose/job', component: chooseJob },
-    { path: '/choose/ready', component: chooseReady },
-    { path: '/round/factory', component: roundFactory },
-    { path: '/round/retailer', component: roundRetailer },
-    { path: '/round/wholesaler', component: roundWholesaler },
-    { path: '/round/guerrilla', component: roundGuerrilla },
-    { path: '/round/keeper', component: roundGuerrilla },
-    { path: '/round/exchanger', component: roundExchanger },
-    { path: '/round/transporter', component: roundTransporter },
-    { path: '/round/market', component: roundMarket },
-    { path: '/round/consoler', component: roundConsoler },
+
     {
-      path: '/end',
-      component: end
-    } /*,
-  { path: '/gameend', component: gameend },
-  { path: '/round/exchange', component: roundExchange },
-  { path: '/round/market', component: roundMarket },
-  { path: '/round/teamleader', component: roundTeamleader }*/
+      path: '/regist/new',
+      component: () => import('@/page/Regist/new'),
+      alias: ['/regist']
+    },
+    { path: '/regist/old', component: () => import('@/page/Regist/old') },
+    { path: '/regist/player', component: () => import('@/page/Regist/player') },
+
+    {
+      path: '/choose',
+      component: () => import('@/page/Choose'),
+      children: [
+        {
+          path: '',
+          component: () => import('@/page/Choose/Game'),
+          alias: ['game']
+        },
+        { path: ':gameId/team', component: () => import('@/page/Choose/Team') },
+        {
+          path: ':gameId/:teamIndex/job',
+          component: () => import('@/page/Choose/Job')
+        },
+        {
+          path: ':gameId/:teamIndex/:job/ready',
+          component: () => import('@/page/Choose/Ready')
+        }
+      ]
+    },
+
+    {
+      path: '/round/:gameId/:teamIndex/',
+
+      component: () => import('@/page/Round'),
+      children: [
+        { path: 'factory', component: () => import('@/page/Round/Factory') },
+        {
+          path: 'wholesaler',
+          component: () => import('@/page/Round/Wholesaler')
+        },
+        { path: 'retailer', component: () => import('@/page/Round/Retailer') },
+        {
+          path: 'guerrilla',
+          component: () => import('@/page/Round/Guerrilla'),
+          alias: ['keeper']
+        },
+        {
+          path: 'exchanger',
+          component: () => import('@/page/Round/Exchanger')
+        },
+        {
+          path: 'transporter',
+          component: () => import('@/page/Round/Transporter')
+        },
+        { path: 'market', component: () => import('@/page/Round/Market') },
+        { path: 'consoler', component: () => import('@/page/Round/Consoler') }
+      ]
+    },
+
+    { path: '/end', component: import('@/page/End') }
   ]
 })
